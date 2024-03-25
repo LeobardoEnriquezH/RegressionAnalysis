@@ -1,0 +1,92 @@
+---
+title: ""
+date: ""
+header-includes:
+- \usepackage[utf8]{inputenc}
+- \usepackage[spanish]{babel}
+- \usepackage{graphicx}
+- \usepackage{multirow,rotating}
+- \pagenumbering{gobble}
+- \usepackage{dcolumn}
+output: 
+  pdf_document:
+    toc: true
+    toc_depth: 3
+    includes:
+      in_header: labels.tex
+      before_body: cover.tex
+csl: apa.csl
+bibliography: fuentes1.bib
+---
+
+```{=tex}
+\pagenumbering{gobble}
+\pagenumbering{arabic}
+```
+
+
+```{r setup, include=FALSE }
+knitr::opts_chunk$set(echo = T, fig.width = 6, fig.height = 3.5)
+
+```
+
+```{r, message=FALSE, include=FALSE,warning=FALSE, background=FALSE, comment=FALSE, engine.path=FALSE, cache=FALSE, out.extra=FALSE, results='hide'}
+
+#rm(list = ls())
+
+pacman::p_load(tidyverse,
+               kableExtra,
+               cowplot,
+               stargazer,knitr,viridis,dplyr,readr,scales,quantmod,texreg,tinytex, 
+               tidyr, imager,lubridate,tseries, astsa, growthrates, tis, dynlm, 
+               readxl, foreign, hrbthemes, gtsummary, corrplot, lm.beta, ggfortify,
+               AER, lmtest, sandwich,GGally)
+```
+
+
+## 1. Regresión a través del origen. 
+
+
+
+## 2. Regresión lineal simple. 
+
+
+## 3. Expresión alternativa para R^2
+
+
+
+## 4. Problema Anova. Equivalencia con la estimación considerando dos poblaciones normales.
+
+
+## 5. Problema ANOVA. Medicamentos.
+
+
+
+## 6. Uso del modelo de regresión lineal simple. 
+
+
+
+## 7. Regresión lineal simple con datos de "performance".
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
