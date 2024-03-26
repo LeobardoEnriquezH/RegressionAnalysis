@@ -1,0 +1,15 @@
+---
+title: "Ejercicio 5"
+author: "Equipo"
+date: "2024-03-26"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 5. Problema ANOVA. Medicamentos.
+
+
+
