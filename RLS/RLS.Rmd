@@ -50,6 +50,64 @@ pacman::p_load(tidyverse,
 
 ## 2. Regresión lineal simple. 
 
+Considere el modelo de regresión $y_i=\beta_0+\beta_1x_i+\epsilon_i$, donde $E(\epsilon_i)=0$, $V(\epsilon_i)=\sigma^2$ y $Cov(\epsilon_i, \epsilon_j)=0$, $\forall i \neq j$; $i,j=1,...,n$. 
+
+Calcular $V(e_i)$, donde $e_i=y_i-\hat{y_i}$ y $\hat{y_i}=\hat{\beta_0}+\hat{\beta_1}x_i$, con $\hat{\beta_0}$ y $\hat{\beta_1}$ los estimadores de los parámetros del modelo. 
+
+Hint: Se puede usar que $V(A-B)=V(A)+V(B)-2Cov(A,B)$ y que $\hat{y_i}$ se puede escribir como una combinación lineal de las $y_{i's}$.
+
+\textcolor{red}{SOLUCIÓN} 
+
+
+
+Como $V(y_i)= V(\beta_0+\beta_1x_i+\epsilon_i)= V(\epsilon_i)= \sigma^2$  por ser $\beta_0, \beta_1$ y $x_i$ constantes. 
+
+
+Como $V(\hat{y_i})=V(\hat{\beta_0} + \hat{\beta_1}x_i) = V(\beta_0)+V(\beta_1x_i)+2Cov(\beta_0, \beta_1x_i)=V(\hat{\beta_0})+ x_i^2V(\hat{\beta_1})+2x_iCov(\hat{\beta_0}, \hat{\beta_1}) = \sigma^2(\frac{1}{n}+\frac{\bar{X}^2}{SSx}) + x_i^2 (\frac{\sigma^2}{SSx}) + 2x_i (\frac{-\bar{X}\sigma^2}{SSx}) = \sigma^2(\frac{SSx+n\bar{X}^2}{nSSx} + \frac{x_i^2}{SSx} - \frac{2x_i\bar{X}}{SSx}) = \sigma^2 (\frac{1}{n} + \frac{(x_i - \bar{X})^2}{SSx})$, con $SS_x=\sum_{i=1}^n(x_i-\bar{X})^2$. 
+
+
+Como $Cov(y_i,\hat{y_i})=Cov(y_i,\bar{Y}+\hat{\beta_1}x_i-\hat{\beta_1}\bar{X}) = Cov(y_i, \bar{Y}) + Cov(y_i, \hat{\beta_1}x_i) + Cov(y_i, -\hat{\beta_1}\bar{X}) = Cov(y_i, \hat{\beta_0}+\hat{\beta_1}\bar{X}) + x_iCov(y_i, \hat{\beta_1}) - \bar{X} Cov(y_i, \hat{\beta_1})  = Cov(y_i, \hat{\beta_0}) + \bar{X} Cov(y_i, \hat{\beta_1}) + x_iCov(y_i, \hat{\beta_1}) - \bar{X} Cov(y_i, \hat{\beta_1}) = Cov(y_i, \hat{\beta_0}) + x_i Cov(y_i, \hat{\beta_1}) = (\frac{1}{n} - \frac{\bar{X} (x_i-\bar{X})}{SSx})\sigma^2 + x_i(\frac{x_i - \bar{X}}{SSx}) \sigma^2 =\sigma^2 (\frac{1}{n} - \frac{\bar{X} (x_i-\bar{X})}{SSx} + x_i(\frac{x_i - \bar{X}}{SSx})$.
+
+
+Entonces: 
+
+
+$$V(e_i)=V(y_i-\hat{y_i})=V(y_i)+V(\hat{y_i})-2Cov(y_i,\hat{y_i}) = \sigma^2+\sigma^2(\frac{1}{n}+\frac{(x_i-\bar{X})^2}{SS_{x}})-2\sigma^2 (\frac{1}{n} - \frac{\bar{X} (x_i-\bar{X})}{SSx} + \frac{x_i(x_i - \bar{X})}{SSx})$$
+$$= \sigma^2 + \frac{\sigma^2}{n} + \frac{\sigma^2 (x_i-\bar{X})^2}{SSx} - \frac{-2\sigma^2}{n} + \frac{2\sigma^2 \bar{X} (x_i- \bar{X})}{SSx} - \frac{2\sigma^2x_i (x_i - \bar{X})}{SSx}=\sigma^2 + \frac{\sigma^2}{n}  + (\frac{-\sigma^2x_i^2 - \sigma^2\bar{X}^2 + 2\sigma^2 \bar{X}x_i}{SSx})$$
+
+$= \sigma^2 + \frac{\sigma^2}{n} - \frac{\sigma^2}{SSx} (x_i - \bar{X})^2 =  \sigma^2 + \frac{\sigma^2}{n} - \frac{\sigma^2}{n} = \sigma^2$
+
+
+
+Se usaron los siguientes resultados: 
+
+
+$\bar{Y} = \hat{\beta_0} + \hat{\beta_1} \bar{X}$
+
+$\hat{y_i}= \hat{\beta_0} + \hat{\beta_1}x_i = (\bar{Y}-\bar{X}\hat{\beta_1}) + \hat{\beta_1}x_i =\bar{Y} + \hat{\beta_1}x_i -\hat{\beta_1}\bar{X}$
+
+
+$V(\hat{\beta_0})=Cov(\hat{\beta_0}, \hat{\beta_0}) = Cov(\sum_{i=1}^n k_{i_0}y_i, \sum_{j=1}^n k_{j_0}y_j) = \sigma^2 \sum_{i=1}^n k_{i_0}^2 = \sigma^2 \sum_{i=1}^n (\frac{1}{n} - \frac{\bar{X}(x_i - \bar{X} )}{SSx})^2 = \sigma^2(\frac{1}{n} + \frac{\bar{X}^2}{SSx})$,
+
+
+
+$V(\hat{\beta_1}) = Cov(\hat{\beta_1}, \hat{\beta_1}) = Cov(\sum_{i=1}^n k_{i_1}y_i, \sum_{j=1}^n k_{j_1}y_j) = \sigma^2 \sum_{i=1}^n k_{i_1}^2  = \sigma^2 \sum_{i=1}^n (\frac{x_i - \bar{X}}{SSx})^2 = \frac{\sigma^2}{(SSx)^2} \sum_{i=1}^n (x_i - \bar{X})^2  = \frac{\sigma^2}{SSx}$,
+
+
+
+
+$Cov(\hat{\beta_0},\hat{\beta_0}) = Cov( \sum_{i=1}^n k_{i_0}y_i, \sum_{j=1}^n k_{j_1}y_j ) = \sigma^2 \sum_{i=1}^n k_{i_0} k_{i_1} = \sigma^2 \sum_{i=1}^n (\frac{1}{n} - \frac{\bar{X}(x_i - \bar{X} )}{SSx}) (\frac{x_i - \bar{X}}{SSx}) = -\frac{\bar{X} \sigma^2 }{SSx}$,
+
+
+
+$Cov(y_i,\hat{\beta_0}) = Cov(y_i, \sum_{i=1}^n k_{i_0} y_i) = k_{i_0} Cov(y_i,y_i) = k_{i_0} V(y_i) = k_{i_0} \sigma^2 = (\frac{1}{n} - \frac{\bar{X}(x_i - \bar{X} )}{SSx}) \sigma^2$,
+
+
+$Cov(y_i,\hat{\beta_1}) = Cov(y_i, \sum_{i=1}^n k_{i_1} y_i) = k_{i_1} Cov(y_i,y_i) = k_{i_1} V(y_i) = k_{i_1} \sigma^2 = (\frac{x_i - \bar{X}}{SSx}) \sigma^2$,
+
+$\frac{SSx}{(x_i-\bar{X})^2} = \frac{\sum_{i=1}^n (x_i - \bar{X})^2}{(x_i - \bar{X})^2} = \sum_{i=1}^n 1 = n$
+
+
 
 ## 3. Expresión alternativa para R^2
 
@@ -59,6 +117,234 @@ pacman::p_load(tidyverse,
 
 
 ## 5. Problema ANOVA. Medicamentos.
+
+
+
+```{r, include=FALSE}
+#library(tidyverse) #read_csv
+datos<-read_csv("Ejercicio5B.csv", col_names = TRUE)
+#Hacemos los datos no numericos como factor
+datos$Med<-factor(datos$Med)
+datos$Edad<-factor(datos$Edad)
+```
+
+
+### I. Análisis descriptivo y/o visualización de datos.
+
+```{r, echo=FALSE, include=FALSE}
+min<-min(datos$Y)
+max<-max(datos$Y)
+sd<-sd(datos$Y)
+mean<-mean(datos$Y)
+```
+
+
+En la base de datos ``Ejercicio5B`` se tiene información del índice de carga viral (Y), si se aplicó o no el medicamento contra Covid (Med) y si los pacientes son mayores o menores (o iguales) a 60 años (Edad). Tenemos un total de 100 pacientes, de los cuales 80 tienen más de 60 años y a la mitad de todos los pacientes se le aplicó el medicamento (tratados).  
+
+En el siguiente Cuadro se muestra la estadística descriptiva del dato numérico, que es el índice de carga viral, es posible observar los pacientes presentaron un mínimo de `r min` y un maximo de `r max`, con una media de  `r mean`. La desviación estándar de `r sd` es pequeña, por lo que parece que los datos no son tan dispersos. 
+
+
+
+```{r, echo=FALSE}
+cargaviral<-as.data.frame(datos$Y)
+#stargazer(cargaviral)
+```
+
+\begin{table}[!htbp] \centering 
+  \caption{} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lccccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+Statistic & \multicolumn{1}{c}{N} & \multicolumn{1}{c}{Mean} & \multicolumn{1}{c}{St. Dev.} & \multicolumn{1}{c}{Min} & \multicolumn{1}{c}{Max} \\ 
+\hline \\[-1.8ex] 
+datos\$Y & 100 & 10.480 & 1.148 & 7.868 & 13.390 \\ 
+\hline \\[-1.8ex] 
+\end{tabular} 
+\end{table} 
+
+
+A continuación podemos observar en la gráfica de caja y bigotes que a los pacientes menores de 60 años a quienes no se les aplicó la vacuna (no fueron tratadas) tienen una mayor carga viral, sin embargo no disponemos de datos para personas menores a 60 años a quienes se les aplicó el medicamento, para una mejor comparación. Por otro lado, para mayores de 60 años, parece no haber una diferencia clara entre los pacientes a los que se le aplicó la vacuna y a las personas a las que no se le aplicó, pues ambos grupos tienen cargas virales menores pero muy parecidas.   
+
+
+
+
+```{r, echo=FALSE}
+# Crear interacción entre factores
+datos$Med_Edad <- interaction(datos$Med, datos$Edad)
+# Definimos colores
+custom_colors <- c("steelblue", "darkorange", "forestgreen", "firebrick")
+# Generamos el Boxplot
+ggplot(datos, aes(x = Med_Edad, y = Y, fill = Med_Edad)) +
+  geom_boxplot(width = 0.3, alpha = 0.5, outlier.shape = NA) +
+  geom_jitter(width = 0.2, height = 0, size = 3, alpha = 0.8) +
+  scale_fill_manual(values = custom_colors) +
+  labs(x = "Med & Edad", y = "Carga viral") +
+  ggtitle("Box Plot con Med & Edad") +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 12, face = "bold"),
+    axis.text = element_text(size = 8),
+    axis.title = element_text(size = 10, face = "bold"),
+    legend.title = element_blank(),
+    legend.position = "none"
+  )
+```
+
+### II. Planteamiento del modelo y supuestos.
+
+Para ver si la menor carga viral está asociada con la aplicación del medicamento planteamos un modelo de regresión donde la variable dependiente es la carga viral $y_i$ y la variable independiente $x_i$ se puede ver como categórica, donde $x_i=1$ si el paciente es tratado y $x_i=0$ si no.
+
+
+$$y_i=\beta_0+\beta_1x_i+\varepsilon_i$$
+
+Suponemos que el modelo presenta linealidad, homocedasticidad en los errores y no autocorrelación en los errores.    
+
+
+### III. Prueba de hipótesis. 
+
+
+```{r, echo=FALSE,  include=FALSE}
+
+#Realizamos un relevel para poner como referencia "No"
+datos$Med<-relevel(datos$Med,"No")
+#levels(datos$Med)
+```
+
+
+
+```{r, echo=FALSE, include=FALSE}
+#Ajustamos nuestro modelo 
+fit<-lm(Y~Med, data = datos)
+
+#Y mostramos el summary con stargazer
+stargazer(fit)
+```
+
+
+```{r, echo=FALSE, include=FALSE}
+b0<-fit$coefficients[1]
+b1<-fit$coefficients[2]
+```
+
+
+En el siguinte Cuadro se muestra el modelo ajustado por mínimos cuadrados ordinarios. El intercepto $\beta_0$ = `r b0`, el término asociado a la variable categórica de si se aplicó el medicamento es $\beta_1$ = `r b1`, y ambos son estadísticamente significativos de manera individual con la prueba $t-student$, es decir, para ambos casos se rechaza la hipótesis nula de que $\beta_0=0$ y $\beta_1=0$ con el 5% de nivel de significancia, respectivamente. La prueba de hipótesis global también rechaza la hipótesis nula de que $\beta_i=0, \forall i=1,..,n$ , es decir, de acuerdo con la prueba $F$, al menos una de los coeficientes es distinto de cero. Cabe notar que como estamos en el caso de una solo variable explicativa, esta prueba coincide con la asociada a $\beta_1$. 
+
+Como puede observarse, el nivel de referencia es $MedNo$, es decir, que no se haya tratado o no se haya aplicado el medicamento. Entonces, de acuerdo con el modelo, el tratamiento disminuye la carga viral en `r b1` unidades.   
+
+
+
+\begin{table}[!htbp] \centering 
+  \caption{} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-2} 
+\\[-1.8ex] & Y \\ 
+\hline \\[-1.8ex] 
+ MedSi & $-$0.468$^{**}$ \\ 
+  & s.e.(0.226) \\
+  & t-value: -2.074 \\
+  & Pr(>|t|): 0.0407\\
+  & \\ 
+ Constant & 10.714$^{***}$ \\ 
+  & s.e.(0.160) \\ 
+  & t-value: 67.097 \\ 
+  & Pr(>|t|): <2e-16\\
+  & \\ 
+\hline \\[-1.8ex] 
+Observations & 100 \\ 
+R$^{2}$ & 0.042 \\ 
+Adjusted R$^{2}$ & 0.032 \\ 
+Residual Std. Error & 1.129 (df = 98) \\ 
+F Statistic & 4.299$^{**}$ (df = 1; 98); p-value: 0.04075 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table} 
+
+
+### IV. Consideración de la variable Edad.
+
+
+Como se mencionó anteriormente, en la base de datos tenemos 20 observaciones de personas no tratadas menores de 60 años y no tenemos personas de ese grupo de edades que sean tratadas por el medicamento, lo que podría sesgar los resultados. Aunado a esto, tenemos que para el grupo de edades mayores de 60 años, no se puede notar gráficamente una disferencia clara entre tratados y no tratados. Por lo tanto, consideramos que los rsultados anteriores no son contundentes, por lo que convendría controlar por la variable de Edad.  
+
+
+### V. Planteamiento del nuevo modelo y pruebas de hipótesis.
+
+En este caso planteamos el mismo modelo, pero como no tenemos individuos tratados y no tratados menores de 60 años en la base de datos (solamente tenemos a los no tratados), tomaremos en cuenta a los grupos homogéneos de tratados y no tratados mayores o iguales a 60 años, por lo que nuestra base de datos se reduce de 100 a 80 observaciones. 
+
+
+
+
+```{r, echo=FALSE, include=FALSE}
+#Ajustamos nuestro modelo 
+datos_cortados<-datos%>%filter(Edad==">60")
+```
+
+
+
+
+```{r, echo=FALSE, include=FALSE}
+#Ajustamos nuestro modelo 
+fit_c<-lm(Y~Med, data = datos_cortados)
+
+#Y mostramos el summary con stargazer
+stargazer(fit_c)
+```
+
+
+```{r, echo=FALSE, include=FALSE}
+b0<-fit_c$coefficients[1]
+b1<-fit_c$coefficients[2]
+```
+
+
+A continuación se muestra el Cuadro correspondiente a la regresión lineal para los pacientes tratados y no tratados mayores a 60 años. La prueba global $F$ muestra que no es posible rechazar la hipótesis nula de que los coeficientes asociados a las variables explicativas son cero, pues el p-value asociado es grande, incluso mayor a 0.1. 
+
+Al parecer, las conclusiones obtenidas al tomar toda la muestra estaban sesgadas por el grupo de edad, pues cuando quitamos a los no tratados menores de 60 años que tenían una carga viral bastante importante, los resultados cambiaron.  
+
+
+\begin{table}[!htbp] \centering 
+  \caption{} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-2} 
+\\[-1.8ex] & Y \\ 
+\hline \\[-1.8ex] 
+ MedSi & 0.029 \\ 
+  & s.e.(0.245) \\
+  & t-value: 0.119 \\
+  & Pr(>|t|): 0.906\\
+  & \\ 
+ Constant & 10.217$^{***}$ \\ 
+  & s.e.(0.194) \\
+  & t-value: 52.704 \\
+  & Pr(>|t|): <2e-16\\
+  & \\ 
+\hline \\[-1.8ex] 
+Observations & 80 \\ 
+R$^{2}$ & 0.0002 \\ 
+Adjusted R$^{2}$ & $-$0.013 \\ 
+Residual Std. Error & 1.062 (df = 78) \\ 
+F Statistic & 0.014 (df = 1; 78); p-value: 0.9056 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table} 
+
+
+
+
+
+
 
 
 

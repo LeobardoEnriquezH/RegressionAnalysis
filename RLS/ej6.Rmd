@@ -1,5 +1,8 @@
 ---
 title: "Ejercicio 6"
+header-includes:
+- \usepackage[utf8]{inputenc}
+- \usepackage[spanish]{babel}
 author: "Equipo"
 date: "2024-03-26"
 output: pdf_document
@@ -9,7 +12,84 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r, echo=FALSE, include=FALSE}
+library(kableExtra)
+library(tidyverse)
+library(stargazer)
+```
+
+
 ## 6. Uso del modelo de regresión lineal simple. 
 
+A continuación se presentan los datos de los pesos de los huevos de 11 nidadas de pingüinos Macaroni, cada nidada tiene dos huevos, uno más pequeño (x) que el otro (y). 
 
+```{r, echo=FALSE}
+x=c(79, 93, 100, 105, 101, 96, 96, 109, 70, 71, 87)
+y=c(123, 138, 154, 161, 155, 149, 152, 160, 117, 123, 138 )
+Datos6=data.frame(cbind(x,y))
+kable(t(Datos6)) %>%
+kable_styling(bootstrap_options = "striped", full_width = F)
+```
+
+### I. Ajuste del modelo de regresión.
+
+Ajustaremos una recta de regresión para estimar el peso promedio del huevo mayor (y) dado el peso del huevo menor (x). 
+
+
+
+```{r, echo=FALSE, include=FALSE}
+#Ajustamos nuestro modelo 
+fit<-lm(y~x, data = Datos6)
+
+#Y mostramos el summary con stargazer
+stargazer(fit)
+```
+
+
+```{r, echo=FALSE, include=FALSE}
+b0<-fit$coefficients[1]
+b1<-fit$coefficients[2]
+```
+
+
+En el siguiente Cuadro podemos observar que el p-valor asociado a la prueba $F$ es de menor a 0.05, por lo que se rechaza la hipótesis nula de que los coeficientes asociados a las variables explicativas son cero. En este caso, como hay una solo variable explicativa, esta prueba coincide con la prueba $t-student$ individual para la $\beta_1$= `r b1`, que también rechaza la hipótesis nula de que $\beta_1=0$. 
+
+
+
+
+
+\begin{table}[!htbp] \centering 
+  \caption{} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-2} 
+\\[-1.8ex] & y \\ 
+\hline \\[-1.8ex] 
+ x & 1.169$^{***}$ \\ 
+  & s.e.(0.088) \\
+  & t-value: 13.225 \\
+  & Pr(>|t|): 3.35e-07\\
+  & \\ 
+ Constant & 35.674$^{***}$ \\ 
+  & s.e.(8.171) \\
+  & t-value: 4.366 \\
+  & Pr(>|t|): 0.00181\\
+  & \\ 
+\hline \\[-1.8ex] 
+Observations & 11 \\ 
+R$^{2}$ & 0.951 \\ 
+Adjusted R$^{2}$ & 0.946 \\ 
+Residual Std. Error & 3.702 (df = 9) \\ 
+F Statistic & 174.895$^{***}$ (df = 1; 9); p-value: 3.351e-07 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table} 
+
+
+### II. 
 
