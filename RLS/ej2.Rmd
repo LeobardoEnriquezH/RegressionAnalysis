@@ -11,5 +11,66 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## 2. Regresión lineal simple.
 
+Considere el modelo de regresión $y_i=\beta_0+\beta_1x_i+\epsilon_i$, donde $E(\epsilon_i)=0$, $V(\epsilon_i)=\sigma^2$ y $Cov(\epsilon_i, \epsilon_j)=0$, $\forall i \neq j$; $i,j=1,...,n$. 
+
+Calcular $V(e_i)$, donde $e_i=y_i-\hat{y_i}$ y $\hat{y_i}=\hat{\beta_0}+\hat{\beta_1}x_i$, con $\hat{\beta_0}$ y $\hat{\beta_1}$ los estimadores de los parámetros del modelo. 
+
+Hint: Se puede usar que $V(A-B)=V(A)+V(B)-2Cov(A,B)$ y que $\hat{y_i}$ se puede escribir como una combinación lineal de las $y_{i's}$.
+
+\textcolor{red}{SOLUCIÓN} 
+
+
+
+Como $V(y_i)= V(\beta_0+\beta_1x_i+\epsilon_i)= V(\epsilon_i)= \sigma^2$  por ser $\beta_0, \beta_1$ y $x_i$ constantes. 
+
+
+Como $V(\hat{y_i})=V(\hat{\beta_0} + \hat{\beta_1}x_i) = V(\beta_0)+V(\beta_1x_i)+2Cov(\beta_0, \beta_1x_i)=V(\hat{\beta_0})+ x_i^2V(\hat{\beta_1})+2x_iCov(\hat{\beta_0}, \hat{\beta_1}) = \sigma^2(\frac{1}{n}+\frac{\bar{X}^2}{SSx}) + x_i^2 (\frac{\sigma^2}{SSx}) + 2x_i (\frac{-\bar{X}\sigma^2}{SSx}) = \sigma^2(\frac{SSx+n\bar{X}^2}{nSSx} + \frac{x_i^2}{SSx} - \frac{2x_i\bar{X}}{SSx}) = \sigma^2 (\frac{1}{n} + \frac{(x_i - \bar{X})^2}{SSx})$, con $SS_x=\sum_{i=1}^n(x_i-\bar{X})^2$. 
+
+
+Como $Cov(y_i,\hat{y_i})=Cov(y_i,\bar{Y}+\hat{\beta_1}x_i-\hat{\beta_1}\bar{X}) = Cov(y_i, \bar{Y}) + Cov(y_i, \hat{\beta_1}x_i) + Cov(y_i, -\hat{\beta_1}\bar{X}) = Cov(y_i, \hat{\beta_0}+\hat{\beta_1}\bar{X}) + x_iCov(y_i, \hat{\beta_1}) - \bar{X} Cov(y_i, \hat{\beta_1})  = Cov(y_i, \hat{\beta_0}) + \bar{X} Cov(y_i, \hat{\beta_1}) + x_iCov(y_i, \hat{\beta_1}) - \bar{X} Cov(y_i, \hat{\beta_1}) = Cov(y_i, \hat{\beta_0}) + x_i Cov(y_i, \hat{\beta_1}) = (\frac{1}{n} - \frac{\bar{X} (x_i-\bar{X})}{SSx})\sigma^2 + x_i(\frac{x_i - \bar{X}}{SSx}) \sigma^2 =\sigma^2 (\frac{1}{n} - \frac{\bar{X} (x_i-\bar{X})}{SSx} + x_i(\frac{x_i - \bar{X}}{SSx})$.
+
+
+Entonces: 
+
+
+$$V(e_i)=V(y_i-\hat{y_i})=V(y_i)+V(\hat{y_i})-2Cov(y_i,\hat{y_i}) = \sigma^2+\sigma^2(\frac{1}{n}+\frac{(x_i-\bar{X})^2}{SS_{x}})-2\sigma^2 (\frac{1}{n} - \frac{\bar{X} (x_i-\bar{X})}{SSx} + \frac{x_i(x_i - \bar{X})}{SSx})$$
+$$= \sigma^2 + \frac{\sigma^2}{n} + \frac{\sigma^2 (x_i-\bar{X})^2}{SSx} - \frac{-2\sigma^2}{n} + \frac{2\sigma^2 \bar{X} (x_i- \bar{X})}{SSx} - \frac{2\sigma^2x_i (x_i - \bar{X})}{SSx}=\sigma^2 + \frac{\sigma^2}{n}  + (\frac{-\sigma^2x_i^2 - \sigma^2\bar{X}^2 + 2\sigma^2 \bar{X}x_i}{SSx})$$
+
+$= \sigma^2 + \frac{\sigma^2}{n} - \frac{\sigma^2}{SSx} (x_i - \bar{X})^2 =  \sigma^2 + \frac{\sigma^2}{n} - \frac{\sigma^2}{n} = \sigma^2$
+
+
+
+Se usaron los siguientes resultados: 
+
+
+$\bar{Y} = \hat{\beta_0} + \hat{\beta_1} \bar{X}$
+
+$\hat{y_i}= \hat{\beta_0} + \hat{\beta_1}x_i = (\bar{Y}-\bar{X}\hat{\beta_1}) + \hat{\beta_1}x_i =\bar{Y} + \hat{\beta_1}x_i -\hat{\beta_1}\bar{X}$
+
+
+$V(\hat{\beta_0})=Cov(\hat{\beta_0}, \hat{\beta_0}) = Cov(\sum_{i=1}^n k_{i_0}y_i, \sum_{j=1}^n k_{j_0}y_j) = \sigma^2 \sum_{i=1}^n k_{i_0}^2 = \sigma^2 \sum_{i=1}^n (\frac{1}{n} - \frac{\bar{X}(x_i - \bar{X} )}{SSx})^2 = \sigma^2(\frac{1}{n} + \frac{\bar{X}^2}{SSx})$,
+
+
+
+$V(\hat{\beta_1}) = Cov(\hat{\beta_1}, \hat{\beta_1}) = Cov(\sum_{i=1}^n k_{i_1}y_i, \sum_{j=1}^n k_{j_1}y_j) = \sigma^2 \sum_{i=1}^n k_{i_1}^2  = \sigma^2 \sum_{i=1}^n (\frac{x_i - \bar{X}}{SSx})^2 = \frac{\sigma^2}{(SSx)^2} \sum_{i=1}^n (x_i - \bar{X})^2  = \frac{\sigma^2}{SSx}$,
+
+
+
+
+$Cov(\hat{\beta_0},\hat{\beta_0}) = Cov( \sum_{i=1}^n k_{i_0}y_i, \sum_{j=1}^n k_{j_1}y_j ) = \sigma^2 \sum_{i=1}^n k_{i_0} k_{i_1} = \sigma^2 \sum_{i=1}^n (\frac{1}{n} - \frac{\bar{X}(x_i - \bar{X} )}{SSx}) (\frac{x_i - \bar{X}}{SSx}) = -\frac{\bar{X} \sigma^2 }{SSx}$,
+
+
+
+$Cov(y_i,\hat{\beta_0}) = Cov(y_i, \sum_{i=1}^n k_{i_0} y_i) = k_{i_0} Cov(y_i,y_i) = k_{i_0} V(y_i) = k_{i_0} \sigma^2 = (\frac{1}{n} - \frac{\bar{X}(x_i - \bar{X} )}{SSx}) \sigma^2$,
+
+
+$Cov(y_i,\hat{\beta_1}) = Cov(y_i, \sum_{i=1}^n k_{i_1} y_i) = k_{i_1} Cov(y_i,y_i) = k_{i_1} V(y_i) = k_{i_1} \sigma^2 = (\frac{x_i - \bar{X}}{SSx}) \sigma^2$,
+
+$\frac{SSx}{(x_i-\bar{X})^2} = \frac{\sum_{i=1}^n (x_i - \bar{X})^2}{(x_i - \bar{X})^2} = \sum_{i=1}^n 1 = n$
+
+
+
+
+
 
 
