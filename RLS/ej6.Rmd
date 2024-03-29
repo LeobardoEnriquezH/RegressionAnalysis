@@ -1,11 +1,14 @@
 ---
 title: "Ejercicio 6"
+author: "Equipo"
+date: "2024-03-26"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
 header-includes:
 - \usepackage[utf8]{inputenc}
 - \usepackage[spanish]{babel}
-author: "Equipo"
-date: "2024-03-26"
-output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -33,7 +36,10 @@ kable_styling(bootstrap_options = "striped", full_width = F)
 
 ### I. Ajuste del modelo de regresión.
 
-Ajustaremos una recta de regresión para estimar el peso promedio del huevo mayor (y) dado el peso del huevo menor (x). 
+Ajustaremos una recta de regresión para estimar el peso promedio del huevo mayor (y) dado el peso del huevo menor (x), es decir, la variable dependiente es el peso del huevo más grande $y_i$ y la variable independiente es el peso del huevo menor. 
+
+
+$$y_i=\beta_0+\beta_1x_i+\varepsilon_i$$ 
 
 
 
@@ -91,5 +97,145 @@ F Statistic & 174.895$^{***}$ (df = 1; 9); p-value: 3.351e-07 \\
 \end{table} 
 
 
-### II. 
+La Gráfica siguiente muestra las observaciones y la recta ajustada, parece ser que hay un muy buen ajuste de la recta a los puntos. 
+
+
+
+```{r, echo=FALSE}
+ggplot(Datos6, aes(x, y)) +
+  geom_point() +
+  geom_abline(intercept = b0, slope = b1) + 
+  theme_bw()
+```
+
+En las siguientes Gráficas podemos observar  las pruebas gráficas para el cumplimiento de los supuestos del modelo de regresión lineal. La Gráfica **Residuals vs Fitted**, se utiliza para comprobar los supuestos de relación lineal, una línea horizontal, sin patrones distintos, es indicación de una relación lineal, lo que es bueno en nuestro caso. La Gráfica **Normal Q-Q**, se utiliza para examinar si los residuos se distribuyen normalmente, es bueno que los puntos residuales sigan la línea recta discontinua, en nuestro caso parece que todo se ajusta bien. La Gráfica **Scale-Location**, se utiliza para comprobar la homogeneidad de la varianza de los residuos (homoscedasticidad), la línea horizontal con puntos igualmente distribuidos es una buena indicación de homocedasticidad, este es el caso en nuestro ejemplo, donde no tenemos un problema de heterocedasticidad. La Gráfica **esiduals vs Leverage**, se utiliza para identificar casos de valores influyentes, es decir, valores extremos que podrían influir en los resultados de la regresión cuando se incluyen o excluyen del análisis, al parecer ningún valor sale de la distancia de Cook. 
+
+
+
+```{r, echo=FALSE}
+par(mfrow = c(2, 2))
+plot(fit)
+```
+
+
+En el siguiente Cuadro se pueden observar las pruebas de Shapiro-Wilk, Breusch-Pagan y Durbin-Watson, en todos los casos el p-value asociado es mayor a 0.05, por lo que no hay evidencia para rechzar las hipótesis nulas de normalidad, homoscedasticidad y no autocorrelación, respectivamente. 
+
+
+
+```{r, echo=FALSE, warning=FALSE, include=FALSE, message=FALSE}
+pkgs <- c(
+  "flextable", "performance", "see", "lmtest", "ggplot2",
+  "qqplotr", "ggrepel", "patchwork", "boot", "rempsyc", "report"
+)
+#install.packages(pkgs)
+
+library(flextable)
+library(performance)
+library(see)
+library(lmtest)
+library(qqplotr)
+library(ggrepel)
+library(patchwork)
+library(boot)
+library(rempsyc)
+library(report)
+
+#check_model(fit) #check_model() function of the performance package
+
+table_tests<-nice_assumptions(fit)
+table_tests_fin<-subset(table_tests, select = -c(Model,Diagnostic) )
+
+set_flextable_defaults(fonts_ignore=TRUE)
+table_nice<-nice_table(nice_assumptions(fit), col.format.p = 2:4,stars=TRUE, short=TRUE, width=0.5,   
+                       note = c("* p < .05, ** p < .01, *** p < .001"))
+```
+
+
+```{r, echo=FALSE}
+#nice_assumptions(fit)
+#table_nice
+kable(t(table_tests_fin)) %>%
+kable_styling(bootstrap_options = "striped", full_width = F)
+
+```
+
+
+
+
+### II. Prueba de hipótesis. Diferencia entre peso mayor y menor como constante. 
+
+Ante la sospecha de que en promedio la diferencia entre el peso mayor y el peso menor es constante (es decir, no depende del peso del huevo menor observado), haremos una prueba de hipótesis. 
+
+
+
+### III. Nueva observación (nidada). ¿Los huevos provienes de pinguinos Macaroni?
+
+
+Se observa el peso de los huevos de una nueva nidada, observándose un peso de 70 y 145 gramos. Usando un intervalo de confianza del 95%, veremos si la nidada de huevos sí proviene de pinguinos Macaroni. 
+
+
+
+```{r, echo=FALSE}
+#cálculo del valor para un peso de 70
+nuevo_y<-b0+b1*70
+```
+
+Si tomamos en cuenta la recta de regresión anterior, podemos ver que $y_i=\hat{\beta_0}+\hat{\beta_1}x_i$ = `r b0` + `r b1` *(70)= `r nuevo_y`. Éste valor se ve alejado de los 145 gramos del huevo más grande encontrado. En el siguiente Cuadro se muestran los intervalos de confianza de los parámetros al 95% de confianza. 
+
+
+
+```{r, echo=FALSE}
+CI_b0<-confint(fit, level = 0.95)[1, ]
+CI_b1<-confint(fit, level = 0.95)[2, ]
+CI_b0_low<-CI_b0[1]
+CI_b0_up<-CI_b0[2]
+CI_b1_low<-CI_b1[1]
+CI_b1_up<-CI_b1[2]
+
+#stargazer(CI_b0)
+```
+
+\begin{table}[!htbp] \centering 
+  \caption{} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}} cccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+Constante & ($\beta_0$) & Pendiente & ($\beta_1$) \\ 
+\hline \\[-1.8ex] 
+2.5 \% & 97.5\% & 2.5 \% & 97.5 \% \\ 
+\hline \\[-1.8ex] 
+$17.2$ & $54.2$ & $0.969$ & $1.369$ \\ 
+\hline \\[-1.8ex] 
+\end{tabular} 
+\end{table} 
+
+
+
+```{r, echo=FALSE}
+new.dat <- data.frame(x=70)
+predict<-predict(fit, newdata = new.dat, interval = 'confidence') # interval = 'prediction' is an option.
+#predict[3]
+```
+
+
+Al 95% de confianza, podemos predecir que el valor del huevo más grande debería estar entre el valor `r predict[2]` y el valor `r predict[3]` de acuerdo con un intervalo de confianza al rededor de la recta de regresión. El valor de 145 gramos no cae dentro del intervalo, por lo que podríamos concluir que la nueva observación no corresponde a los huevos de los pingüinos Macaroni, de acuerdo con el modelo planteado.En la siguiente Gráfica podemos observar este intervalo al rededor de la recta de regresión $\hat{y}_h \pm t_{\alpha / 2, n - 2} (s.e.)_y$ donde $(s.e.)_y = \sqrt{\frac{\sum^n_{i=1} (y_i - \hat{y})^2}{n - 2}} \sqrt{\frac{1}{n} + \frac{(x - \bar{x})^2}{\sum^n_{i=1} (x_i - \bar{x})^2}}$.  
+
+
+
+```{r, echo=FALSE, }
+ggplot(Datos6, aes(x=x, y=y)) + 
+  geom_point(color='#2980B9', size = 2) + 
+  geom_smooth(formula = y ~ x, method = "lm", se = TRUE, level=0.95,color='#2C3E50')+ theme_bw()
+```
+
+
+
+
+
+
+
+
+
+
 
