@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-## 1. Regresión a través del origen.
+## 1. Regresión a través del origen. 
 
 $$y_i=\beta x_i+\xi_i \quad i: 1, \ldots, n$$
 
@@ -32,4 +32,11 @@ $$
 & =\operatorname{Var}\left(\frac{\sum X_i\left(\beta X_i+\xi_i\right)}{\sum X_i{ }^2}\right)
 \end{aligned}
 $$
+
+Continúa....
+
+```{r}
+5+5
+```
+
 
