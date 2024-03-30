@@ -11,5 +11,33 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## 3. Expresión alternativa para R^2
 
+Considere el coeficiente de correlación muestral o de Pearson para dos variables X y Y :
 
+$$r_{x y}=\frac{\sum_{i=1}^n\left(x_i-\bar{X}\right)\left(y_i-\bar{Y}\right)}{\left(\sum_{i=1}^n\left(x_i-\bar{X}\right)^2 \sum_{i=1}^n\left(y_i-\bar{Y}\right)^2\right)^{1 / 2}}$$.
+
+Considere el modelo de regresión
+
+$$y_i=\beta_0+\beta_1 x_i+\varepsilon_i$$.
+
+a. Demuestre que:
+
+$$ R^2 = r_{xy}^2 $$
+
+b. Demuestre que $t^*=t$, donde $t$ es la estadística usada para contrastar " $H_0: \beta_1=0$ vs $H_1: \beta_1 \neq 0$ ":
+$$
+t=\frac{\widehat{\beta}_1}{\sqrt{\sum_{i=1}^n\left(x_i-\bar{X}\right)^2}} .
+$$
+
+Por otra parte, $t^*=\frac{r_{x y} \sqrt{n-2}}{\sqrt{1-r_{x y}^2}}$ es la estadística usada para contrastar " $H_0: \rho=0$ vs $H_a: \rho \neq 0$ " cuando $(X, Y)$ sigue una distribución normal bivariada con coeficiente de correlación $\rho=\rho_{x y}$.
+
+
+\textcolor{red}{SOLUCIÓN a.}
+
+Recordemos que: $R^2=\frac{\sum_{i=1}^n\left(\hat{y}_i-\bar{y}\right)^2}{\sum_{i=1}^n\left(y_i-\hat{y}\right)^2}=\frac{S C R}{S C T}$
+
+Y por la expresión (77) de las notas sabemos que: 
+
+$$\begin{aligned} 
+SCR = \hat{\beta}_1^2 S S_x & =\left(\frac{\sum_{i=1}^n\left(x_i-\bar{x}\right)\left(y_i-\bar{y}\right)}{\sum_{i=1}^n\left(x_i-\bar{x}\right)^2}\right)^2 \cdot \sum_{i=1}^n\left(x_i-\bar{x}\right)^2 \\ & =\frac{\left(\sum_{i=1}^n\left(x_i-\bar{x}\right)\left(y_i-\bar{y}\right)\right)^2}{\sum_{i=1}^n\left(x_i-\bar{x}\right)^2}
+\end{aligned}$$
 
