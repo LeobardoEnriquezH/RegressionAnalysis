@@ -10,7 +10,33 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-## 1. Regresión a través del origen.
+## 1. Regresión a través del origen. 
 
+$$y_i=\beta x_i+\xi_i \quad i: 1, \ldots, n$$
+
+donde $\xi_1, \ldots, \varepsilon_n$ son v.a.i talque $\xi_i \sim N\left(0, \frac{\sigma^2}{w_i}\right)$ $\forall i=1, \ldots, n$
+Suponiendo $\sigma^2$ conocida y $w_i=\frac{1}{x_i^2} \quad i=1, \ldots, n$
+I)
+$$
+\begin{aligned}
+& \sum_{i=1}^n \varepsilon_i^2=\sum_{i=1}^n\left(y_i-\beta x_i\right)^2 \\
+& \frac{d}{d \beta}=2 \sum_{i=1}^n\left(y_i-\beta x_i\right)\left(-x_i\right)=0 \\
+& \rightarrow \sum_{i=1}^n\left(y_i-\beta x_i\right)\left(-x_i\right)=0 \rightarrow \sum_{i=1}^n y_i\left(-x_i\right)+\sum_{i=1}^n \beta x_i^2=0 \\
+& \therefore \hat{\beta}=\frac{\sum_{i=1}^n y_i x_i}{\sum_{i=1}^n x_i^2}
+\end{aligned}
+$$
+II) $\operatorname{Var}(\hat{\beta})$
+$$
+\begin{aligned}
+\operatorname{Var}(\hat{\beta}) & =\operatorname{Var}\left(\frac{\sum Y_i X_i}{\sum X_i{ }^2}\right) \\
+& =\operatorname{Var}\left(\frac{\sum X_i\left(\beta X_i+\xi_i\right)}{\sum X_i{ }^2}\right)
+\end{aligned}
+$$
+
+Continúa....
+
+```{r}
+5+5
+```
 
 
