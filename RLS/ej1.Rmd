@@ -45,11 +45,11 @@ $$
 \end{aligned}
 $$
 III)
-Veamos que $\hat{\beta}$ es estimator lineal
+Veamos que $\hat{\beta}$ es estimador lineal
 $$
 \begin{aligned}
 & \hat{B}=\frac{\sum X_i Y_i}{\sum_{i=1}^n X_i^2} \quad \text { Sea } \quad c_i=\frac{X_i}{\sum X_i{ }^2} \\
-& \rightarrow \hat{B}=\sum_{i=1}^n C_i Y_i \quad \therefore \text { es estimator lineal }
+& \rightarrow \hat{B}=\sum_{i=1}^n C_i Y_i \quad \therefore \text { es estimador lineal }
 \end{aligned}
 $$
 
