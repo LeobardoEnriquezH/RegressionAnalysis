@@ -14,8 +14,10 @@ knitr::opts_chunk$set(echo = TRUE)
 
 $$y_i=\beta x_i+\xi_i \quad i: 1, \ldots, n$$
 
-donde $\xi_1, \ldots, \varepsilon_n$ son v.a.i talque $\xi_i \sim N\left(0, \frac{\sigma^2}{w_i}\right)$ $\forall i=1, \ldots, n$
+donde $\xi_1, \ldots, \xi_n$ son v.a.i talque $\xi_i \sim N\left(0, \frac{\sigma^2}{w_i}\right)$ $\forall i=1, \ldots, n$
+
 Suponiendo $\sigma^2$ conocida y $w_i=\frac{1}{x_i^2} \quad i=1, \ldots, n$
+
 I)
 $$
 \begin{aligned}
