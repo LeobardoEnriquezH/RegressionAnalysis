@@ -32,11 +32,35 @@ $$
 & =\operatorname{Var}\left(\frac{\sum X_i\left(\beta X_i+\xi_i\right)}{\sum X_i{ }^2}\right)
 \end{aligned}
 $$
+II)
+$$
+\begin{aligned}
+& \operatorname{Var}(\hat{\beta})=\operatorname{Var}\left(\frac{\sum X_i^2 \beta+\sum X_i \xi_i}{\sum X_i^2}\right) \\
+& =\operatorname{Var}\left(\beta+\frac{\sum X_i \xi_i}{\sum X_i^2}\right)=\operatorname{Var}\left(\frac{\sum X_i \xi_i}{\sum X_i{ }^2}\right) \\
+& \operatorname{sea} C_i=\frac{X_i}{\sum X_i^2} \longrightarrow \operatorname{Var}(\hat{\beta})=\sum C_i \xi_i \\
+& \operatorname{Var}(\hat{\beta})=\left(\sum C_i\right)^2 \operatorname{Var}\left(\xi_i\right)=\left(\sum C_i\right)^2 \frac{\sigma^2}{\omega_i^2} \\
+& \therefore \operatorname{Var}(\hat{\beta})=\frac{\left(\sum X_i\right)^2 \sigma^2}{\left(\sum X_i^2\right)^3}
+\end{aligned}
+$$
+III)
+Veamos que $\hat{\beta}$ es estimator lineal
+$$
+\begin{aligned}
+& \hat{B}=\frac{\sum X_i Y_i}{\sum_{i=1}^n X_i^2} \quad \text { Sea } \quad c_i=\frac{X_i}{\sum X_i{ }^2} \\
+& \rightarrow \hat{B}=\sum_{i=1}^n C_i Y_i \quad \therefore \text { es estimator lineal }
+\end{aligned}
+$$
 
-Continúa....
+Ademas
+$$
+\begin{aligned}
+\mathbb{E}(\hat{\beta}) & =\mathbb{E}\left(\frac{\Sigma X_i^2 \beta+\sum X_i \xi_i}{\sum X_i^2}\right) \\
+& =\mathbb{E}(\beta)+\mathbb{E}\left(\frac{\sum X_i \xi_i}{\Sigma X_i^2}\right)=\beta+\frac{\sum X_i \mathbb{E}\left(\xi_i\right)}{\Sigma X_i^2}
+\end{aligned}
+$$
 
-```{r}
-5+5
-```
+Como $\varepsilon_i \sim N\left(0, \frac{\sigma^2}{w_i}\right)$ entrances $\mathbb{E}(\hat{\beta})=\beta$
+De esta forma como $\hat{\beta}$ es estimador lineal y ademas es insesgado, por el teorema Gauss - Markov
+$\hat{\beta}$ es el UMVUE
 
 
