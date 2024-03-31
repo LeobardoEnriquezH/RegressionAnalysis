@@ -12,10 +12,13 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## 1. Regresión a través del origen. 
 
+
 $$y_i=\beta x_i+\xi_i \quad i: 1, \ldots, n$$
 
-donde $\xi_1, \ldots, \varepsilon_n$ son v.a.i talque $\xi_i \sim N\left(0, \frac{\sigma^2}{w_i}\right)$ $\forall i=1, \ldots, n$
+donde $\xi_1, \ldots, \xi_n$ son v.a.i talque $\xi_i \sim N\left(0, \frac{\sigma^2}{w_i}\right)$ $\forall i=1, \ldots, n$
+
 Suponiendo $\sigma^2$ conocida y $w_i=\frac{1}{x_i^2} \quad i=1, \ldots, n$
+
 I)
 $$
 \begin{aligned}
@@ -32,7 +35,7 @@ $$
 & =\operatorname{Var}\left(\frac{\sum X_i\left(\beta X_i+\xi_i\right)}{\sum X_i{ }^2}\right)
 \end{aligned}
 $$
-II)
+
 $$
 \begin{aligned}
 & \operatorname{Var}(\hat{\beta})=\operatorname{Var}\left(\frac{\sum X_i^2 \beta+\sum X_i \xi_i}{\sum X_i^2}\right) \\
@@ -43,11 +46,11 @@ $$
 \end{aligned}
 $$
 III)
-Veamos que $\hat{\beta}$ es estimator lineal
+Veamos que $\hat{\beta}$ es estimador lineal
 $$
 \begin{aligned}
 & \hat{B}=\frac{\sum X_i Y_i}{\sum_{i=1}^n X_i^2} \quad \text { Sea } \quad c_i=\frac{X_i}{\sum X_i{ }^2} \\
-& \rightarrow \hat{B}=\sum_{i=1}^n C_i Y_i \quad \therefore \text { es estimator lineal }
+& \rightarrow \hat{B}=\sum_{i=1}^n C_i Y_i \quad \therefore \text { es estimador lineal }
 \end{aligned}
 $$
 
