@@ -34,7 +34,7 @@ $$
 & =\operatorname{Var}\left(\frac{\sum X_i\left(\beta X_i+\xi_i\right)}{\sum X_i{ }^2}\right)
 \end{aligned}
 $$
-II)
+
 $$
 \begin{aligned}
 & \operatorname{Var}(\hat{\beta})=\operatorname{Var}\left(\frac{\sum X_i^2 \beta+\sum X_i \xi_i}{\sum X_i^2}\right) \\
