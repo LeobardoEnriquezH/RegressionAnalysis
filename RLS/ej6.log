@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.12) (preloaded format=pdflatex 2023.1.15)  28 MAR 2024 19:46
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.12) (preloaded format=pdflatex 2023.1.15)  8 APR 2024 21:35
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -264,58 +264,27 @@ Package graphics Info: Driver file: pdftex.def on input line 107.
 )
 \Gin@req@height=\dimen159
 \Gin@req@width=\dimen160
-) (C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/generic/babel\babel.sty
-Package: babel 2022/12/26 3.84 The Babel package
-\babel@savecnt=\count277
-\U@D=\dimen161
-\l@unhyphenated=\language79
-
-(C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/generic/babel\txtbabel.def
-)
-\bbl@readstream=\read2
-\bbl@dirlevel=\count278
-*************************************
-* Local config file bblopts.cfg used
-*
-(C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/latex/arabi\bblopts.cfg
-File: bblopts.cfg 2005/09/08 v0.1 add Arabic and Farsi to "declared" options of
- babel
-)
-(C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/latex/babel-spanish\spanis
-h.ldf
-Language: spanish.ldf 2021/05/27 v5.0q Spanish support from the babel system
-\es@quottoks=\toks26
-\es@quotdepth=\count279
-Package babel Info: Making " an active character on input line 570.
-Package babel Info: Making . an active character on input line 675.
-Package babel Info: Making < an active character on input line 722.
-Package babel Info: Making > an active character on input line 722.
-))
-(C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/generic/babel/locale/es\ba
-bel-spanish.tex
-Package babel Info: Importing font and identification data for spanish
-(babel)             from babel-es.ini. Reported on input line 11.
 )
 (C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/latex/booktabs\booktabs.st
 y
 Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
-\heavyrulewidth=\dimen162
-\lightrulewidth=\dimen163
-\cmidrulewidth=\dimen164
-\belowrulesep=\dimen165
-\belowbottomsep=\dimen166
-\aboverulesep=\dimen167
-\abovetopsep=\dimen168
-\cmidrulesep=\dimen169
-\cmidrulekern=\dimen170
-\defaultaddspace=\dimen171
-\@cmidla=\count280
-\@cmidlb=\count281
-\@aboverulesep=\dimen172
-\@belowrulesep=\dimen173
-\@thisruleclass=\count282
-\@lastruleclass=\count283
-\@thisrulewidth=\dimen174
+\heavyrulewidth=\dimen161
+\lightrulewidth=\dimen162
+\cmidrulewidth=\dimen163
+\belowrulesep=\dimen164
+\belowbottomsep=\dimen165
+\aboverulesep=\dimen166
+\abovetopsep=\dimen167
+\cmidrulesep=\dimen168
+\cmidrulekern=\dimen169
+\defaultaddspace=\dimen170
+\@cmidla=\count277
+\@cmidlb=\count278
+\@aboverulesep=\dimen171
+\@belowrulesep=\dimen172
+\@thisruleclass=\count279
+\@lastruleclass=\count280
+\@thisrulewidth=\dimen173
 ) (C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/latex/tools\longtable.st
 y
 Package: longtable 2021-09-01 v4.17 Multi-page Table package (DPC)
@@ -323,24 +292,24 @@ Package: longtable 2021-09-01 v4.17 Multi-page Table package (DPC)
 \LTright=\skip55
 \LTpre=\skip56
 \LTpost=\skip57
-\LTchunksize=\count284
-\LTcapwidth=\dimen175
+\LTchunksize=\count281
+\LTcapwidth=\dimen174
 \LT@head=\box54
 \LT@firsthead=\box55
 \LT@foot=\box56
 \LT@lastfoot=\box57
 \LT@gbox=\box58
-\LT@cols=\count285
-\LT@rows=\count286
-\c@LT@tables=\count287
-\c@LT@chunks=\count288
-\LT@p@ftn=\toks27
+\LT@cols=\count282
+\LT@rows=\count283
+\c@LT@tables=\count284
+\c@LT@chunks=\count285
+\LT@p@ftn=\toks26
 ) (C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/latex/tools\array.sty
 Package: array 2022/03/10 v2.5f Tabular extension package (FMi)
-\col@sep=\dimen176
+\col@sep=\dimen175
 \ar@mcellbox=\box59
-\extrarowheight=\dimen177
-\NC@list=\toks28
+\extrarowheight=\dimen176
+\NC@list=\toks27
 \extratabsurround=\skip58
 \backup@length=\skip59
 \ar@cellbox=\box60
@@ -349,31 +318,31 @@ Package: array 2022/03/10 v2.5f Tabular extension package (FMi)
 y
 Package: multirow 2021/03/15 v2.8 Span multiple rows of a table
 \multirow@colwidth=\skip60
-\multirow@cntb=\count289
+\multirow@cntb=\count286
 \multirow@dima=\skip61
-\bigstrutjot=\dimen178
+\bigstrutjot=\dimen177
 ) (C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/latex/wrapfig\wrapfig.st
 y
-\wrapoverhang=\dimen179
-\WF@size=\dimen180
-\c@WF@wrappedlines=\count290
+\wrapoverhang=\dimen178
+\WF@size=\dimen179
+\c@WF@wrappedlines=\count287
 \WF@box=\box61
-\WF@everypar=\toks29
+\WF@everypar=\toks28
 Package: wrapfig 2003/01/31  v 3.6
 ) (C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/latex/float\float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count291
-\float@exts=\toks30
+\c@float@type=\count288
+\float@exts=\toks29
 \float@box=\box62
-\@float@everytoks=\toks31
+\@float@everytoks=\toks30
 \@floatcapt=\box63
 )
 (C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/latex/colortbl\colortbl.st
 y
 Package: colortbl 2022/06/20 v1.0f Color table columns (DPC)
-\everycr=\toks32
+\everycr=\toks31
 \minrowclearance=\skip62
-\rownum=\count292
+\rownum=\count289
 )
 (C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/latex/pdflscape\pdflscape.
 sty
@@ -394,27 +363,27 @@ Package: tabu 2019/01/11 v2.9 - flexible LaTeX tabulars (FC+tabu-fixed)
 y
 Package: varwidth 2009/03/30 ver 0.92;  Variable-width minipages
 \@vwid@box=\box64
-\sift@deathcycles=\count293
-\@vwid@loff=\dimen181
-\@vwid@roff=\dimen182
+\sift@deathcycles=\count290
+\@vwid@loff=\dimen180
+\@vwid@roff=\dimen181
 )
-\c@taburow=\count294
-\tabu@nbcols=\count295
-\tabu@cnt=\count296
-\tabu@Xcol=\count297
-\tabu@alloc=\count298
-\tabu@nested=\count299
-\tabu@target=\dimen183
-\tabu@spreadtarget=\dimen184
-\tabu@naturalX=\dimen185
-\tabucolX=\dimen186
-\tabu@Xsum=\dimen187
-\extrarowdepth=\dimen188
-\abovetabulinesep=\dimen189
-\belowtabulinesep=\dimen190
-\tabustrutrule=\dimen191
-\tabu@thebody=\toks33
-\tabu@footnotes=\toks34
+\c@taburow=\count291
+\tabu@nbcols=\count292
+\tabu@cnt=\count293
+\tabu@Xcol=\count294
+\tabu@alloc=\count295
+\tabu@nested=\count296
+\tabu@target=\dimen182
+\tabu@spreadtarget=\dimen183
+\tabu@naturalX=\dimen184
+\tabucolX=\dimen185
+\tabu@Xsum=\dimen186
+\extrarowdepth=\dimen187
+\abovetabulinesep=\dimen188
+\belowtabulinesep=\dimen189
+\tabustrutrule=\dimen190
+\tabu@thebody=\toks32
+\tabu@footnotes=\toks33
 \tabu@box=\box65
 \tabu@arstrutbox=\box66
 \tabu@hleads=\box67
@@ -441,20 +410,20 @@ Package: trimspaces 2009/09/17 v1.1 Trim spaces around a token list
 \UL@box=\box70
 \UL@hyphenbox=\box71
 \UL@skip=\skip65
-\UL@hook=\toks35
-\UL@height=\dimen192
-\UL@pe=\count300
-\UL@pixel=\dimen193
+\UL@hook=\toks34
+\UL@height=\dimen191
+\UL@pe=\count297
+\UL@pixel=\dimen192
 \ULC@box=\box72
 Package: ulem 2019/11/18
-\ULdepth=\dimen194
+\ULdepth=\dimen193
 )
 (C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/latex/makecell\makecell.st
 y
 Package: makecell 2009/08/03 V0.1e Managing of Tab Column Heads and Cells
-\rotheadsize=\dimen195
-\c@nlinenum=\count301
-\TeXr@lab=\toks36
+\rotheadsize=\dimen194
+\c@nlinenum=\count298
+\TeXr@lab=\toks35
 )
 (C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/latex/bookmark\bookmark.st
 y
@@ -506,11 +475,11 @@ Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 titlestring.sty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
-\c@section@level=\count302
+\c@section@level=\count299
 )
-\@linkdim=\dimen196
-\Hy@linkcounter=\count303
-\Hy@pagecounter=\count304
+\@linkdim=\dimen195
+\Hy@linkcounter=\count300
+\Hy@pagecounter=\count301
 (C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\pd1enc.def
 File: pd1enc.def 2022-11-13 v7.00u Hyperref: PDFDocEncoding definition (HO)
 Now handling font encoding PD1 ...
@@ -524,7 +493,7 @@ Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 sty
 Package: etexcmds 2019/12/15 v1.7 Avoid name clashes with e-TeX commands (HO)
 )
-\Hy@SavedSpaceFactor=\count305
+\Hy@SavedSpaceFactor=\count302
 (C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\puenc.def
 File: puenc.def 2022-11-13 v7.00u Hyperref: PDF Unicode definition (HO)
 Now handling font encoding PU ...
@@ -538,13 +507,13 @@ Package hyperref Info: Plain pages OFF on input line 4177.
 Package hyperref Info: Backreferencing OFF on input line 4182.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4410.
-\c@Hy@tempcnt=\count306
+\c@Hy@tempcnt=\count303
 (C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/latex/url\url.sty
 \Urlmuskip=\muskip17
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
 LaTeX Info: Redefining \url on input line 4748.
-\XeTeXLinkMargin=\dimen197
+\XeTeXLinkMargin=\dimen196
 (C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/generic/bitset\bitset.sty
 Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
 
@@ -553,9 +522,9 @@ alc.sty
 Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
 )
 ))
-\Fld@menulength=\count307
-\Field@Width=\dimen198
-\Fld@charsize=\dimen199
+\Fld@menulength=\count304
+\Field@Width=\dimen197
+\Fld@charsize=\dimen198
 Package hyperref Info: Hyper figures OFF on input line 6027.
 Package hyperref Info: Link nesting OFF on input line 6032.
 Package hyperref Info: Hyper index ON on input line 6035.
@@ -569,9 +538,9 @@ y
 Package: atbegshi-ltx 2021/01/10 v1.0c Emulation of the original atbegshi
 package with kernel methods
 )
-\Hy@abspage=\count308
-\c@Item=\count309
-\c@Hfootnote=\count310
+\Hy@abspage=\count305
+\c@Item=\count306
+\c@Hfootnote=\count307
 )
 Package hyperref Info: Driver (autodetected): hpdftex.
 
@@ -584,8 +553,8 @@ Package: atveryend-ltx 2020/08/19 v1.0a Emulation of the original atveryend pac
 kage
 with kernel methods
 )
-\Fld@listcount=\count311
-\c@bookmark@seq@number=\count312
+\Fld@listcount=\count308
+\c@bookmark@seq@number=\count309
 
 (C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/latex/rerunfilecheck\rerun
 filecheck.sty
@@ -603,11 +572,11 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 (C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/latex/bookmark\bkm-pdftex.
 def
 File: bkm-pdftex.def 2020-11-06 v1.29 bookmark driver for pdfTeX (HO)
-\BKM@id=\count313
+\BKM@id=\count310
 )) (C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/latex/xurl\xurl.sty
 Package: xurl 2022/01/09 v 0.10 modify URL breaks
 )
-LaTeX Font Info:    Trying to load font information for T1+lmr on input line 89
+LaTeX Font Info:    Trying to load font information for T1+lmr on input line 84
 .
 (C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/latex/lm\t1lmr.fd
 File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
@@ -615,47 +584,45 @@ File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 (C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-
 pdftex.def
 File: l3backend-pdftex.def 2022-10-26 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count314
+\l__color_backend_stack_int=\count311
 \l__pdf_internal_box=\box73
 ) (ej6.aux
-LaTeX Info: Redefining \. on input line 38.
-LaTeX Info: Redefining \% on input line 38.
 
 LaTeX Warning: Label `' multiply defined.
 
 )
 \openout1 = `ej6.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 89.
-LaTeX Font Info:    ... okay on input line 89.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 89.
-LaTeX Font Info:    ... okay on input line 89.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 89.
-LaTeX Font Info:    ... okay on input line 89.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 89.
-LaTeX Font Info:    ... okay on input line 89.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 89.
-LaTeX Font Info:    ... okay on input line 89.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 89.
-LaTeX Font Info:    ... okay on input line 89.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 89.
-LaTeX Font Info:    ... okay on input line 89.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 89.
-LaTeX Font Info:    ... okay on input line 89.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 89.
-LaTeX Font Info:    ... okay on input line 89.
-LaTeX Info: Redefining \microtypecontext on input line 89.
-Package microtype Info: Applying patch `item' on input line 89.
-Package microtype Info: Applying patch `toc' on input line 89.
-Package microtype Info: Applying patch `eqnum' on input line 89.
-Package microtype Info: Applying patch `footnote' on input line 89.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
+LaTeX Info: Redefining \microtypecontext on input line 84.
+Package microtype Info: Applying patch `item' on input line 84.
+Package microtype Info: Applying patch `toc' on input line 84.
+Package microtype Info: Applying patch `eqnum' on input line 84.
+Package microtype Info: Applying patch `footnote' on input line 84.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using protrusion set `basicmath'.
 Package microtype Info: Automatic font expansion enabled (level 2),
 (microtype)             stretch: 20, shrink: 20, step: 1, non-selected.
 Package microtype Info: Using default expansion set `alltext-nott'.
-LaTeX Info: Redefining \showhyphens on input line 89.
+LaTeX Info: Redefining \showhyphens on input line 84.
 Package microtype Info: No adjustment of tracking.
 Package microtype Info: No adjustment of interword spacing.
 Package microtype Info: No adjustment of character kerning.
@@ -667,17 +634,17 @@ File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman
 (C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf
 .mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count315
-\scratchdimen=\dimen256
+\scratchcounter=\count312
+\scratchdimen=\dimen199
 \scratchbox=\box74
-\nofMPsegments=\count316
-\nofMParguments=\count317
-\everyMPshowfont=\toks37
-\MPscratchCnt=\count318
-\MPscratchDim=\dimen257
-\MPnumerator=\count319
-\makeMPintoPDFobject=\count320
-\everyMPtoPDFconversion=\toks38
+\nofMPsegments=\count313
+\nofMParguments=\count314
+\everyMPshowfont=\toks36
+\MPscratchCnt=\count315
+\MPscratchDim=\dimen256
+\MPnumerator=\count316
+\makeMPintoPDFobject=\count317
+\everyMPtoPDFconversion=\toks37
 )
 (C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopd
 f-base.sty
@@ -723,45 +690,43 @@ File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-LaTeX Info: Redefining \. on input line 89.
-LaTeX Info: Redefining \% on input line 89.
-Package hyperref Info: Link coloring OFF on input line 89.
-LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 9
-1.
+Package hyperref Info: Link coloring OFF on input line 84.
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 1
+07.
 (C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/latex/lm\ot1lmr.fd
 File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 9
-1.
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 1
+07.
 (C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/latex/lm\omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
-91.
+107.
 (C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/latex/lm\omslmsy.fd
 File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
-91.
+107.
 (C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/latex/lm\omxlmex.fd
 File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 91.
+(Font)              <10> on input line 107.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 91.
+(Font)              <7> on input line 107.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 91.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 91.
-
+(Font)              <5> on input line 107.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 107
+.
 (C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
 (C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/latex/microtype\mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 91.
-
+LaTeX Font Info:    Trying to load font information for U+msb on input line 107
+.
 (C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
@@ -769,50 +734,50 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 113.
+(Font)              <8> on input line 125.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 113.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 113.
-<ej6_files/figure-latex/unnamed-chunk-5-1.pdf, id=3, 469.755pt x 325.215pt>
+(Font)              <6> on input line 125.
+<ej6_files/figure-latex/unnamed-chunk-5-1.pdf, id=3, 433.62pt x 201.75375pt>
 File: ej6_files/figure-latex/unnamed-chunk-5-1.pdf Graphic file (type pdf)
 <use ej6_files/figure-latex/unnamed-chunk-5-1.pdf>
 Package pdftex.def Info: ej6_files/figure-latex/unnamed-chunk-5-1.pdf  used on 
-input line 160.
-(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+input line 157.
+(pdftex.def)             Requested size: 433.62555pt x 201.75632pt.
 [1
 
-{C:/Users/Leobardo/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}] [2 <./ej6
-_files/figure-latex/unnamed-chunk-5-1.pdf>]
-<ej6_files/figure-latex/unnamed-chunk-6-1.pdf, id=34, 469.755pt x 325.215pt>
+{C:/Users/Leobardo/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}]
+<ej6_files/figure-latex/unnamed-chunk-6-1.pdf, id=26, 433.62pt x 289.08pt>
 File: ej6_files/figure-latex/unnamed-chunk-6-1.pdf Graphic file (type pdf)
 <use ej6_files/figure-latex/unnamed-chunk-6-1.pdf>
 Package pdftex.def Info: ej6_files/figure-latex/unnamed-chunk-6-1.pdf  used on 
-input line 180.
-(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[3 <./ej6_files/figure-latex/unnamed-chunk-6-1.pdf>]
-<ej6_files/figure-latex/unnamed-chunk-12-1.pdf, id=46, 469.755pt x 325.215pt>
-File: ej6_files/figure-latex/unnamed-chunk-12-1.pdf Graphic file (type pdf)
-<use ej6_files/figure-latex/unnamed-chunk-12-1.pdf>
-Package pdftex.def Info: ej6_files/figure-latex/unnamed-chunk-12-1.pdf  used on
- input line 246.
-(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[4 <./ej6_files/figure-latex/unnamed-chunk-12-1.pdf>] (ej6.aux
-LaTeX Info: Redefining \. on input line 38.
-LaTeX Info: Redefining \% on input line 38.
+input line 177.
+(pdftex.def)             Requested size: 433.63878pt x 289.09251pt.
+[2 <./ej6_files/figure-latex/unnamed-chunk-5-1.pdf> <./ej6_files/figure-latex/u
+nnamed-chunk-6-1.pdf>]
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 2
+07.
+(C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/latex/lm\t1lmtt.fd
+File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
+<ej6_files/figure-latex/unnamed-chunk-16-1.pdf, id=41, 469.755pt x 325.215pt>
+File: ej6_files/figure-latex/unnamed-chunk-16-1.pdf Graphic file (type pdf)
+<use ej6_files/figure-latex/unnamed-chunk-16-1.pdf>
+Package pdftex.def Info: ej6_files/figure-latex/unnamed-chunk-16-1.pdf  used on
+ input line 265.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+[3] [4 <./ej6_files/figure-latex/unnamed-chunk-16-1.pdf>] (ej6.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 16385 strings out of 476406
- 267696 string characters out of 2788151
- 1865787 words of memory out of 3000000
- 36354 multiletter control sequences out of 15000+600000
- 560095 words of font info for 110 fonts, out of 8000000 for 9000
+ 15057 strings out of 476406
+ 245316 string characters out of 2788151
+ 1870787 words of memory out of 3000000
+ 35045 multiletter control sequences out of 15000+600000
+ 556233 words of font info for 105 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 74i,11n,81p,1002b,463s stack positions out of 10000i,1000n,20000p,200000b,80000s
+ 74i,11n,81p,1002b,443s stack positions out of 10000i,1000n,20000p,200000b,80000s
 {C:/Users/Leobardo/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-rm.enc
 }{C:/Users/Leobardo/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-mathit.
 enc}{C:/Users/Leobardo/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-math
@@ -825,17 +790,21 @@ lic/lm/lmex10.pfb><C:/Users/Leobardo/AppData/Local/Programs/MiKTeX/fonts/type1/
 public/lm/lmmi10.pfb><C:/Users/Leobardo/AppData/Local/Programs/MiKTeX/fonts/typ
 e1/public/lm/lmmi5.pfb><C:/Users/Leobardo/AppData/Local/Programs/MiKTeX/fonts/t
 ype1/public/lm/lmmi7.pfb><C:/Users/Leobardo/AppData/Local/Programs/MiKTeX/fonts
-/type1/public/lm/lmr10.pfb><C:/Users/Leobardo/AppData/Local/Programs/MiKTeX/fon
-ts/type1/public/lm/lmr12.pfb><C:/Users/Leobardo/AppData/Local/Programs/MiKTeX/f
-onts/type1/public/lm/lmr17.pfb><C:/Users/Leobardo/AppData/Local/Programs/MiKTeX
-/fonts/type1/public/lm/lmr5.pfb><C:/Users/Leobardo/AppData/Local/Programs/MiKTe
-X/fonts/type1/public/lm/lmr7.pfb><C:/Users/Leobardo/AppData/Local/Programs/MiKT
-eX/fonts/type1/public/lm/lmri10.pfb><C:/Users/Leobardo/AppData/Local/Programs/M
-iKTeX/fonts/type1/public/lm/lmsy10.pfb><C:/Users/Leobardo/AppData/Local/Program
-s/MiKTeX/fonts/type1/public/lm/lmsy7.pfb>
-Output written on ej6.pdf (4 pages, 266265 bytes).
+/type1/public/lm/lmmi8.pfb><C:/Users/Leobardo/AppData/Local/Programs/MiKTeX/fon
+ts/type1/public/lm/lmr10.pfb><C:/Users/Leobardo/AppData/Local/Programs/MiKTeX/f
+onts/type1/public/lm/lmr5.pfb><C:/Users/Leobardo/AppData/Local/Programs/MiKTeX/
+fonts/type1/public/lm/lmr6.pfb><C:/Users/Leobardo/AppData/Local/Programs/MiKTeX
+/fonts/type1/public/lm/lmr7.pfb><C:/Users/Leobardo/AppData/Local/Programs/MiKTe
+X/fonts/type1/public/lm/lmr8.pfb><C:/Users/Leobardo/AppData/Local/Programs/MiKT
+eX/fonts/type1/public/lm/lmri8.pfb><C:/Users/Leobardo/AppData/Local/Programs/Mi
+KTeX/fonts/type1/public/lm/lmsy10.pfb><C:/Users/Leobardo/AppData/Local/Programs
+/MiKTeX/fonts/type1/public/lm/lmsy6.pfb><C:/Users/Leobardo/AppData/Local/Progra
+ms/MiKTeX/fonts/type1/public/lm/lmsy7.pfb><C:/Users/Leobardo/AppData/Local/Prog
+rams/MiKTeX/fonts/type1/public/lm/lmsy8.pfb><C:/Users/Leobardo/AppData/Local/Pr
+ograms/MiKTeX/fonts/type1/public/lm/lmtt10.pfb>
+Output written on ej6.pdf (4 pages, 305089 bytes).
 PDF statistics:
- 146 PDF objects out of 1000 (max. 8388607)
+ 166 PDF objects out of 1000 (max. 8388607)
  13 named destinations out of 1000 (max. 500000)
- 24624 words of extra memory for PDF output out of 24883 (max. 10000000)
+ 22576 words of extra memory for PDF output out of 24883 (max. 10000000)
 

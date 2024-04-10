@@ -1,15 +1,10 @@
 ---
-title: "Ejercicio 6"
-author: "Equipo"
-date: "2024-03-26"
-output:
-  pdf_document: default
-  html_document:
-    df_print: paged
-header-includes:
-- \usepackage[utf8]{inputenc}
-- \usepackage[spanish]{babel}
+title: ""
+author: ""
+date: ""
+output: pdf_document
 ---
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -19,6 +14,17 @@ knitr::opts_chunk$set(echo = TRUE)
 library(kableExtra)
 library(tidyverse)
 library(stargazer)
+library(performance)
+library(flextable)
+library(see)
+library(lmtest)
+library(qqplotr)
+library(ggrepel)
+library(patchwork)
+library(boot)
+library(rempsyc)
+library(report)
+library(multcomp)
 ```
 
 
@@ -58,7 +64,7 @@ b1<-fit$coefficients[2]
 ```
 
 
-En el siguiente Cuadro podemos observar que el p-valor asociado a la prueba $F$ es de menor a 0.05, por lo que se rechaza la hipótesis nula de que los coeficientes asociados a las variables explicativas son cero. En este caso, como hay una solo variable explicativa, esta prueba coincide con la prueba $t-student$ individual para la $\beta_1$= `r b1`, que también rechaza la hipótesis nula de que $\beta_1=0$. 
+En el siguiente Cuadro podemos observar que el p-valor asociado a la prueba $F$ es de menor a 0.05, por lo que se rechaza la hipótesis nula de que los coeficientes asociados a las variables explicativas son cero contra la alternativa de que al menos un coeficiente estimado es distinto de cero. En este caso, como hay una solo variable explicativa, esta prueba coincide con la prueba $t-student$ individual para la $\beta_1$= `r b1`, que también rechaza la hipótesis nula de que $\beta_1=0$ contra la alternativa de que $\beta_1 \neq0$. 
 
 
 
@@ -67,6 +73,7 @@ En el siguiente Cuadro podemos observar que el p-valor asociado a la prueba $F$ 
 \begin{table}[!htbp] \centering 
   \caption{} 
   \label{} 
+\footnotesize
 \begin{tabular}{@{\extracolsep{5pt}}lc} 
 \\[-1.8ex]\hline 
 \hline \\[-1.8ex] 
@@ -101,7 +108,7 @@ La Gráfica siguiente muestra las observaciones y la recta ajustada, parece ser 
 
 
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.width = 6, fig.height = 2.8}
 ggplot(Datos6, aes(x, y)) +
   geom_point() +
   geom_abline(intercept = b0, slope = b1) + 
@@ -112,43 +119,44 @@ En las siguientes Gráficas podemos observar  las pruebas gráficas para el cump
 
 
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.width = 6, fig.height = 4}
 par(mfrow = c(2, 2))
 plot(fit)
 ```
+
+
+
+```{r, echo=FALSE, warning=FALSE,  message=FALSE, fig.width = 3, fig.height = 2.8, include=FALSE}
+par(mfrow = c(2, 2))
+#####check_model() function of performance package: Graphs####
+
+# return a list of single plots
+diagnostic_plots <- plot(check_model(fit, panel = FALSE))
+# linearity
+diagnostic_plots[[2]]
+# normally distributed residuals
+diagnostic_plots[[5]] #6
+# homoscedasticiy - homogeneity of variance
+diagnostic_plots[[3]]
+# influential observations - outliers
+diagnostic_plots[[4]]
+
+
+```
+
 
 
 En el siguiente Cuadro se pueden observar las pruebas de Shapiro-Wilk, Breusch-Pagan y Durbin-Watson, en todos los casos el p-value asociado es mayor a 0.05, por lo que no hay evidencia para rechzar las hipótesis nulas de normalidad, homoscedasticidad y no autocorrelación, respectivamente. 
 
 
 
-```{r, echo=FALSE, warning=FALSE, include=FALSE, message=FALSE}
-pkgs <- c(
-  "flextable", "performance", "see", "lmtest", "ggplot2",
-  "qqplotr", "ggrepel", "patchwork", "boot", "rempsyc", "report"
-)
-#install.packages(pkgs)
-
-library(flextable)
-library(performance)
-library(see)
-library(lmtest)
-library(qqplotr)
-library(ggrepel)
-library(patchwork)
-library(boot)
-library(rempsyc)
-library(report)
-
-#check_model(fit) #check_model() function of the performance package
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+#nice_assumptions from package rempsyc
 
 table_tests<-nice_assumptions(fit)
 table_tests_fin<-subset(table_tests, select = -c(Model,Diagnostic) )
-
-set_flextable_defaults(fonts_ignore=TRUE)
-table_nice<-nice_table(nice_assumptions(fit), col.format.p = 2:4,stars=TRUE, short=TRUE, width=0.5,   
-                       note = c("* p < .05, ** p < .01, *** p < .001"))
 ```
+
 
 
 ```{r, echo=FALSE}
@@ -164,7 +172,33 @@ kable_styling(bootstrap_options = "striped", full_width = F)
 
 ### II. Prueba de hipótesis. Diferencia entre peso mayor y menor como constante. 
 
-Ante la sospecha de que en promedio la diferencia entre el peso mayor y el peso menor es constante (es decir, no depende del peso del huevo menor observado), haremos una prueba de hipótesis. 
+Ante la sospecha de que en promedio la diferencia entre el peso mayor y el peso menor es constante (es decir, no depende del peso del huevo menor observado), haremos una prueba de hipótesis. En primer lugar notemos que esto implicaría $H_0: \beta_1=0$, contra la alternativa $\beta_1\neq0$, y notamos en el Cuadro anterior de los coeficientes estimados del modelo, que se rechaza $H_0: \beta_1=0$, con la prueba t - student, a favor de la hipótesis alternativa $H_a: \beta_1\neq0$. Esto mismo es posible observarlo con el aprueba ``Simultaneous Tests for General Linear Hypotheses`` que se muestra a continuación, donde se rechaza esta hipótesis nula. 
+
+
+```{r, echo=FALSE}
+# Pruebas de hipótesis para beta1
+Matriz=matrix(c(0,1), ncol=2, nrow=1)
+c=0
+#alternative: "two.sided" (default), "greater" or "less"
+prueba1=glht(fit, linfct=Matriz, rhs=c, alternative="two.sided")
+#summary(prueba1)
+```
+
+
+\begin{table}[!htbp] \centering
+\footnotesize
+\begin{tabular}{|lllll|}
+\hline
+\multicolumn{5}{|c|}{Simultaneous Tests for General Linear Hypotheses}                                                                                                \\ \hline
+\multicolumn{5}{|c|}{Fit: lm(formula = Y $\sim$x, data = Datos6)}                                                                                                    \\ \hline
+\multicolumn{1}{|l|}{Linear Hypotheses:}  & \multicolumn{1}{l|}{}         & \multicolumn{1}{l|}{}           & \multicolumn{1}{l|}{}                &                  \\ \hline
+\multicolumn{1}{|l|}{}                    & \multicolumn{1}{l|}{Estimate} & \multicolumn{1}{l|}{Std. Error} & \multicolumn{1}{l|}{t value}         & Pr(\textless{}t) \\ \hline
+\multicolumn{1}{|l|}{1 == 0} & \multicolumn{1}{l|}{1.16940}  & \multicolumn{1}{l|}{0.08842}     & \multicolumn{1}{l|}{-13.22}         & 3.35e-07*           \\ \hline
+\multicolumn{1}{|l|}{}                    & \multicolumn{1}{l|}{}         & \multicolumn{1}{l|}{}           & \multicolumn{1}{l|}{}                &                  \\ \hline
+\multicolumn{1}{|l|}{Signif. codes:}      & \multicolumn{4}{l|}{0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1}                                                       \\ \hline
+\multicolumn{5}{|l|}{(Adjusted p values reported -- single-step method)}                                                                                              \\ \hline
+\end{tabular}
+\end{table}
 
 
 
@@ -201,7 +235,7 @@ CI_b1_up<-CI_b1[2]
 \begin{tabular}{@{\extracolsep{5pt}} cccc} 
 \\[-1.8ex]\hline 
 \hline \\[-1.8ex] 
-Constante & ($\beta_0$) & Pendiente & ($\beta_1$) \\ 
+Constante ($\beta_0$) &  & Pendiente ($\beta_1$) &  \\ 
 \hline \\[-1.8ex] 
 2.5 \% & 97.5\% & 2.5 \% & 97.5 \% \\ 
 \hline \\[-1.8ex] 
@@ -212,6 +246,24 @@ $17.2$ & $54.2$ & $0.969$ & $1.369$ \\
 
 
 
+
+```{r, echo=FALSE}
+#Intervalos para la esperanza de Y dado un valor x. Aquí x=65
+newdata <- data.frame(x = c(70) )
+Eydadx65 <- predict(fit, newdata, interval = "confidence", level = 0.95)
+#head(Eydadx65)
+```
+
+
+```{r, echo=FALSE}
+MatZ0Z1=matrix(c(1,70), ncol=2, nrow=1)
+prueba2=glht(fit, linfct=MatZ0Z1)
+### Intervalo de confianza 
+#confint(prueba2, level=.95)
+```
+
+
+
 ```{r, echo=FALSE}
 new.dat <- data.frame(x=70)
 predict<-predict(fit, newdata = new.dat, interval = 'confidence') # interval = 'prediction' is an option.
@@ -219,14 +271,18 @@ predict<-predict(fit, newdata = new.dat, interval = 'confidence') # interval = '
 ```
 
 
+
 Al 95% de confianza, podemos predecir que el valor del huevo más grande debería estar entre el valor `r predict[2]` y el valor `r predict[3]` de acuerdo con un intervalo de confianza al rededor de la recta de regresión. El valor de 145 gramos no cae dentro del intervalo, por lo que podríamos concluir que la nueva observación no corresponde a los huevos de los pingüinos Macaroni, de acuerdo con el modelo planteado.En la siguiente Gráfica podemos observar este intervalo al rededor de la recta de regresión $\hat{y}_h \pm t_{\alpha / 2, n - 2} (s.e.)_y$ donde $(s.e.)_y = \sqrt{\frac{\sum^n_{i=1} (y_i - \hat{y})^2}{n - 2}} \sqrt{\frac{1}{n} + \frac{(x - \bar{x})^2}{\sum^n_{i=1} (x_i - \bar{x})^2}}$.  
 
 
 
 ```{r, echo=FALSE, }
+#method: lm, glm, gam, loess, rlm
 ggplot(Datos6, aes(x=x, y=y)) + 
   geom_point(color='#2980B9', size = 2) + 
-  geom_smooth(formula = y ~ x, method = "lm", se = TRUE, level=0.95,color='#2C3E50')+ theme_bw()
+  geom_smooth(formula = y ~ x, method = "lm", se = TRUE, level=0.95,color='#2C3E50')+ theme_bw()+
+  annotate("point", x = 70, y = 145, colour = "red")
+  
 ```
 
 

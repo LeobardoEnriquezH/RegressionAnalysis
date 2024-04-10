@@ -36,7 +36,6 @@ observamos que $\mathbb{E}(Y ; z=-1)=\mathbb{E}(y)=\mu_y$
 
 Es decir, $\mu_x=\beta_0+\beta_1$ y $\mu_y=\beta_0-\beta_1$,
 
-
 II. Conocemos los estimadores:
 $$
 \hat{\beta}_0=\bar{w}-\hat{\beta}_1 \bar{z}  \text { y }  \hat{\beta}_1=\frac{\sum_{i=1}^{n+m}\left(z_i-\bar{z}\right)\left(w_i-\bar{w}\right)}{\sum_{i=1}^{n+m}\left(z_i-\bar{z}\right)^2}
