@@ -11,5 +11,57 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## 4. Problema Anova. Equivalencia con la estimación considerando dos poblaciones normales.
 
+Sea $X_1, \ldots, X_n$ una m.a de la distribución $N\left(\mu_x, \sigma^2\right)$ y $Y_1, \ldots, Y_m$ una m.a de la distribución $N\left(\mu_y, \sigma^2\right)$ independientes entre si,
+sea $Z=1$ si la observacion es de la poblacion con distribucion $N\left(\mu_x, \sigma^2\right)$ y $Z=-1$ si la poblacion es de la poblacion con distribucion $N\left(\mu_y, \sigma^2\right)$
 
+I. Consideramos el modelo de regresion lineal simple:
+$$
+w_j=\beta_0+\beta_1 z_j+\varepsilon_j
+$$
+con $\varepsilon_1, \ldots, \varepsilon_{n+m}$ variables independientes talque $\varepsilon_j \sim N\left(0, \sigma^2\right) \quad \forall j=1, \ldots, n+m$ 
+
+Entonces:
+$$
+\mathbb{E}(w ; z=1)=\mathbb{E}(x ; z=1)=\beta_0+\beta_1
+$$
+
+observamos que $\mathbb{E}(x ; z=1)=\mathbb{E}(x)=\mu_x$
+
+Por otro lado tenemos:
+$$
+\mathbb{E}(w ; z=-1)=\mathbb{E}(y ; z=-1)=\beta_0-\beta_1
+$$
+
+observamos que $\mathbb{E}(Y ; z=-1)=\mathbb{E}(y)=\mu_y$
+
+Es decir, $\mu_x=\beta_0+\beta_1$ y $\mu_y=\beta_0-\beta_1$,
+
+
+II. Conocemos los estimadores:
+$$
+\hat{\beta}_0=\bar{w}-\hat{\beta}_1 \bar{z}  \text { y }  \hat{\beta}_1=\frac{\sum_{i=1}^{n+m}\left(z_i-\bar{z}\right)\left(w_i-\bar{w}\right)}{\sum_{i=1}^{n+m}\left(z_i-\bar{z}\right)^2}
+$$
+
+Con esto podemos obtener:
+a) $\hat{E}(w ; z=1)$
+como $Z=1$ entonces $w=x$ y $\bar{z}=1$, asi:
+$$
+\hat{\beta}_1=\frac{\sum_{i=1}^n\left(z_i-\bar{z}\right)\left(x_i-\bar{x}\right)}{\sum_{i=1}^n\left(z_i-\bar{z}\right)^2} \rightarrow \hat{\beta}_1=0
+$$
+
+$$
+\begin{array}{r}
+\text { y } \hat{\beta}_0=\bar{x}-\hat{\beta}_1 \bar{z}=\bar{x}-\hat{\beta}_1=\bar{x} \\
+\therefore \hat{\mathbb{E}}(W ; z=1)=\hat{\beta}_0+\hat{\beta}_1=\bar{x}
+\end{array}
+$$
+
+b) Como $Z=-1$ entonces $w=y$ y $\bar{z}=-1$, asi:
+$$
+\begin{aligned}
+& \hat{\beta}_1=\frac{\sum_{i=1}^m\left(z_i-\bar{z}\right)\left(y_i-\bar{y}\right)}{\sum_{i=1}^m\left(z_i-\bar{z}\right)^2} \longrightarrow \hat{\beta}_1=0 \\
+& y, \hat{\beta}_0=\bar{y}-\hat{\beta}_1=\bar{y}
+\quad \therefore \hat{\mathbb{E}}(W ; z=-1)=\hat{\beta}_0-\hat{\beta}_1=\bar{y}
+\end{aligned}
+$$
 
