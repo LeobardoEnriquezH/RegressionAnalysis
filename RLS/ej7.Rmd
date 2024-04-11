@@ -1,7 +1,7 @@
 ---
-title: "Ejercicio 7"
-author: "Equipo"
-date: "2024-03-26"
+title: ""
+author: ""
+date: ""
 output: pdf_document
 ---
 
@@ -9,7 +9,283 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+
+```{r, echo=FALSE, include=FALSE}
+library(kableExtra)
+library(tidyverse)
+library(stargazer)
+library(performance)
+library(flextable)
+library(see)
+library(lmtest)
+library(qqplotr)
+library(ggrepel)
+library(patchwork)
+library(boot)
+library(rempsyc)
+library(report)
+library(multcomp)
+```
+
+
 ## 7. Regresión lineal simple con datos de "performance".
+
+
+Consideraremos los datos en la base ``performance.csv`` y las variables: y = academic performance of the school (api00) y x = percentage of students receiving free meals (meals). Estos datos corresponden a una muestra aleatoria de 400 escuelas primarias en California, en donde por escuela se realizaron mediciones que tienen que ver con su desempeño en el año 2000. 
+
+```{r, echo=FALSE}
+datos7<-read_csv("performance.csv", show_col_types = FALSE)
+```
+
+
+### i) Regresión lineal simple y verificación de supuestos.
+
+Ajustaremos un modelo de regresión lineal simple del desempeño escolar (api00) en función del procentaje de estudiantes que recibieron desayunos gratuitos en las escuelas (meals). 
+
+```{r, echo=FALSE}
+modelo1<-lm(data=datos7, api00~meals)
+#summary(modelo1)
+#stargazer(modelo1)
+```
+
+
+\begin{table}[!htbp] \centering 
+  \caption{} 
+  \label{}
+\footnotesize
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-2} 
+\\[-1.8ex] & api00 \\ 
+\hline \\[-1.8ex] 
+ meals & $-$4.015$^{***}$ \\ 
+  & s.e.(0.097) \\ 
+  & p-value: <2e-16 \\ 
+  & \\ 
+ Constant & 889.783$^{***}$ \\ 
+  & (6.622) \\
+  & p-value: <2e-16 \\ 
+  & \\ 
+\hline \\[-1.8ex] 
+Observations & 400 \\ 
+R$^{2}$ & 0.811 \\ 
+Adjusted R$^{2}$ & 0.811 \\ 
+Residual Std. Error & 61.877 (df = 398) \\ 
+F Statistic & 1,710.691$^{***}$ (df = 1; 398); p-value: < 2.2e-16 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table}  
+ 
+ 
+
+En el siguiente Cuadro se pueden observar las pruebas de Shapiro-Wilk, Breusch-Pagan y Durbin-Watson, en el primer caso de la normalidad el p-value asociado es mayor a 0.05, por lo que no hay evidencia para rechzar las hipótesis nulas de normalidad, sin embargo hay problemas de homoscedasticidad y no autocorrelación. 
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+#nice_assumptions from package rempsyc
+
+table_tests<-nice_assumptions(modelo1)
+table_tests_fin<-subset(table_tests, select = -c(Model,Diagnostic) )
+```
+
+
+
+```{r, echo=FALSE}
+#nice_assumptions()
+#table_nice
+kable(t(table_tests_fin)) %>%
+kable_styling(bootstrap_options = "striped", full_width = F)
+
+```
+
+
+También podemos observar de forma gráfica estos resultados. 
+
+
+```{r, echo=FALSE, fig.width = 6, fig.height = 4, include=FALSE}
+par(mfrow = c(2, 2))
+plot(modelo1)
+```
+
+
+
+
+
+
+```{r, echo=FALSE, warning=FALSE,  message=FALSE, fig.width = 3, fig.height = 2}
+par(mfrow = c(2, 2))
+#####check_model() function of performance package: Graphs####
+
+# return a list of single plots
+diagnostic_plots <- plot(check_model(modelo1, panel = FALSE))
+# linearity
+diagnostic_plots[[2]]
+# normally distributed residuals
+diagnostic_plots[[5]] #6
+# homoscedasticiy - homogeneity of variance
+diagnostic_plots[[3]]
+# influential observations - outliers
+diagnostic_plots[[4]]
+
+
+```
+
+
+
+### ii) Ajuste de un mejor modelo que cumple los supuestos. 
+
+
+Debido a que con el primer modelo no se satisfacen los supuestos de homocedasticidad y no autocorrelación de los errores, procederemos a hacer algunas pruebas para corregir estos problemas. Haremos unas pruebas para ver qué transformación podría ser la adecuada para la variable dependiente e independiente. 
+
+
+
+```{r, echo=FALSE}
+bc<-car::powerTransform(modelo1)
+```
+
+
+
+```{r, echo=FALSE}
+datos7$meals2<-datos7$meals+1 #sumamos 1 porque hay un valor de 0 (no positivo)
+#car::boxTidwell(api00~meals2, data = datos7)
+```
+
+
+
+El resultado de la prueba ``Estimated transformation parameter `` para transformación de tipo BoxCox, para conocer el exponente de la variable dependiente, muestra que el valor es de `r bc[7]`. Esto sugiere elevar a un exponente de $3/2=1.5$ a la variable dependiente. Por otra parte, la prueba ``BoxTidwell`` para la tranformación de la variable independiente muestra un valor de $1.2132$. Sin embargo, primero trataremos de hacer cambios a la variable dependiente, ya que las transformaciones la dependiente es más complicado y lo haremos en caso de no encontrar un mejor modelo. Primero probaremos con la transformación logarítmica a la variable independiente.       
+
+
+```{r, echo=FALSE}
+modelo2<-lm(data=datos7, api00 ~ I(log(meals2)))
+summary(modelo2)
+```
+
+
+
+
+Las pruebas de cumplimiento de los supuestos. 
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+#nice_assumptions from package rempsyc
+
+table_tests<-nice_assumptions(modelo2)
+table_tests_fin<-subset(table_tests, select = -c(Model,Diagnostic) )
+```
+
+
+
+```{r, echo=FALSE}
+#nice_assumptions()
+#table_nice
+kable(t(table_tests_fin)) %>%
+kable_styling(bootstrap_options = "striped", full_width = F)
+
+```
+
+
+También podemos observar de forma gráfica estos resultados. 
+
+
+```{r, echo=FALSE, fig.width = 6, fig.height = 4}
+par(mfrow = c(2, 2))
+plot(modelo2)
+```
+
+
+
+
+
+
+```{r, echo=FALSE, warning=FALSE,  message=FALSE, fig.width = 3, fig.height = 2}
+par(mfrow = c(2, 2))
+#####check_model() function of performance package: Graphs####
+
+# return a list of single plots
+diagnostic_plots <- plot(check_model(modelo2, panel = FALSE))
+# linearity
+diagnostic_plots[[2]]
+# normally distributed residuals
+diagnostic_plots[[5]] #6
+# homoscedasticiy - homogeneity of variance
+diagnostic_plots[[3]]
+# influential observations - outliers
+diagnostic_plots[[4]]
+
+
+```
+
+
+
+
+```{r, echo=FALSE}
+car::powerTransform(modelo2)
+```
+
+
+```{r, echo=FALSE}
+modelo3<-lm(data=datos7, I(api00^(5/2)) ~ I(log(meals2)))
+summary(modelo3)
+```
+
+
+
+Las pruebas de cumplimiento de los supuestos. 
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+#nice_assumptions from package rempsyc
+
+table_tests<-nice_assumptions(modelo3)
+table_tests_fin<-subset(table_tests, select = -c(Model,Diagnostic) )
+```
+
+
+
+```{r, echo=FALSE}
+#nice_assumptions()
+#table_nice
+kable(t(table_tests_fin)) %>%
+kable_styling(bootstrap_options = "striped", full_width = F)
+
+```
+
+
+
+
+
+
+```{r, echo=FALSE, warning=FALSE,  message=FALSE, fig.width = 3, fig.height = 2}
+par(mfrow = c(2, 2))
+#####check_model() function of performance package: Graphs####
+
+# return a list of single plots
+diagnostic_plots <- plot(check_model(modelo3, panel = FALSE))
+# linearity
+diagnostic_plots[[2]]
+# normally distributed residuals
+diagnostic_plots[[5]] #6
+# homoscedasticiy - homogeneity of variance
+diagnostic_plots[[3]]
+# influential observations - outliers
+diagnostic_plots[[4]]
+
+
+```
+
+
+
+
+
+
+
+
+
+
 
 
 
