@@ -12,24 +12,62 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## 1. Regresión a través del origen.
 
-$$y_i=\beta x_i+\xi_i \quad i: 1, \ldots, n$$
+$$
+y_i=\beta x_i+\xi_i \quad i=1 \ldots n
+$$
+donde $\xi_1, \ldots, \xi_n$ son v.a.i. talque $\xi_i \sim N\left(0, \frac{\sigma^2}{w_i}\right)$
+$$
+\forall i=1 \ldots n
+$$
 
-donde $\xi_1, \ldots, \varepsilon_n$ son v.a.i talque $\xi_i \sim N\left(0, \frac{\sigma^2}{w_i}\right)$ $\forall i=1, \ldots, n$
-Suponiendo $\sigma^2$ conocida y $w_i=\frac{1}{x_i^2} \quad i=1, \ldots, n$
+Suponiendo $\sigma^2$ conocida y $\omega_i=\frac{1}{x_i^2} \quad i=1, \ldots, n$
 I)
+Como las $\xi_i$ son normales, entonces $y_i \sim N\left(\beta x_i, x_i^2 \sigma^2\right)$ y son independientes, entonces la funcion de verosimilitud nos queda:
+$$
+\prod_{i=1}^n \frac{1}{\sqrt{2 \pi} x_i \sigma} e^{-\frac{\left(y_i-\beta x_i\right)^2}{2 x_i^2 \sigma^2}}
+$$
+es decir:
+$$
+\frac{1}{(2 \pi)^{n / 2} x_i^n \sigma^n} e^{\sum_{i=1}^n \frac{-\left(y_i-\beta x_i\right)^2}{2 x_i^2 \sigma^2}}
+$$
+
+Aplicando logaritmo:
+$$
+\ln (1)-\frac{n}{2} \ln (2 \pi)-n \ln \left(x_i\right)-n \ln (\sigma)+\sum_{i=1}^n \frac{-\left(y_i-\beta x_i\right)^2}{2 x_i^2 \sigma^2}
+$$
+derivando e igualando a cero obtenemos:
 $$
 \begin{aligned}
-& \sum_{i=1}^n \varepsilon_i^2=\sum_{i=1}^n\left(y_i-\beta x_i\right)^2 \\
-& \frac{d}{d \beta}=2 \sum_{i=1}^n\left(y_i-\beta x_i\right)\left(-x_i\right)=0 \\
-& \rightarrow \sum_{i=1}^n\left(y_i-\beta x_i\right)\left(-x_i\right)=0 \rightarrow \sum_{i=1}^n y_i\left(-x_i\right)+\sum_{i=1}^n \beta x_i^2=0 \\
-& \therefore \hat{\beta}=\frac{\sum_{i=1}^n y_i x_i}{\sum_{i=1}^n x_i^2}
+& \frac{d}{d \beta} \ln (f)=-\sum_{i=1}^n \frac{\left(y_i-\beta x_i\right)}{x_i^2 \sigma^2}\left(-x_i\right)=0 \\
+& \rightarrow \sum_{i=1}^n \frac{\left(y_i-\beta x_i\right)}{x_i \sigma^2}=0 \rightarrow \sum_{i=1}^n \frac{y_i}{x_i \sigma^2}-\sum_{i=1}^n \frac{\beta}{\sigma^2}=0
 \end{aligned}
 $$
-II) $\operatorname{Var}(\hat{\beta})$
+Asi
+$$
+\sum_{i=1}^n \frac{y_i}{x_i \sigma^2}=\frac{n \beta}{\sigma^2} \rightarrow \hat{\beta}=\sum_{i=1}^n \frac{y_i}{x_i n}
+$$
+II)
 $$
 \begin{aligned}
-\operatorname{Var}(\hat{\beta}) & =\operatorname{Var}\left(\frac{\sum Y_i X_i}{\sum X_i{ }^2}\right) \\
-& =\operatorname{Var}\left(\frac{\sum X_i\left(\beta X_i+\xi_i\right)}{\sum X_i{ }^2}\right)
+& \operatorname{Var}(\hat{\beta}) \\
+& =\operatorname{Var}\left(\sum_{i=1}^n \frac{y_i}{x_i n}\right)=\frac{1}{n^2} \cdot \operatorname{Var}\left(\sum_{i=1}^n \frac{y_i}{x_i }\right) \\
+& =\frac{1}{n^2} \sum_{i=1}^n \operatorname{Var}\left(\frac{y_i}{x_i}\right)=\frac{1}{n^2} \sum_{i=1}^n \frac{1}{x_i{ }^2} \operatorname{Var}\left(y_i\right) \\
+& =\frac{1}{n^2} \sum_{i=1}^n \frac{1^2}{x_i^2}\left(x_i^2 \sigma^2\right)=\frac{1}{n^2} \sum_{i=1}^n \sigma^2=\frac{\sigma^2}{n} \\
+& \therefore \operatorname{Var}(\hat{\beta})=\frac{\sigma^2}{n}
+\end{aligned}
+$$
+III)
+$\operatorname{Como} \hat{\beta}=\sum_{i=1}^n \frac{y_i}{x_{i} n}$, Sea $c_i=\frac{1}{x_i n}$ entonces
+$$
+\hat{\beta}=\sum_{i=1}^n c_i y_i \quad \therefore \text { es estimador lineal }
+$$
+
+Ademas
+$$
+\begin{aligned}
+\mathbb{E}(\hat{\beta}) & =\mathbb{E}\left(\sum_{i=1}^n \frac{y_i}{x_i n}\right)=\frac{1}{n} \sum_{i=1}^n \mathbb{E}\left(\frac{y_i}{x_i}\right) \\
+& =\frac{1}{n} \sum_{i=1}^n \frac{1}{x_i} \mathbb{E}\left(y_i\right)=\frac{1}{n} \sum_{i=1}^n \beta=\beta
 \end{aligned}
 $$
 
+De esta forma $\hat{\beta}$ es estimador lineal y ademas es insesgado, por el teorema Gauss - Markoy $\hat{\beta}$ es el UMVUE
