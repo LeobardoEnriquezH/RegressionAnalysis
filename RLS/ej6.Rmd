@@ -172,13 +172,13 @@ kable_styling(bootstrap_options = "striped", full_width = F)
 
 ### II. Prueba de hipótesis. Diferencia entre peso mayor y menor como constante. 
 
-Ante la sospecha de que en promedio la diferencia entre el peso mayor y el peso menor es constante (es decir, no depende del peso del huevo menor observado), haremos una prueba de hipótesis. En primer lugar notemos que esto implicaría $H_0: \beta_1=0$, contra la alternativa $\beta_1\neq0$, y notamos en el Cuadro anterior de los coeficientes estimados del modelo, que se rechaza $H_0: \beta_1=0$, con la prueba t - student, a favor de la hipótesis alternativa $H_a: \beta_1\neq0$. Esto mismo es posible observarlo con el aprueba ``Simultaneous Tests for General Linear Hypotheses`` que se muestra a continuación, donde se rechaza esta hipótesis nula. 
+Ante la sospecha de que en promedio la diferencia entre el peso mayor y el peso menor es constante (es decir, no depende del peso del huevo menor observado), haremos una prueba de hipótesis. En primer lugar notemos que esto implicaría $H_0: \beta_1=1$, contra la alternativa $\beta_1\neq1$, a continuación se muestra la aprueba ``Simultaneous Tests for General Linear Hypotheses``, donde no se rechaza esta hipótesis nula, pues el p-valor asociado es mayor a 0.05, considerando un nivel del confianza del 95%.  
 
 
 ```{r, echo=FALSE}
 # Pruebas de hipótesis para beta1
 Matriz=matrix(c(0,1), ncol=2, nrow=1)
-c=0
+c=1
 #alternative: "two.sided" (default), "greater" or "less"
 prueba1=glht(fit, linfct=Matriz, rhs=c, alternative="two.sided")
 #summary(prueba1)
@@ -189,12 +189,12 @@ prueba1=glht(fit, linfct=Matriz, rhs=c, alternative="two.sided")
 \footnotesize
 \begin{tabular}{|lllll|}
 \hline
-\multicolumn{5}{|c|}{Simultaneous Tests for General Linear Hypotheses}                                                                                                \\ \hline
-\multicolumn{5}{|c|}{Fit: lm(formula = Y $\sim$x, data = Datos6)}                                                                                                    \\ \hline
-\multicolumn{1}{|l|}{Linear Hypotheses:}  & \multicolumn{1}{l|}{}         & \multicolumn{1}{l|}{}           & \multicolumn{1}{l|}{}                &                  \\ \hline
+\multicolumn{5}{|c|}{Simultaneous Tests for General Linear Hypotheses}                                                                                                \\ 
+\multicolumn{5}{|c|}{Fit: lm(formula = Y $\sim$x, data = Datos6)}                                                                                                    \\
+\multicolumn{5}{|l|}{Linear Hypotheses:}                                                                                                                            \\ \hline
 \multicolumn{1}{|l|}{}                    & \multicolumn{1}{l|}{Estimate} & \multicolumn{1}{l|}{Std. Error} & \multicolumn{1}{l|}{t value}         & Pr(\textless{}t) \\ \hline
-\multicolumn{1}{|l|}{1 == 0} & \multicolumn{1}{l|}{1.16940}  & \multicolumn{1}{l|}{0.08842}     & \multicolumn{1}{l|}{-13.22}         & 3.35e-07*           \\ \hline
-\multicolumn{1}{|l|}{}                    & \multicolumn{1}{l|}{}         & \multicolumn{1}{l|}{}           & \multicolumn{1}{l|}{}                &                  \\ \hline
+\multicolumn{1}{|l|}{1 == 1} & \multicolumn{1}{l|}{1.16940}  & \multicolumn{1}{l|}{0.08842}     & \multicolumn{1}{l|}{1.916}         & 0.0877           \\ \hline
+\multicolumn{5}{|l|}{}                             \\ \hline
 \multicolumn{1}{|l|}{Signif. codes:}      & \multicolumn{4}{l|}{0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1}                                                       \\ \hline
 \multicolumn{5}{|l|}{(Adjusted p values reported -- single-step method)}                                                                                              \\ \hline
 \end{tabular}
@@ -214,76 +214,53 @@ Se observa el peso de los huevos de una nueva nidada, observándose un peso de 7
 nuevo_y<-b0+b1*70
 ```
 
-Si tomamos en cuenta la recta de regresión anterior, podemos ver que $y_i=\hat{\beta_0}+\hat{\beta_1}x_i$ = `r b0` + `r b1` *(70)= `r nuevo_y`. Éste valor se ve alejado de los 145 gramos del huevo más grande encontrado. En el siguiente Cuadro se muestran los intervalos de confianza de los parámetros al 95% de confianza. 
+Si tomamos en cuenta la recta de regresión anterior, podemos ver que $y_i=\hat{\beta_0}+\hat{\beta_1}x_i$ = `r b0` + `r b1` *(70)= `r nuevo_y`. Éste valor se ve alejado de los 145 gramos del huevo más grande encontrado.
 
-
-
-```{r, echo=FALSE}
-CI_b0<-confint(fit, level = 0.95)[1, ]
-CI_b1<-confint(fit, level = 0.95)[2, ]
-CI_b0_low<-CI_b0[1]
-CI_b0_up<-CI_b0[2]
-CI_b1_low<-CI_b1[1]
-CI_b1_up<-CI_b1[2]
-
-#stargazer(CI_b0)
-```
-
-\begin{table}[!htbp] \centering 
-  \caption{} 
-  \label{} 
-\begin{tabular}{@{\extracolsep{5pt}} cccc} 
-\\[-1.8ex]\hline 
-\hline \\[-1.8ex] 
-Constante ($\beta_0$) &  & Pendiente ($\beta_1$) &  \\ 
-\hline \\[-1.8ex] 
-2.5 \% & 97.5\% & 2.5 \% & 97.5 \% \\ 
-\hline \\[-1.8ex] 
-$17.2$ & $54.2$ & $0.969$ & $1.369$ \\ 
-\hline \\[-1.8ex] 
-\end{tabular} 
-\end{table} 
 
 
 
 
 ```{r, echo=FALSE}
-#Intervalos para la esperanza de Y dado un valor x. Aquí x=65
-newdata <- data.frame(x = c(70) )
-Eydadx65 <- predict(fit, newdata, interval = "confidence", level = 0.95)
-#head(Eydadx65)
-```
-
-
-```{r, echo=FALSE}
-MatZ0Z1=matrix(c(1,70), ncol=2, nrow=1)
-prueba2=glht(fit, linfct=MatZ0Z1)
-### Intervalo de confianza 
-#confint(prueba2, level=.95)
-```
-
-
-
-```{r, echo=FALSE}
-new.dat <- data.frame(x=70)
-predict<-predict(fit, newdata = new.dat, interval = 'confidence') # interval = 'prediction' is an option.
+new.dat <- data.frame(x = c(70))
+predict<-predict(fit, newdata = new.dat, interval = 'prediction',  level = 0.95)
 #predict[3]
 ```
 
 
 
-Al 95% de confianza, podemos predecir que el valor del huevo más grande debería estar entre el valor `r predict[2]` y el valor `r predict[3]` de acuerdo con un intervalo de confianza al rededor de la recta de regresión. El valor de 145 gramos no cae dentro del intervalo, por lo que podríamos concluir que la nueva observación no corresponde a los huevos de los pingüinos Macaroni, de acuerdo con el modelo planteado.En la siguiente Gráfica podemos observar este intervalo al rededor de la recta de regresión $\hat{y}_h \pm t_{\alpha / 2, n - 2} (s.e.)_y$ donde $(s.e.)_y = \sqrt{\frac{\sum^n_{i=1} (y_i - \hat{y})^2}{n - 2}} \sqrt{\frac{1}{n} + \frac{(x - \bar{x})^2}{\sum^n_{i=1} (x_i - \bar{x})^2}}$.  
+Al 95% de confianza, podemos predecir que el valor del huevo más grande debería estar entre el valor `r predict[2]` y el valor `r predict[3]` de acuerdo con un intervalo de predicción. El valor de 145 gramos no cae dentro del intervalo, como también podemos observar en la siguiente Gráfica, por lo que podríamos concluir que la nueva observación no corresponde a los huevos de los pingüinos Macaroni. 
 
 
 
-```{r, echo=FALSE, }
-#method: lm, glm, gam, loess, rlm
-ggplot(Datos6, aes(x=x, y=y)) + 
-  geom_point(color='#2980B9', size = 2) + 
-  geom_smooth(formula = y ~ x, method = "lm", se = TRUE, level=0.95,color='#2C3E50')+ theme_bw()+
-  annotate("point", x = 70, y = 145, colour = "red")
-  
+```{r, echo=FALSE}
+# Extract the prediction interval values
+lower_limit <- predict[1, "lwr"]
+predicted_value <- predict[1, "fit"]
+upper_limit <- predict[1, "upr"]
+
+# Print the prediction interval values
+#cat("Lower Limit:", lower_limit, "\n")
+#cat("Predicted Sales:", predicted_sales, "\n")
+#cat("Upper Limit:", upper_limit, "\n")
 ```
+
+
+```{r, echo=FALSE, fig.width = 6, fig.height = 4}
+
+# Plot the prediction interval on a graph
+plot(Datos6$x, Datos6$y, main = "", xlab = "X", ylab = "Y", pch = 16)
+# Add the regression line
+abline(fit, col = "green")  
+# Add the predicted point
+points(70, predicted_value, col = "red", pch = 16)
+points(70, 145, col = "blue", pch = 16)
+segments(70, lower_limit, 70, upper_limit, col = "red", lwd = 2)
+```
+
+
+
+
+
 
 
 
