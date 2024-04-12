@@ -293,7 +293,7 @@ En el Modelo 2, se tiene un $R^2$ de 0.79, el cual es el coeficiente de determin
 
 ### v) Prueba de hipótesis de investigación. 
 
-Para verificar el argumento de que "A mayor porcentaje de comidas gratis en la escuela es menor el desempeño de la escuela", plantearemos una prueba de hipótesis. Planteamos la hipótesis nula $H_0: \beta_1 \geq0$ contra la alternativa $H_a: \beta_1<0$, donde $\beta_1$ es el parátro estimado asociado a la variable independiente ``meal``. A continuación se muestra la aprueba ``Simultaneous Tests for General Linear Hypotheses``, donde se rechaza esta hipótesis nula, pues el p-valor asociado es menor a 0.05, considerando un nivel del confianza del 95%.
+Para verificar el argumento de que "A mayor porcentaje de comidas gratis en la escuela es menor el desempeño de la escuela", plantearemos una prueba de hipótesis. Planteamos la hipótesis nula $H_0: \beta_1 \geq0$ contra la alternativa $H_a: \beta_1<0$, donde $\beta_1$ es el parámetro estimado asociado a la variable independiente ``meal``. A continuación se muestra la aprueba ``Simultaneous Tests for General Linear Hypotheses``, donde se rechaza esta hipótesis nula, pues el p-valor asociado es menor a 0.05, considerando un nivel del confianza del 95%.
 
 
 
