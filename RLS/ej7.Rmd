@@ -25,6 +25,8 @@ library(boot)
 library(rempsyc)
 library(report)
 library(multcomp)
+library(car)
+library(broom)
 ```
 
 
@@ -104,6 +106,42 @@ kable_styling(bootstrap_options = "striped", full_width = F)
 ```
 
 
+
+```{r, echo=FALSE}
+#Normalidad: Ho:Hay normalidad. 
+library(nortest)
+datos_m1<-augment(modelo1)
+normalidad_m1<-ad.test(datos_m1$.std.resid)
+#No se rechaza Ho, p-value >0.05
+```
+
+
+
+
+```{r, echo=FALSE, include=FALSE}
+#Homocedasticidad: Ho:Varianza constantes. 
+library(car)
+homocedasticidad_m1<-car::ncvTest(modelo1)
+#Se rechaza Ho, p-value <0.05
+```
+
+
+
+
+```{r, echo=FALSE, include=FALSE}
+#Linealidad 
+library(car)
+residualPlots(modelo1)
+#Ho: no se necesita transformación para linealidad
+#Se rechaza Ho, p-value <0.05
+```
+
+
+
+
+La normalidad de los errores se confirma con la prueba ``Anderson-Darling normality test`` con la función ``ad.test`` que muestra un p-value de `r normalidad_m1[2]`. La heterocedasticidad se confirma con la prueba ``Non-constant Variance Score Test`` con la función ``ncvTest``, que muestra un p-value de `r homocedasticidad_m1[5]`. Finalmente, con la función de ``residualPlots`` obtenemos para la prueba de ``Tukey test`` un p value de $0.01174$, por lo que se rechaza la hipótesis nula de linealidad. 
+
+
 También podemos observar de forma gráfica estos resultados. Observemos la gráfica de **Fitted values** contra **Residuals**, parece haber un problema de linealidad. En la gráfica **Standard Normal distribution Quantiles** contra **Sample Quantile Deviations** tenemos que la normalidad sí se preserva. En la gráfica de **Fitted Values** contra **$\sqrt{|Std. Residuals|}$** parece no haber homogeneidad de la varianza. Y finalmente, en la gráfica de **Leverage(hii)** contra **Std. Residuals** parece no haber valores atípicos influyentes. Entonces podemos concluir que nuestro modelo no cumple con dos supuestos importantes, la linealidad y la homocedasticidad. 
 
 
@@ -140,13 +178,13 @@ diagnostic_plots[[4]]
 ### ii) Ajuste de un mejor modelo que cumple los supuestos. 
 
 
-Debido a que con el primer modelo no se satisfacen los supuestos de linealidad y homocedasticidad procederemos a hacer algunas pruebas para corregir estos problemas. Haremos unas pruebas para ver qué transformación podría ser la adecuada para la variable dependiente e independiente. 
+Presentamos pruebas para ver qué transformación es adecuada para la variable dependiente e independiente. 
 
 
 
 ```{r, echo=FALSE}
 bc<-car::powerTransform(modelo1)
-cat("PowerTransform: \n")
+#cat("PowerTransform: \n")
 bc
 ```
 
@@ -154,19 +192,17 @@ bc
 
 ```{r, echo=FALSE}
 datos7$meals2<-datos7$meals+1 #sumamos 1 porque hay un valor de 0 (no positivo)
-cat("BoxTidwell: \n")
-car::boxTidwell(api00~ I(meals+1), data = datos7)
+#cat("BoxTidwell: \n")
+car::boxTidwell(api00^2~ I(meals+1), data = datos7)
 ```
 
 
 
-El resultado de la prueba ``Estimated transformation parameter `` con la función ``powerTransform`` para transformación de tipo BoxCox, para conocer el exponente $\lambda$ de la variable dependiente, muestra que el valor es de `r bc[7]`. Esto sugiere elevar a un exponente de $3/2=1.5$ a la variable dependiente. Por otra parte, la prueba con la función ``BoxTidwell`` para la tranformación de la variable independiente (modificada al sumarle +1) muestra un valor $\lambda$ de $1.2132$ con un p-value asociado de $0.02591$, lo que implica que $\lambda\neq 1$ y hay que transformar a la variable independiente.  
-
-Sin embargo, primero trataremos de hacer cambios a la variable independiente, ya que las transformaciones de la variable dependiente vuelve un poco más complicada la interpretación de los coeficientes estimados y en general el modelo. Primero probaremos con la transformación **cuadrática** a la variable independiente, en caso de que se cumplan los supuestos nos quedaremos con este modelo.        
+El resultado de la prueba ``Estimated transformation parameter `` con la función ``powerTransform`` para transformación de tipo BoxCox, para conocer el exponente $\lambda$ de la variable dependiente, muestra que el valor es de `r bc[7]`. Esto sugiere elevar a un exponente de $1.6$ a la variable dependiente, por simplicidad en la interpretación consideraremos un exponente de $2$. Por otra parte, la prueba con la función ``BoxTidwell`` para la tranformación de la variable independiente (modificada al sumarle +1 y tomando en cuenta la variable dependiente al cuadrado) muestra un valor $\lambda$ de $0.93552$ con un p-value asociado de $0.4374$, lo que implica que la hipótesis nula de que $\lambda = 1$ no se rechaza, i.e., no hay evidencia suficiente para rechazar la linealidad de la variable independiente. Entonces ajustamos el MODELO 2.   
 
 
 ```{r, echo=FALSE}
-modelo2<-lm(data=datos7, api00 ~ I((meals)^(2)))
+modelo2<-lm(data=datos7, I(api00^2) ~ meals)
 #summary(modelo2)
 #stargazer(modelo2)
 ```
@@ -175,31 +211,29 @@ modelo2<-lm(data=datos7, api00 ~ I((meals)^(2)))
 
 \begin{table}[!htbp] \centering 
   \caption{MODELO 2} 
-  \label{} 
+  \label{}
 \footnotesize
 \begin{tabular}{@{\extracolsep{5pt}}lc} 
 \\[-1.8ex]\hline 
 \hline \\[-1.8ex] 
  & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
 \cline{2-2} 
-\\[-1.8ex] & api00 \\ 
+\\[-1.8ex] & I(api00$\hat{\mkern6mu}$2) \\ 
 \hline \\[-1.8ex] 
- I((meals)$\hat{\mkern6mu}$(2)) & $-$0.03592$^{***}$ \\ 
-  & s.e. (0.0009269) \\ 
-  & t value: -38.75 \\
-  & Pr(>|t|): <2e-16 \\
+ meals & $-$5,337.734$^{***}$ \\ 
+  & s.e.(121.696) \\
+  & p-value: <2e-16 \\
   & \\ 
- Constant & 814.761$^{***}$ \\ 
-  & s.e. (5.407) \\ 
-  & t value: 150.70 \\
-  & Pr(>|t|): <2e-16 \\
+ Constant & 761,544.500$^{***}$ \\ 
+  & s.e. (8,301.866) \\ 
+  & p-value: <2e-16 \\
   & \\ 
 \hline \\[-1.8ex] 
 Observations & 400 \\ 
-R$^{2}$ & 0.790 \\ 
-Adjusted R$^{2}$ & 0.790 \\ 
-Residual Std. Error & 65.195 (df = 398) \\ 
-F Statistic & 1,501.536$^{***}$ (df = 1; 398); p-value: < 2.2e-16 \\ 
+R$^{2}$ & 0.829 \\ 
+Adjusted R$^{2}$ & 0.828 \\ 
+Residual Std. Error & 77,573.340 (df = 398) \\ 
+F Statistic & 1,923.808$^{***}$ (df = 1; 398);  p-value: < 2.2e-16 \\ 
 \hline 
 \hline \\[-1.8ex] 
 \textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
@@ -230,7 +264,45 @@ kable_styling(bootstrap_options = "striped", full_width = F)
 ```
 
 
-También podemos observar de forma gráfica estos resultados. 
+
+
+
+
+```{r, echo=FALSE}
+#Normalidad: Ho:Hay normalidad. 
+library(nortest)
+datos_m2<-augment(modelo2)
+normalidad_m2<-ad.test(datos_m2$.std.resid)
+#No se rechaza Ho, p-value >0.05
+```
+
+
+
+```{r, echo=FALSE}
+#Homocedasticidad: Ho:Varianza constantes. 
+homocedasticidad_m2<-car::ncvTest(modelo2)
+#Se rechaza Ho, p-value <0.05
+```
+
+
+
+
+```{r, echo=FALSE, include=FALSE}
+#Linealidad 
+library(car)
+residualPlots(modelo2)
+#Ho: no se necesita transformación para linealidad
+#Se rechaza Ho, p-value <0.05
+```
+
+
+
+
+
+La normalidad de los errores se confirma con la prueba ``Anderson-Darling normality test`` con la función ``ad.test`` que muestra un p-value de `r normalidad_m2[2]`. La homocedasticidad se confirma con la prueba ``Non-constant Variance Score Test`` con la función ``ncvTest``, que muestra un p-value de `r homocedasticidad_m2[5]`. Finalmente, con la función de ``residualPlots`` obtenemos para la prueba de ``Tukey test`` un p value de $0.5969$, por lo que no se rechaza la hipótesis nula de linealidad. 
+
+
+También podemos confirmar de forma gráfica estos resultados. 
 
 
 ```{r, echo=FALSE, fig.width = 6, fig.height = 4, include=FALSE}
@@ -266,12 +338,12 @@ diagnostic_plots[[4]]
 ### iii)Gráfica de datos originales y las curvas ajustadas de ambos modelos. 
 
 
-A continuación se muestra la Gráfica de los datos originales y las curvas ajustadas tanto para el primero modelo sin tratamiento de las variables (recta roja) y la curva ajustada del segundo modelo con la variable independiente cuadrática (curva azul). 
+A continuación se muestra la Gráfica de los datos originales y las curvas ajustadas tanto para el primero modelo sin tratamiento de las variables (recta roja) y la curva ajustada del segundo modelo con la variable dependiente cuadrática (curva azul). 
 
 
 ```{r, include=FALSE}
 curva_ajustada1 <- function(x) {modelo1$coefficients[1] + modelo1$coefficients[2]*x}
-curva_ajustada2 <- function(x) {modelo2$coefficients[1] + modelo2$coefficients[2]*x^2}
+curva_ajustada2 <- function(x) {sqrt(modelo2$coefficients[1] + modelo2$coefficients[2]*x)}
 ```
 
 
@@ -288,24 +360,24 @@ ggplot(datos7, aes(meals, api00)) +
 
 ### iv) Interpretación de la prueba ANOVA y la R^2. 
 
-En el Modelo 2, se tiene un $R^2$ de 0.79, el cual es el coeficiente de determinación que en este caso se interpreta como que el 79% de la variabilidad del rendimiento acedémico en la escuela ``api00`` se explica por el modelo que incluye la variable del porcentaje de estudiantes que reciben desayuno en la esceula ``meal``. Por otra parte, la prueba $F$ asociada a la tabla ANOVA, contrasta en este caso de la regresión lineal simple las hipótesis nula $H_0: \beta_1=0$ contra la alternativa $H_a: \beta_1\neq0$. Como el p-value asociado es menor a $2e-16$ se rechaza $H_0$ con una significancia estadística del 5%, podemos concluir que la inclusión de la variable explicativa ``meal`` ayuda a modelar $E(api00; meal)$. Es decir, el rendimiento acedémico en la escuela ``api00``  se relaciona linealmente con la variable del porcentaje de estudiantes que reciben desayuno en la esceula ``meal``. 
+En el Modelo 2, se tiene un $R^2$ de 0.82, el cual es el coeficiente de determinación que en este caso se interpreta como que el 82% de la variabilidad del rendimiento acedémico en la escuela ``api00`` se explica por el modelo que incluye la variable del porcentaje de estudiantes que reciben desayuno en la esceula ``meal``. Por otra parte, la prueba $F$ asociada a la tabla ANOVA, contrasta en este caso de la regresión lineal simple las hipótesis nula $H_0: \beta_1=0$ contra la alternativa $H_a: \beta_1\neq0$. Como el p-value asociado es menor a $2e-16$ se rechaza $H_0$ con una significancia estadística del 5%, podemos concluir que la inclusión de la variable explicativa ``meal`` ayuda a modelar $E(api00; meal)$. Es decir, el rendimiento acedémico en la escuela ``api00``  se relaciona linealmente con la variable del porcentaje de estudiantes que reciben desayuno en la esceula ``meal``. 
 
 
 ### v) Prueba de hipótesis de investigación. 
 
-Para verificar el argumento de que "A mayor porcentaje de comidas gratis en la escuela es menor el desempeño de la escuela", plantearemos una prueba de hipótesis. Planteamos la hipótesis nula $H_0: \beta_1 \geq0$ contra la alternativa $H_a: \beta_1<0$, donde $\beta_1$ es el parámetro estimado asociado a la variable independiente ``meal``. A continuación se muestra la aprueba ``Simultaneous Tests for General Linear Hypotheses``, donde se rechaza esta hipótesis nula, pues el p-valor asociado es menor a 0.05, considerando un nivel del confianza del 95%.
+Para verificar el argumento de que "A mayor porcentaje de comidas gratis en la escuela es menor el desempeño de la escuela", plantearemos una prueba de hipótesis. Planteamos la hipótesis nula $H_0: \beta_1 \geq0$ contra la alternativa $H_a: \beta_1<0$, donde $\beta_1$ es el parámetro estimado asociado a la variable independiente ``meal``. A continuación se muestra la aprueba ``Simultaneous Tests for General Linear Hypotheses``, donde se rechaza esta hipótesis nula, pues el p-valor asociado es menor a 0.05, con un nivel del confianza de 95%.
 
 
 
 
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, include=FALSE}
 # Pruebas de hipótesis para beta1
 Matriz=matrix(c(0,1), ncol=2, nrow=1)
 c=0
 #alternative: "two.sided" (default), "greater" or "less"
 prueba1=glht(modelo2, linfct=Matriz, rhs=c, alternative="less")
-#summary(prueba1)
+summary(prueba1)
 ```
 
 
@@ -314,10 +386,10 @@ prueba1=glht(modelo2, linfct=Matriz, rhs=c, alternative="less")
 \begin{tabular}{|lllll|}
 \hline
 \multicolumn{5}{|c|}{Simultaneous Tests for General Linear Hypotheses}                                                                                                \\ 
-\multicolumn{5}{|c|}{Fit:lm(formula = api00 $\sim$ I((meals)$\wedge$(2)), data = datos7)}                                                                                                    \\
+\multicolumn{5}{|c|}{Fit:lm(formula = I(api00$\wedge$2) $\sim$ meals, data = datos7)}                                                                                                    \\
 \multicolumn{5}{|l|}{Linear Hypotheses:}                                                                                                                            \\ \hline
 \multicolumn{1}{|l|}{}                    & \multicolumn{1}{l|}{Estimate} & \multicolumn{1}{l|}{Std. Error} & \multicolumn{1}{l|}{t value}         & Pr(\textless{}t) \\ \hline
-\multicolumn{1}{|l|}{1 >= 0} & \multicolumn{1}{l|}{-0.0359152}  & \multicolumn{1}{l|}{0.0009269}     & \multicolumn{1}{l|}{-38.75}         & <2e-16 ***           \\ \hline
+\multicolumn{1}{|l|}{1 >= 0} & \multicolumn{1}{l|}{-5337.7}  & \multicolumn{1}{l|}{121.7}     & \multicolumn{1}{l|}{-43.86 }         & <2e-16 ***           \\ \hline
 \multicolumn{5}{|l|}{}                             \\ \hline
 \multicolumn{1}{|l|}{Signif. codes:}      & \multicolumn{4}{l|}{0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1}                                                       \\ \hline
 \multicolumn{5}{|l|}{(Adjusted p values reported -- single-step method)}                                                                                              \\ \hline

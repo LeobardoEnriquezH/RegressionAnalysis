@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.12) (preloaded format=pdflatex 2023.1.15)  12 APR 2024 02:42
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.12) (preloaded format=pdflatex 2023.1.15)  12 APR 2024 11:59
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -739,103 +739,97 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 155.
+(Font)              <10> on input line 157.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 155.
-<ej7_files/figure-latex/unnamed-chunk-7-1.pdf, id=3, 216.81pt x 144.54pt>
-File: ej7_files/figure-latex/unnamed-chunk-7-1.pdf Graphic file (type pdf)
-<use ej7_files/figure-latex/unnamed-chunk-7-1.pdf>
-Package pdftex.def Info: ej7_files/figure-latex/unnamed-chunk-7-1.pdf  used on 
-input line 162.
+(Font)              <7> on input line 157.
+<ej7_files/figure-latex/unnamed-chunk-10-1.pdf, id=3, 216.81pt x 144.54pt>
+File: ej7_files/figure-latex/unnamed-chunk-10-1.pdf Graphic file (type pdf)
+<use ej7_files/figure-latex/unnamed-chunk-10-1.pdf>
+Package pdftex.def Info: ej7_files/figure-latex/unnamed-chunk-10-1.pdf  used on
+ input line 172.
 (pdftex.def)             Requested size: 216.81938pt x 144.54623pt.
-<ej7_files/figure-latex/unnamed-chunk-7-2.pdf, id=4, 216.81pt x 144.54pt>
-File: ej7_files/figure-latex/unnamed-chunk-7-2.pdf Graphic file (type pdf)
-<use ej7_files/figure-latex/unnamed-chunk-7-2.pdf>
-Package pdftex.def Info: ej7_files/figure-latex/unnamed-chunk-7-2.pdf  used on 
-input line 163.
+<ej7_files/figure-latex/unnamed-chunk-10-2.pdf, id=4, 216.81pt x 144.54pt>
+File: ej7_files/figure-latex/unnamed-chunk-10-2.pdf Graphic file (type pdf)
+<use ej7_files/figure-latex/unnamed-chunk-10-2.pdf>
+Package pdftex.def Info: ej7_files/figure-latex/unnamed-chunk-10-2.pdf  used on
+ input line 173.
 (pdftex.def)             Requested size: 216.81938pt x 144.54623pt.
-<ej7_files/figure-latex/unnamed-chunk-7-3.pdf, id=5, 216.81pt x 144.54pt>
-File: ej7_files/figure-latex/unnamed-chunk-7-3.pdf Graphic file (type pdf)
-<use ej7_files/figure-latex/unnamed-chunk-7-3.pdf>
-Package pdftex.def Info: ej7_files/figure-latex/unnamed-chunk-7-3.pdf  used on 
-input line 164.
+<ej7_files/figure-latex/unnamed-chunk-10-3.pdf, id=5, 216.81pt x 144.54pt>
+File: ej7_files/figure-latex/unnamed-chunk-10-3.pdf Graphic file (type pdf)
+<use ej7_files/figure-latex/unnamed-chunk-10-3.pdf>
+Package pdftex.def Info: ej7_files/figure-latex/unnamed-chunk-10-3.pdf  used on
+ input line 174.
 (pdftex.def)             Requested size: 216.81938pt x 144.54623pt.
-<ej7_files/figure-latex/unnamed-chunk-7-4.pdf, id=6, 216.81pt x 144.54pt>
-File: ej7_files/figure-latex/unnamed-chunk-7-4.pdf Graphic file (type pdf)
-<use ej7_files/figure-latex/unnamed-chunk-7-4.pdf>
-Package pdftex.def Info: ej7_files/figure-latex/unnamed-chunk-7-4.pdf  used on 
-input line 165.
+<ej7_files/figure-latex/unnamed-chunk-10-4.pdf, id=6, 216.81pt x 144.54pt>
+File: ej7_files/figure-latex/unnamed-chunk-10-4.pdf Graphic file (type pdf)
+<use ej7_files/figure-latex/unnamed-chunk-10-4.pdf>
+Package pdftex.def Info: ej7_files/figure-latex/unnamed-chunk-10-4.pdf  used on
+ input line 175.
 (pdftex.def)             Requested size: 216.81938pt x 144.54623pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 162--166
+Underfull \hbox (badness 10000) in paragraph at lines 172--176
 [][] []
  []
 
 [1
 
-{C:/Users/Leobardo/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}]
-LaTeX Font Info:    Trying to load font information for TS1+lmtt on input line 
-197.
-(C:\Users\Leobardo\AppData\Local\Programs\MiKTeX\tex/latex/lm\ts1lmtt.fd
-File: ts1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-) [2 <./ej7_files/figure-latex/unnamed-chunk-7-1.pdf> <./ej7_files/figure-latex
-/unnamed-chunk-7-2.pdf> <./ej7_files/figure-latex/unnamed-chunk-7-3.pdf> <./ej7
-_files/figure-latex/unnamed-chunk-7-4.pdf>]
-<ej7_files/figure-latex/unnamed-chunk-14-1.pdf, id=71, 216.81pt x 136.51pt>
-File: ej7_files/figure-latex/unnamed-chunk-14-1.pdf Graphic file (type pdf)
-<use ej7_files/figure-latex/unnamed-chunk-14-1.pdf>
-Package pdftex.def Info: ej7_files/figure-latex/unnamed-chunk-14-1.pdf  used on
- input line 268.
-(pdftex.def)             Requested size: 216.81938pt x 136.5159pt.
-<ej7_files/figure-latex/unnamed-chunk-14-2.pdf, id=72, 216.81pt x 136.51pt>
-File: ej7_files/figure-latex/unnamed-chunk-14-2.pdf Graphic file (type pdf)
-<use ej7_files/figure-latex/unnamed-chunk-14-2.pdf>
-Package pdftex.def Info: ej7_files/figure-latex/unnamed-chunk-14-2.pdf  used on
+{C:/Users/Leobardo/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}] [2 <./ej7
+_files/figure-latex/unnamed-chunk-10-1.pdf> <./ej7_files/figure-latex/unnamed-c
+hunk-10-2.pdf> <./ej7_files/figure-latex/unnamed-chunk-10-3.pdf> <./ej7_files/f
+igure-latex/unnamed-chunk-10-4.pdf>]
+<ej7_files/figure-latex/unnamed-chunk-20-1.pdf, id=71, 216.81pt x 136.51pt>
+File: ej7_files/figure-latex/unnamed-chunk-20-1.pdf Graphic file (type pdf)
+<use ej7_files/figure-latex/unnamed-chunk-20-1.pdf>
+Package pdftex.def Info: ej7_files/figure-latex/unnamed-chunk-20-1.pdf  used on
  input line 269.
 (pdftex.def)             Requested size: 216.81938pt x 136.5159pt.
-<ej7_files/figure-latex/unnamed-chunk-14-3.pdf, id=73, 216.81pt x 136.51pt>
-File: ej7_files/figure-latex/unnamed-chunk-14-3.pdf Graphic file (type pdf)
-<use ej7_files/figure-latex/unnamed-chunk-14-3.pdf>
-Package pdftex.def Info: ej7_files/figure-latex/unnamed-chunk-14-3.pdf  used on
+<ej7_files/figure-latex/unnamed-chunk-20-2.pdf, id=72, 216.81pt x 136.51pt>
+File: ej7_files/figure-latex/unnamed-chunk-20-2.pdf Graphic file (type pdf)
+<use ej7_files/figure-latex/unnamed-chunk-20-2.pdf>
+Package pdftex.def Info: ej7_files/figure-latex/unnamed-chunk-20-2.pdf  used on
  input line 270.
 (pdftex.def)             Requested size: 216.81938pt x 136.5159pt.
-<ej7_files/figure-latex/unnamed-chunk-14-4.pdf, id=74, 216.81pt x 136.51pt>
-File: ej7_files/figure-latex/unnamed-chunk-14-4.pdf Graphic file (type pdf)
-<use ej7_files/figure-latex/unnamed-chunk-14-4.pdf>
-Package pdftex.def Info: ej7_files/figure-latex/unnamed-chunk-14-4.pdf  used on
+<ej7_files/figure-latex/unnamed-chunk-20-3.pdf, id=73, 216.81pt x 136.51pt>
+File: ej7_files/figure-latex/unnamed-chunk-20-3.pdf Graphic file (type pdf)
+<use ej7_files/figure-latex/unnamed-chunk-20-3.pdf>
+Package pdftex.def Info: ej7_files/figure-latex/unnamed-chunk-20-3.pdf  used on
  input line 271.
 (pdftex.def)             Requested size: 216.81938pt x 136.5159pt.
+<ej7_files/figure-latex/unnamed-chunk-20-4.pdf, id=74, 216.81pt x 136.51pt>
+File: ej7_files/figure-latex/unnamed-chunk-20-4.pdf Graphic file (type pdf)
+<use ej7_files/figure-latex/unnamed-chunk-20-4.pdf>
+Package pdftex.def Info: ej7_files/figure-latex/unnamed-chunk-20-4.pdf  used on
+ input line 272.
+(pdftex.def)             Requested size: 216.81938pt x 136.5159pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 268--272
+Underfull \hbox (badness 10000) in paragraph at lines 269--273
 [][] []
  []
 
-[3 <./ej7_files/figure-latex/unnamed-chunk-14-1.pdf> <./ej7_files/figure-latex/
-unnamed-chunk-14-2.pdf> <./ej7_files/figure-latex/unnamed-chunk-14-3.pdf> <./ej
-7_files/figure-latex/unnamed-chunk-14-4.pdf>]
-<ej7_files/figure-latex/unnamed-chunk-16-1.pdf, id=117, 433.62pt x 201.75375pt>
-
-File: ej7_files/figure-latex/unnamed-chunk-16-1.pdf Graphic file (type pdf)
-<use ej7_files/figure-latex/unnamed-chunk-16-1.pdf>
-Package pdftex.def Info: ej7_files/figure-latex/unnamed-chunk-16-1.pdf  used on
- input line 282.
+<ej7_files/figure-latex/unnamed-chunk-22-1.pdf, id=75, 433.62pt x 201.75375pt>
+File: ej7_files/figure-latex/unnamed-chunk-22-1.pdf Graphic file (type pdf)
+<use ej7_files/figure-latex/unnamed-chunk-22-1.pdf>
+Package pdftex.def Info: ej7_files/figure-latex/unnamed-chunk-22-1.pdf  used on
+ input line 283.
 (pdftex.def)             Requested size: 433.62555pt x 201.75632pt.
-[4 <./ej7_files/figure-latex/unnamed-chunk-16-1.pdf>] (ej7.aux)
+[3 <./ej7_files/figure-latex/unnamed-chunk-20-1.pdf> <./ej7_files/figure-latex/
+unnamed-chunk-20-2.pdf> <./ej7_files/figure-latex/unnamed-chunk-20-3.pdf> <./ej
+7_files/figure-latex/unnamed-chunk-20-4.pdf>] [4 <./ej7_files/figure-latex/unna
+med-chunk-22-1.pdf>] (ej7.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 15151 strings out of 476406
- 248294 string characters out of 2788151
- 1866787 words of memory out of 3000000
- 35121 multiletter control sequences out of 15000+600000
- 556820 words of font info for 109 fonts, out of 8000000 for 9000
+ 15104 strings out of 476406
+ 247535 string characters out of 2788151
+ 1867787 words of memory out of 3000000
+ 35086 multiletter control sequences out of 15000+600000
+ 556172 words of font info for 104 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 74i,12n,81p,1002b,449s stack positions out of 10000i,1000n,20000p,200000b,80000s
+ 74i,12n,81p,1002b,447s stack positions out of 10000i,1000n,20000p,200000b,80000s
 {C:/Users/Leobardo/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-mathit
 .enc}{C:/Users/Leobardo/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-rm.
-enc}{C:/Users/Leobardo/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-ts1.
 enc}{C:/Users/Leobardo/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-math
 sy.enc}{C:/Users/Leobardo/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-m
 athex.enc}{C:/Users/Leobardo/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/l
@@ -855,9 +849,9 @@ X/fonts/type1/public/lm/lmsy10.pfb><C:/Users/Leobardo/AppData/Local/Programs/Mi
 KTeX/fonts/type1/public/lm/lmsy6.pfb><C:/Users/Leobardo/AppData/Local/Programs/
 MiKTeX/fonts/type1/public/lm/lmsy8.pfb><C:/Users/Leobardo/AppData/Local/Program
 s/MiKTeX/fonts/type1/public/lm/lmtt10.pfb>
-Output written on ej7.pdf (4 pages, 520440 bytes).
+Output written on ej7.pdf (4 pages, 520488 bytes).
 PDF statistics:
- 229 PDF objects out of 1000 (max. 8388607)
+ 225 PDF objects out of 1000 (max. 8388607)
  15 named destinations out of 1000 (max. 500000)
  22622 words of extra memory for PDF output out of 24883 (max. 10000000)
 
