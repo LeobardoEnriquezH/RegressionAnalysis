@@ -32,7 +32,7 @@ knitr::opts_chunk$set(echo = T, fig.width = 6, fig.height = 3.5)
 
 ```{r, message=FALSE, include=FALSE,warning=FALSE, background=FALSE, comment=FALSE, engine.path=FALSE, cache=FALSE, out.extra=FALSE, results='hide'}
 
-#rm(list = ls())
+rm(list = ls())
 
 pacman::p_load(tidyverse,
                kableExtra,
@@ -40,12 +40,87 @@ pacman::p_load(tidyverse,
                stargazer,knitr,viridis,dplyr,readr,scales,quantmod,texreg,tinytex, 
                tidyr, imager,lubridate,tseries, astsa, growthrates, tis, dynlm, 
                readxl, foreign, hrbthemes, gtsummary, corrplot, lm.beta, ggfortify,
-               AER, lmtest, sandwich,GGally)
+               AER, lmtest, sandwich,GGally, performance, flextable, see, qqplotr,
+               ggrepel, patchwork,boot, rempsyc, report,multcomp, car, broom)
 ```
 
 
+
+
+
+
+
+
+
+
+
+\newpage 
+
 ## 1. Regresión a través del origen. 
 
+
+$$
+y_i=\beta x_i+\xi_i \quad i=1 \ldots n
+$$
+donde $\xi_1, \ldots, \xi_n$ son v.a.i. talque $\xi_i \sim N\left(0, \frac{\sigma^2}{w_i}\right)$
+$$
+\forall i=1 \ldots n
+$$
+
+Suponiendo $\sigma^2$ conocida y $\omega_i=\frac{1}{x_i^2} \quad i=1, \ldots, n$
+I)
+Como las $\xi_i$ son normales, entonces $y_i \sim N\left(\beta x_i, x_i^2 \sigma^2\right)$ y son independientes, entonces la funcion de verosimilitud nos queda:
+$$
+\prod_{i=1}^n \frac{1}{\sqrt{2 \pi} x_i \sigma} e^{-\frac{\left(y_i-\beta x_i\right)^2}{2 x_i^2 \sigma^2}}
+$$
+es decir:
+$$
+\frac{1}{(2 \pi)^{n / 2} x_i^n \sigma^n} e^{\sum_{i=1}^n \frac{-\left(y_i-\beta x_i\right)^2}{2 x_i^2 \sigma^2}}
+$$
+
+Aplicando logaritmo:
+$$
+\ln (1)-\frac{n}{2} \ln (2 \pi)-n \ln \left(x_i\right)-n \ln (\sigma)+\sum_{i=1}^n \frac{-\left(y_i-\beta x_i\right)^2}{2 x_i^2 \sigma^2}
+$$
+derivando e igualando a cero obtenemos:
+$$
+\begin{aligned}
+& \frac{d}{d \beta} \ln (f)=-\sum_{i=1}^n \frac{\left(y_i-\beta x_i\right)}{x_i^2 \sigma^2}\left(-x_i\right)=0 \\
+& \rightarrow \sum_{i=1}^n \frac{\left(y_i-\beta x_i\right)}{x_i \sigma^2}=0 \rightarrow \sum_{i=1}^n \frac{y_i}{x_i \sigma^2}-\sum_{i=1}^n \frac{\beta}{\sigma^2}=0
+\end{aligned}
+$$
+Asi
+$$
+\sum_{i=1}^n \frac{y_i}{x_i \sigma^2}=\frac{n \beta}{\sigma^2} \rightarrow \hat{\beta}=\sum_{i=1}^n \frac{y_i}{x_i n}
+$$
+II)
+$$
+\begin{aligned}
+& \operatorname{Var}(\hat{\beta}) \\
+& =\operatorname{Var}\left(\sum_{i=1}^n \frac{y_i}{x_i n}\right)=\frac{1}{n^2} \cdot \operatorname{Var}\left(\sum_{i=1}^n \frac{y_i}{x_i }\right) \\
+& =\frac{1}{n^2} \sum_{i=1}^n \operatorname{Var}\left(\frac{y_i}{x_i}\right)=\frac{1}{n^2} \sum_{i=1}^n \frac{1}{x_i{ }^2} \operatorname{Var}\left(y_i\right) \\
+& =\frac{1}{n^2} \sum_{i=1}^n \frac{1^2}{x_i^2}\left(x_i^2 \sigma^2\right)=\frac{1}{n^2} \sum_{i=1}^n \sigma^2=\frac{\sigma^2}{n} \\
+& \therefore \operatorname{Var}(\hat{\beta})=\frac{\sigma^2}{n}
+\end{aligned}
+$$
+III)
+$\operatorname{Como} \hat{\beta}=\sum_{i=1}^n \frac{y_i}{x_{i} n}$, Sea $c_i=\frac{1}{x_i n}$ entonces
+$$
+\hat{\beta}=\sum_{i=1}^n c_i y_i \quad \therefore \text { es estimador lineal }
+$$
+
+Ademas
+$$
+\begin{aligned}
+\mathbb{E}(\hat{\beta}) & =\mathbb{E}\left(\sum_{i=1}^n \frac{y_i}{x_i n}\right)=\frac{1}{n} \sum_{i=1}^n \mathbb{E}\left(\frac{y_i}{x_i}\right) \\
+& =\frac{1}{n} \sum_{i=1}^n \frac{1}{x_i} \mathbb{E}\left(y_i\right)=\frac{1}{n} \sum_{i=1}^n \beta=\beta
+\end{aligned}
+$$
+
+De esta forma $\hat{\beta}$ es estimador lineal y ademas es insesgado, por el teorema Gauss - Markoy $\hat{\beta}$ es el UMVUE
+
+
+\newpage 
 
 
 ## 2. Regresión lineal simple. 
@@ -79,7 +154,7 @@ $= \sigma^2 + \frac{\sigma^2}{n} - \frac{\sigma^2}{SSx} (x_i - \bar{X})^2 =  \si
 
 
 
-Se usaron los siguientes resultados: 
+También se usaron los siguientes resultados: 
 
 
 $\bar{Y} = \hat{\beta_0} + \hat{\beta_1} \bar{X}$
@@ -109,15 +184,179 @@ $\frac{SSx}{(x_i-\bar{X})^2} = \frac{\sum_{i=1}^n (x_i - \bar{X})^2}{(x_i - \bar
 
 
 
+\newpage 
+
+
 ## 3. Expresión alternativa para R^2
+
+Considere el coeficiente de correlación muestral o de Pearson para dos variables X y Y :
+
+$$r_{x y}=\frac{\sum_{i=1}^n\left(x_i-\bar{X}\right)\left(y_i-\bar{Y}\right)}{\left(\sum_{i=1}^n\left(x_i-\bar{X}\right)^2 \sum_{i=1}^n\left(y_i-\bar{Y}\right)^2\right)^{1 / 2}}$$.
+
+Considere el modelo de regresión
+
+$$y_i=\beta_0+\beta_1 x_i+\varepsilon_i$$.
+
+a. Demuestre que:
+
+$$ R^2 = r_{xy}^2 $$
+
+b. Demuestre que $t^*=t$, donde $t$ es la estadística usada para contrastar " $H_0: \beta_1=0$ vs $H_1: \beta_1 \neq 0$ ":
+$$
+t=\frac{\widehat{\beta}_1}{\sqrt{\frac{\widehat{\sigma}^2}{\sum_{i=1}^n\left(x_i-\bar{X}\right)^2}}} .
+$$
+
+Por otra parte, $t^*=\frac{r_{x y} \sqrt{n-2}}{\sqrt{1-r_{x y}^2}}$ es la estadística usada para contrastar " $H_0: \rho=0$ vs $H_a: \rho \neq 0$ " cuando $(X, Y)$ sigue una distribución normal bivariada con coeficiente de correlación $\rho=\rho_{x y}$.
+
+
+\textcolor{red}{SOLUCIÓN a.}
+
+Recordemos que: $R^2=\frac{\sum_{i=1}^n\left(\hat{y}_i-\bar{y}\right)^2}{\sum_{i=1}^n\left(y_i-\bar{y}\right)^2}=\frac{S C R}{S C T}$
+
+Y por la expresión (77) de las notas sabemos que: 
+
+$$\begin{aligned} 
+SCR = \hat{\beta}_1^2 S S_x & =\left(\frac{\sum_{i=1}^n\left(x_i-\bar{x}\right)\left(y_i-\bar{y}\right)}{\sum_{i=1}^n\left(x_i-\bar{x}\right)^2}\right)^2 \cdot \sum_{i=1}^n\left(x_i-\bar{x}\right)^2 \\ & =\frac{\left(\sum_{i=1}^n\left(x_i-\bar{x}\right)\left(y_i-\bar{y}\right)\right)^2}{\sum_{i=1}^n\left(x_i-\bar{x}\right)^2}
+\end{aligned}$$
+
+Entonces tenemos:
+
+$$\begin{aligned} 
+R^2 & =\frac{SCR}{SCT} \\ & =\frac{\frac{\left(\sum_{i=1}^n\left(x_i-\bar{x}\right)\left(y_i-\bar{y}\right)\right)^2}{\sum_{i=1}^n\left(x_i-\bar{x}\right)^2}}{\sum_{i=1}^n\left(y_i-\bar{y}\right)^2} \\ &
+=\frac{\left(\sum_{i=1}^n\left(x_i-\bar{x}\right)\left(y_i-\bar{y}\right)\right)^2}{\sum_{i=1}^n\left(x_i-\bar{x}\right)^2 \cdot \sum_{i=1}^n\left(y_i-\bar{y}\right)^2} 
+\end{aligned}$$
+
+Por tanto tenemos que:
+
+$$
+R^2 = \frac{\left(\sum_{i=1}^n\left(x_i-\bar{x}\right)\left(y_i-\bar{y}\right)\right)^2}{\sum_{i=1}^n\left(x_i-\bar{x}\right)^2 \cdot \sum_{i=1}^n\left(y_i-\bar{y}\right)^2}
+$$
+
+Ahora, notemos que:
+
+$$\begin{aligned} 
+r_{xy}^2 & = \left(\frac{\sum_{i=1}^n\left(x_i-\bar{x}\right)\left(y_i-\bar{y}\right)}{\sqrt{\sum_{i=1}^n\left(x_i-\bar{x}\right)^2 \cdot \sum_{i=1}^n\left(y_i-\bar{y}\right)^2}}\right)^2 \\ & 
+= \frac{\left(\sum_{i=1}^n\left(x_i-\bar{x}\right)\left(y_i-\bar{y}\right)\right)^2}{\sum_{i=1}^n\left(x_i-\bar{x}\right)^2 \cdot \sum_{i=1}^n\left(y_i-\bar{y}\right)^2} \\ &
+= R^2
+\end{aligned}$$
+
+$$
+\therefore R^2 = r_{xy}^2
+$$
+
+\textcolor{red}{SOLUCIÓN b.}
+
+Primero notemos lo siguiente:
+
+$$\begin{aligned} 
+t & = \frac{\widehat{\beta}_1}{\sqrt{\frac{\widehat{\sigma}^2}{\sum_{i=1}^n\left(x_i-\bar{x}\right)^2}}} \\ &
+= \frac{\frac{\sum_{i=1}^n\left(x_i-\bar{x}\right)\left(y_i-\bar{y}\right)}{\sum_{i=1}^n\left(x_i-\bar{x}\right)^2}}{\sqrt{\frac{\frac{\sum_{i=1}^n (y_i - \widehat{y_i})^2}{n-2}}{\sum_{i=1}^n\left(x_i-\bar{x}\right)^2}}} \\ &
+= \frac{\frac{\sum_{i=1}^n\left(x_i-\bar{x}\right)\left(y_i-\bar{y}\right)}{\sum_{i=1}^n\left(x_i-\bar{x}\right)^2}}{\frac{\sqrt{\sum_{i=1}^n (y_i - \widehat{y_i})^2}}{\sqrt{n-2} \cdot \sqrt{\sum_{i=1}^n(x_i - \bar{x})^2}}} \\ &
+= \frac{\sum_{i=1}^n\left(x_i-\bar{x}\right)\left(y_i-\bar{y}\right) \cdot \sqrt{n-2}\sqrt{\sum_{i=1}^n(x_i - \bar{x})^2}}{\sum_{i=1}^n\left(x_i-\bar{x}\right)^2 \cdot \sqrt{\sum_{i=1}^n (y_i - \widehat{y_i})^2}} \\ &
+= \frac{\sum_{i=1}^n\left(x_i-\bar{x}\right)\left(y_i-\bar{y}\right) \cdot \sqrt{n-2}}{\sqrt{\sum_{i=1}^n\left(x_i-\bar{x}\right)^2} \cdot \sqrt{\sum_{i=1}^n (y_i - \widehat{y_i})^2}} \\ &
+= \frac{\sum_{i=1}^n\left(x_i-\bar{x}\right)\left(y_i-\bar{y}\right) \cdot \sqrt{n-2}}{\left( \sum_{i=1}^n\left(x_i-\bar{x}\right)^2 \cdot \sum_{i=1}^n (y_i - \widehat{y_i})^2 \right)^{\frac{1}{2}}}
+\end{aligned}$$
+
+Así: $t = \frac{\sum_{i=1}^n\left(x_i-\bar{x}\right)\left(y_i-\bar{y}\right) \cdot \sqrt{n-2}}{\left( \sum_{i=1}^n\left(x_i-\bar{x}\right)^2 \cdot \sum_{i=1}^n (y_i - \widehat{y_i})^2 \right)^{\frac{1}{2}}}$
+
+Por otro lado tenemos que:
+
+$$\begin{aligned} 
+t^* & = \frac{r_{xy} \cdot \sqrt{n-2}}{\sqrt{1 - r_{xy}^2}} \\ &
+= \frac{\frac{\sum_{i=1}^n\left(x_i-\bar{x}\right)\left(y_i-\bar{y}\right)}{\left( \sum_{i=1}^n\left(x_i-\bar{x}\right)^2 \cdot \sum_{i=1}^n (y_i - \bar{y_i})^2 \right)^{\frac{1}{2}}} \cdot \sqrt{n-2}}{\sqrt{1 - \frac{\sum_{i=1}^n(\widehat{y_i} - \bar{y_i})^2}{\sum_{i=1}^n(y_i - \bar{y_i})^2}}} \\ &
+= \frac{\frac{\sum_{i=1}^n\left(x_i-\bar{x}\right)\left(y_i-\bar{y}\right) \cdot \sqrt{n-2}}{\sqrt{\sum_{i=1}^n\left(x_i-\bar{x}\right)^2} \cdot \sqrt{\sum_{i=1}^n (y_i - \bar{y_i})^2}}}{\sqrt{\frac{\sum_{i=1}^n(y_I - \bar{y_i})^2 - \sum_{i=1}^n(\widehat{y_i}-\bar{y_i})^2}{\sum_{i=1}^n(y_i-\bar{y_i})^2}}}
+\end{aligned}$$
+
+Ahora, por la expresión (68) de las notas de clase sabemos que:
+$$
+\sum_{i=1}^n(y_i-\bar{y_i})^2=\sum_{i=1}^n(\widehat{y_i}-\bar{y_i})^2+\sum_{i=1}^n(y_i-\widehat{y_i})^2 \Longrightarrow \sum_{i=1}^n(y_i-\bar{y_i})^2-\sum_{i=1}^n(\widehat{y_i}-\bar{y_i})^2=\sum_{i=1}^n(y_i-\widehat{y_i})^2
+$$
+Así:
+
+$$\begin{aligned} 
+t^* & = \frac{\frac{\sum_{i=1}^n\left(x_i-\bar{x}\right)\left(y_i-\bar{y}\right) \cdot \sqrt{n-2}}{\sqrt{\sum_{i=1}^n\left(x_i-\bar{x}\right)^2} \cdot \sqrt{\sum_{i=1}^n (y_i - \bar{y_i})^2}}}{\sqrt{\frac{\sum_{i=1}^n(y_i-\widehat{y_i})^2}{\sum_{i=1}^n(y_i-\bar{y_i})^2}}} \\ &
+= \frac{\frac{\sum_{i=1}^n\left(x_i-\bar{x}\right)\left(y_i-\bar{y}\right) \cdot \sqrt{n-2}}{\sqrt{\sum_{i=1}^n\left(x_i-\bar{x}\right)^2} \cdot \sqrt{\sum_{i=1}^n (y_i - \bar{y_i})^2}}}{\frac{\sqrt{\sum_{i=1}^n(y_i-\widehat{y_i})^2}}{\sqrt{\sum_{i=1}^n(y_i-\bar{y_i})^2}}} \\ &
+= \frac{\sum_{i=1}^n\left(x_i-\bar{x}\right)\left(y_i-\bar{y}\right) \cdot \sqrt{n-2}}{\sqrt{\sum_{i=1}^n\left(x_i-\bar{x}\right)^2} \cdot \sqrt{\sum_{i=1}^n (y_i - \widehat{y_i})^2}} \\ &
+= \frac{\sum_{i=1}^n\left(x_i-\bar{x}\right)\left(y_i-\bar{y}\right) \cdot \sqrt{n-2}}{\left( \sum_{i=1}^n\left(x_i-\bar{x}\right)^2 \cdot \sum_{i=1}^n (y_i - \widehat{y_i})^2 \right)^{\frac{1}{2}}} \\ &
+= t
+\end{aligned}$$
+
+$$\therefore t^* = t $$
+
+
+
+
+
+\newpage
 
 
 
 ## 4. Problema Anova. Equivalencia con la estimación considerando dos poblaciones normales.
 
 
-## 5. Problema ANOVA. Medicamentos.
+Sea $X_1, \ldots, X_n$ una m.a de la distribución $N\left(\mu_x, \sigma^2\right)$ y $Y_1, \ldots, Y_m$ una m.a de la distribución $N\left(\mu_y, \sigma^2\right)$ independientes entre si,
+sea $Z=1$ si la observacion es de la poblacion con distribucion $N\left(\mu_x, \sigma^2\right)$ y $Z=-1$ si la poblacion es de la poblacion con distribucion $N\left(\mu_y, \sigma^2\right)$
 
+I. Consideramos el modelo de regresion lineal simple:
+$$
+w_j=\beta_0+\beta_1 z_j+\varepsilon_j
+$$
+con $\varepsilon_1, \ldots, \varepsilon_{n+m}$ variables independientes talque $\varepsilon_j \sim N\left(0, \sigma^2\right) \quad \forall j=1, \ldots, n+m$ 
+
+Entonces:
+$$
+\mathbb{E}(w ; z=1)=\mathbb{E}(x ; z=1)=\beta_0+\beta_1
+$$
+
+observamos que $\mathbb{E}(x ; z=1)=\mathbb{E}(x)=\mu_x$
+
+Por otro lado tenemos:
+$$
+\mathbb{E}(w ; z=-1)=\mathbb{E}(y ; z=-1)=\beta_0-\beta_1
+$$
+
+observamos que $\mathbb{E}(Y ; z=-1)=\mathbb{E}(y)=\mu_y$
+
+Es decir, $\mu_x=\beta_0+\beta_1$ y $\mu_y=\beta_0-\beta_1$,
+
+II. Conocemos los estimadores:
+$$
+\hat{\beta}_0=\bar{w}-\hat{\beta}_1 \bar{z}  \text { y }  \hat{\beta}_1=\frac{\sum_{i=1}^{n+m}\left(z_i-\bar{z}\right)\left(w_i-\bar{w}\right)}{\sum_{i=1}^{n+m}\left(z_i-\bar{z}\right)^2}
+$$
+
+Con esto podemos obtener:
+a) $\hat{E}(w ; z=1)$
+como $Z=1$ entonces $w=x$ y $\bar{z}=1$, asi:
+$$
+\hat{\beta}_1=\frac{\sum_{i=1}^n\left(z_i-\bar{z}\right)\left(x_i-\bar{x}\right)}{\sum_{i=1}^n\left(z_i-\bar{z}\right)^2} \rightarrow \hat{\beta}_1=0
+$$
+
+$$
+\begin{array}{r}
+\text { y } \hat{\beta}_0=\bar{x}-\hat{\beta}_1 \bar{z}=\bar{x}-\hat{\beta}_1=\bar{x} \\
+\therefore \hat{\mathbb{E}}(W ; z=1)=\hat{\beta}_0+\hat{\beta}_1=\bar{x}
+\end{array}
+$$
+
+b) Como $Z=-1$ entonces $w=y$ y $\bar{z}=-1$, asi:
+$$
+\begin{aligned}
+& \hat{\beta}_1=\frac{\sum_{i=1}^m\left(z_i-\bar{z}\right)\left(y_i-\bar{y}\right)}{\sum_{i=1}^m\left(z_i-\bar{z}\right)^2} \longrightarrow \hat{\beta}_1=0 \\
+& y, \hat{\beta}_0=\bar{y}-\hat{\beta}_1=\bar{y}
+\quad \therefore \hat{\mathbb{E}}(W ; z=-1)=\hat{\beta}_0-\hat{\beta}_1=\bar{y}
+\end{aligned}
+$$
+
+
+
+
+
+\newpage 
+
+
+
+
+## 5. Problema ANOVA. Medicamentos.
 
 
 ```{r, include=FALSE}
@@ -139,7 +378,7 @@ mean<-mean(datos$Y)
 ```
 
 
-En la base de datos ``Ejercicio5B`` se tiene información del índice de carga viral (Y), si se aplicó o no el medicamento contra Covid (Med) y si los pacientes son mayores o menores (o iguales) a 60 años (Edad). Tenemos un total de 100 pacientes, de los cuales 80 tienen más de 60 años y a la mitad de todos los pacientes se le aplicó el medicamento (tratados).  
+En la base de datos ``Ejercicio5B`` se tiene información del índice de carga viral (Y) y si se aplicó o no el medicamento contra Covid (Med) para un grupo de 100 personas. A 50 personas se le aplicó el medicamento.  
 
 En el siguiente Cuadro se muestra la estadística descriptiva del dato numérico, que es el índice de carga viral, es posible observar los pacientes presentaron un mínimo de `r min` y un maximo de `r max`, con una media de  `r mean`. La desviación estándar de `r sd` es pequeña, por lo que parece que los datos no son tan dispersos. 
 
@@ -164,44 +403,40 @@ datos\$Y & 100 & 10.480 & 1.148 & 7.868 & 13.390 \\
 \end{table} 
 
 
-A continuación podemos observar en la gráfica de caja y bigotes que a los pacientes menores de 60 años a quienes no se les aplicó la vacuna (no fueron tratadas) tienen una mayor carga viral, sin embargo no disponemos de datos para personas menores a 60 años a quienes se les aplicó el medicamento, para una mejor comparación. Por otro lado, para mayores de 60 años, parece no haber una diferencia clara entre los pacientes a los que se le aplicó la vacuna y a las personas a las que no se le aplicó, pues ambos grupos tienen cargas virales menores pero muy parecidas.   
+En la siguiente Gráfica de caja y bigotes (brazos), podemos observar  que hay una mediana mayor de carga viral para los individuos no tratados, con respecto a los tratados, además de una mayor dispersión de los datos para los no tratados. No se observaron outliers o valores atípicos.  
 
 
-
-
-```{r, echo=FALSE}
-# Crear interacción entre factores
-datos$Med_Edad <- interaction(datos$Med, datos$Edad)
+```{r, echo=FALSE, fig.width=6, fig.height=3.5}
 # Definimos colores
-custom_colors <- c("steelblue", "darkorange", "forestgreen", "firebrick")
+custom_colors <- c("steelblue", "darkorange")
 # Generamos el Boxplot
-ggplot(datos, aes(x = Med_Edad, y = Y, fill = Med_Edad)) +
-  geom_boxplot(width = 0.3, alpha = 0.5, outlier.shape = NA) +
-  geom_jitter(width = 0.2, height = 0, size = 3, alpha = 0.8) +
+ggplot(datos, aes(x = Med, y = Y, fill = Med)) +
+  geom_boxplot(width = 0.3, alpha = 0.5, outlier.shape = 1, outlier.colour = "red") +
+  #geom_jitter(width = 0.2, height = 0, size = 1, alpha = 0.8) +
   scale_fill_manual(values = custom_colors) +
-  labs(x = "Med & Edad", y = "Carga viral") +
-  ggtitle("Box Plot con Med & Edad") +
+  labs(x = "Med", y = "Carga viral") +
+  ggtitle("Box Plot con Med (tratados y no tratados)") +
   theme_minimal() +
   theme(
     plot.title = element_text(size = 12, face = "bold"),
     axis.text = element_text(size = 8),
     axis.title = element_text(size = 10, face = "bold"),
     legend.title = element_blank(),
-    legend.position = "none"
-  )
+    legend.position = "none")
 ```
 
-### II. Planteamiento del modelo y supuestos.
+
+### II. Planteamiento y estimación del modelo.
 
 Para ver si la menor carga viral está asociada con la aplicación del medicamento planteamos un modelo de regresión donde la variable dependiente es la carga viral $y_i$ y la variable independiente $x_i$ se puede ver como categórica, donde $x_i=1$ si el paciente es tratado y $x_i=0$ si no.
 
 
 $$y_i=\beta_0+\beta_1x_i+\varepsilon_i$$
 
-Suponemos que el modelo presenta linealidad, homocedasticidad en los errores y no autocorrelación en los errores.    
+Verificaremos que el modelo presente linealidad, además de homocedasticidad y no autocorrelación en los errores, para poder interpretar los resultados del ajuste del modelo que se muestra en la columna (1) del Cuadro al final de esta sección.     
 
 
-### III. Prueba de hipótesis. 
+
 
 
 ```{r, echo=FALSE,  include=FALSE}
@@ -215,62 +450,105 @@ datos$Med<-relevel(datos$Med,"No")
 
 ```{r, echo=FALSE, include=FALSE}
 #Ajustamos nuestro modelo 
-fit<-lm(Y~Med, data = datos)
+fit1<-lm(Y~Med, data = datos)
 
 #Y mostramos el summary con stargazer
-stargazer(fit)
+#stargazer(fit1)
 ```
 
 
 ```{r, echo=FALSE, include=FALSE}
-b0<-fit$coefficients[1]
-b1<-fit$coefficients[2]
+b0<-fit1$coefficients[1]
+b1<-fit1$coefficients[2]
 ```
 
 
-En el siguinte Cuadro se muestra el modelo ajustado por mínimos cuadrados ordinarios. El intercepto $\beta_0$ = `r b0`, el término asociado a la variable categórica de si se aplicó el medicamento es $\beta_1$ = `r b1`, y ambos son estadísticamente significativos de manera individual con la prueba $t-student$, es decir, para ambos casos se rechaza la hipótesis nula de que $\beta_0=0$ y $\beta_1=0$ con el 5% de nivel de significancia, respectivamente. La prueba de hipótesis global también rechaza la hipótesis nula de que $\beta_i=0, \forall i=1,..,n$ , es decir, de acuerdo con la prueba $F$, al menos una de los coeficientes es distinto de cero. Cabe notar que como estamos en el caso de una solo variable explicativa, esta prueba coincide con la asociada a $\beta_1$. 
-
-Como puede observarse, el nivel de referencia es $MedNo$, es decir, que no se haya tratado o no se haya aplicado el medicamento. Entonces, de acuerdo con el modelo, el tratamiento disminuye la carga viral en `r b1` unidades.   
 
 
+### III. Validación de supuestos y pruebas de hipótesis.  
 
-\begin{table}[!htbp] \centering 
-  \caption{} 
-  \label{} 
-\begin{tabular}{@{\extracolsep{5pt}}lc} 
-\\[-1.8ex]\hline 
-\hline \\[-1.8ex] 
- & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
-\cline{2-2} 
-\\[-1.8ex] & Y \\ 
-\hline \\[-1.8ex] 
- MedSi & $-$0.468$^{**}$ \\ 
-  & s.e.(0.226) \\
-  & t-value: -2.074 \\
-  & Pr(>|t|): 0.0407\\
-  & \\ 
- Constant & 10.714$^{***}$ \\ 
-  & s.e.(0.160) \\ 
-  & t-value: 67.097 \\ 
-  & Pr(>|t|): <2e-16\\
-  & \\ 
-\hline \\[-1.8ex] 
-Observations & 100 \\ 
-R$^{2}$ & 0.042 \\ 
-Adjusted R$^{2}$ & 0.032 \\ 
-Residual Std. Error & 1.129 (df = 98) \\ 
-F Statistic & 4.299$^{**}$ (df = 1; 98); p-value: 0.04075 \\ 
-\hline 
-\hline \\[-1.8ex] 
-\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
-\end{tabular} 
-\end{table} 
+Haremos una prueba de hipótesis, para responder a la pregunta de si existe una relación entre la aplicación del medicamento y la disminución de la carga viral. Es decir, planteamos la hipótesis nula $H=: \beta_1>0$ y la alternativa $H_a: \beta_1<0$. En la prueba ``Simultaneous Tests for General Linear Hypotheses`` se rechaza $H_0$ con un nivel de confianza del 95%, pues el p-value asociado es de $0.0204$ y t-value de $-2.074$. Sin embargo, para que este resultado tenga validez y para que también las pruebas de hipótesis individuales y global  del modelo de la columna (1) del cuadro al final de esta sección tengan validez y podamos interpretar los coeficientes estimados, debemos de hacer las pruebas de cumplimiento de los supuestos del modelo de regresión lineal.    
+
+
+```{r, echo=FALSE}
+# Pruebas de hipótesis para beta1
+Matriz=matrix(c(0,1), ncol=2, nrow=1)
+c=0
+#alternative: "two.sided" (default), "greater" or "less"
+prueba1=glht(fit1, linfct=Matriz, rhs=c, alternative="less")
+summary(prueba1)
+```
+
+
+
+
+\begin{table}[!htbp] \centering
+\footnotesize
+\begin{tabular}{|lllll|}
+\hline
+\multicolumn{5}{|c|}{Simultaneous Tests for General Linear Hypotheses}                                                                                                \\ \hline
+\multicolumn{5}{|c|}{Fit: lm(formula = Y $\sim$Med, data = datos)}                                                                                                    \\ \hline
+\multicolumn{1}{|l|}{Linear Hypotheses:}  & \multicolumn{1}{l|}{}         & \multicolumn{1}{l|}{}           & \multicolumn{1}{l|}{}                &                  \\ \hline
+\multicolumn{1}{|l|}{}                    & \multicolumn{1}{l|}{Estimate} & \multicolumn{1}{l|}{Std. Error} & \multicolumn{1}{l|}{t value}         & Pr(\textless{}t) \\ \hline
+\multicolumn{1}{|l|}{1 \textgreater{}= 0} & \multicolumn{1}{l|}{-0.4682}  & \multicolumn{1}{l|}{0.2258}     & \multicolumn{1}{l|}{-2.074 }         & 0.0204*           \\ \hline
+\multicolumn{1}{|l|}{}                    & \multicolumn{1}{l|}{}         & \multicolumn{1}{l|}{}           & \multicolumn{1}{l|}{}                &                  \\ \hline
+\multicolumn{1}{|l|}{Signif. codes:}      & \multicolumn{4}{l|}{0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1}                                                       \\ \hline
+\multicolumn{5}{|l|}{(Adjusted p values reported -- single-step method)}                                                                                              \\ \hline
+\end{tabular}
+\end{table}
+
+
+
+
+
+En el siguiente Cuadro se pueden observar las pruebas de Shapiro-Wilk, Breusch-Pagan y Durbin-Watson para el Modelo 1, que plantean la hipótesis nulas de normalidad, homoscedasticidad y no autocorrelación, respectivamente. Se concluye que el Modelo 1 presenta normalidad de los errores, sin embargo presenta autocorrelación y heteroscedasticidad. Por lo que tendríamos que hacer algunos ajustes al modelo, con algunos tratamientos a las variables, si quisiéramos usarlo para inferencia.  
+
+
+
+```{r, echo=FALSE}
+table_tests<-nice_assumptions(fit1)
+table_tests_fin<-subset(table_tests, select = -c(Model,Diagnostic) )
+
+kable(t(table_tests_fin)) %>%
+kable_styling(bootstrap_options = "striped", full_width = F)
+```
+
+
+
+
+
 
 
 ### IV. Consideración de la variable Edad.
 
+Tenemos un total de 100 pacientes, de los cuales 80 tienen más de 60 años y a la mitad de todos los pacientes se le aplicó el medicamento (tratados). En la base de datos tenemos 20 observaciones de personas no tratadas menores de 60 años y no tenemos personas de ese grupo de edades que sean tratadas por el medicamento, lo que podría sesgar los resultados.   
 
-Como se mencionó anteriormente, en la base de datos tenemos 20 observaciones de personas no tratadas menores de 60 años y no tenemos personas de ese grupo de edades que sean tratadas por el medicamento, lo que podría sesgar los resultados. Aunado a esto, tenemos que para el grupo de edades mayores de 60 años, no se puede notar gráficamente una disferencia clara entre tratados y no tratados. Por lo tanto, consideramos que los rsultados anteriores no son contundentes, por lo que convendría controlar por la variable de Edad.  
+A continuación podemos observar en la gráfica de caja y bigotes que a los pacientes menores de 60 años a quienes no se les aplicó la vacuna (no fueron tratadas) tienen una mayor carga viral, sin embargo no disponemos de datos para personas menores a 60 años a quienes se les aplicó el medicamento, para una mejor comparación. Por otro lado, para mayores de 60 años, parece no haber una diferencia clara entre los pacientes a los que se le aplicó la vacuna y a las personas a las que no se le aplicó, pues ambos grupos tienen cargas virales menores pero muy parecidas. Finalmente, no se detectaron datos atípicos (outliers) en los datos.  Por lo tanto, consideramos que los rsultados anteriores no son contundentes, por lo que convendría controlar por la variable de Edad.  
+
+
+
+
+```{r, echo=FALSE, fig.width=6, fig.height=3}
+# Crear interacción entre factores
+datos$Med_Edad <- interaction(datos$Med, datos$Edad)
+# Definimos colores
+custom_colors <- c("steelblue", "darkorange", "forestgreen", "firebrick")
+# Generamos el Boxplot
+ggplot(datos, aes(x = Med_Edad, y = Y, fill = Med_Edad)) +
+  geom_boxplot(width = 0.3, alpha = 0.5, outlier.shape = 1, outlier.colour = "red") +
+  #geom_jitter(width = 0.2, height = 0, size = 1, alpha = 0.8) +
+  scale_fill_manual(values = custom_colors) +
+  labs(x = "Med & Edad", y = "Carga viral") +
+  ggtitle("Box Plot con Med & Edad") +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 12, face = "bold"),
+    axis.text = element_text(size = 8),
+    axis.title = element_text(size = 10, face = "bold"),
+    legend.title = element_blank(),
+    legend.position = "none")
+```
+
 
 
 ### V. Planteamiento del nuevo modelo y pruebas de hipótesis.
@@ -290,53 +568,78 @@ datos_cortados<-datos%>%filter(Edad==">60")
 
 ```{r, echo=FALSE, include=FALSE}
 #Ajustamos nuestro modelo 
-fit_c<-lm(Y~Med, data = datos_cortados)
+fit2<-lm(Y~Med, data = datos_cortados)
 
 #Y mostramos el summary con stargazer
-stargazer(fit_c)
+stargazer(fit2)
 ```
 
 
 ```{r, echo=FALSE, include=FALSE}
-b0<-fit_c$coefficients[1]
-b1<-fit_c$coefficients[2]
+b0<-fit2$coefficients[1]
+b1<-fit2$coefficients[2]
 ```
 
 
-A continuación se muestra el Cuadro correspondiente a la regresión lineal para los pacientes tratados y no tratados mayores a 60 años. La prueba global $F$ muestra que no es posible rechazar la hipótesis nula de que los coeficientes asociados a las variables explicativas son cero, pues el p-value asociado es grande, incluso mayor a 0.1. 
+En la columna (2) del Cuadro a final de esta sección se muestran los resultados correspondientes  a la regresión lineal para los pacientes tratados y no tratados mayores a 60 años. La prueba global $F$ muestra que no es posible rechazar la hipótesis nula de que los coeficientes asociados a las variables explicativas son cero, pues el p-value asociado es grande, incluso mayor a 0.1. Al parecer, las conclusiones obtenidas al tomar toda la muestra estaban sesgadas por el grupo de edad, pues cuando quitamos a los no tratados menores de 60 años que tenían una carga viral bastante importante, los resultados cambiaron. Como en la prueba global no es posible rechazar la hipítesis nula, no es posible continuar el análisis con este modelo, y esto está relacionado con el no rechazo de la hipótesis nula de la prueba individual t-student para $\beta_1$, es decir, que la variable explicativa no es estadísticamente significativa en el modelo de regresión lineal. 
 
-Al parecer, las conclusiones obtenidas al tomar toda la muestra estaban sesgadas por el grupo de edad, pues cuando quitamos a los no tratados menores de 60 años que tenían una carga viral bastante importante, los resultados cambiaron.  
+NOTA: Si tomáramos todos los datos, sin considerar los grupos heterogéneos, para el coeficiente estimado asociado a la aplicación o no al medicamento, no se puede rechazar la hipótesis nula de $\beta_1=0$ contra la alternativa de $\beta_1\neq0$. Esto se muestra en la columna (3) del cuadro al final de esta sección. Además, la variable estadísticamente significativa es la edad, la prueba global $F$ también rechaza $H_0$ de que todos los coeficientes estimados son cero. Adicionalmente, para este modelo se cumplen los tres supuestos más importantes, como la normalidad, no autocorrelación y homocedasticidad, como se muestra en el Cuadro correspondiente a las pruebas Shapiro-Wilk, Breusch-Pagan y Durbin-Watson. Sin embargo, no podemos continuar por este camino, en primera porque estamos analizando datos heterogéneos, tal vez si tuviéramos a los individuos menores de 60 años con tratamiento, podríamos analizarlo, y en segundo lugar, la respuesta a que si hay un efecto del medicamento parecería ser negativa y solamente dependería de la variable edad.    
+
+
+
+```{r, echo=FALSE}
+fit3<-lm(Y~Med+Edad, data = datos)
+#summary(fit3)
+```
+
+
+
+```{r, echo=FALSE}
+table_tests<-nice_assumptions(fit3)
+table_tests_fin<-subset(table_tests, select = -c(Model,Diagnostic) )
+
+kable(t(table_tests_fin)) %>%
+kable_styling(bootstrap_options = "striped", full_width = F)
+```
+
+
+
+```{r, echo=FALSE}
+#stargazer(fit1,fit2,fit3)
+```
+
 
 
 \begin{table}[!htbp] \centering 
   \caption{} 
   \label{} 
-\begin{tabular}{@{\extracolsep{5pt}}lc} 
+\footnotesize
+\begin{tabular}{@{\extracolsep{5pt}}lccc} 
 \\[-1.8ex]\hline 
 \hline \\[-1.8ex] 
- & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
-\cline{2-2} 
-\\[-1.8ex] & Y \\ 
+ & \multicolumn{3}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-4} 
+\\[-1.8ex] & \multicolumn{3}{c}{Y} \\ 
+\\[-1.8ex] & (1) & (2) & (3)\\ 
 \hline \\[-1.8ex] 
- MedSi & 0.029 \\ 
-  & s.e.(0.245) \\
-  & t-value: 0.119 \\
-  & Pr(>|t|): 0.906\\
-  & \\ 
- Constant & 10.217$^{***}$ \\ 
-  & s.e.(0.194) \\
-  & t-value: 52.704 \\
-  & Pr(>|t|): <2e-16\\
-  & \\ 
+ MedSi & $-$0.468$^{**}$ & 0.029 & 0.029 \\ 
+  & (0.226) & (0.245) & (0.242) \\ 
+  & & & \\ 
+ Edad\textgreater 60 &  &  & $-$1.244$^{***}$ \\ 
+  &  &  & (0.302) \\ 
+  & & & \\ 
+ Constant & 10.714$^{***}$ & 10.217$^{***}$ & 11.460$^{***}$ \\ 
+  & (0.160) & (0.194) & (0.234) \\ 
+  & & & \\ 
 \hline \\[-1.8ex] 
-Observations & 80 \\ 
-R$^{2}$ & 0.0002 \\ 
-Adjusted R$^{2}$ & $-$0.013 \\ 
-Residual Std. Error & 1.062 (df = 78) \\ 
-F Statistic & 0.014 (df = 1; 78); p-value: 0.9056 \\ 
+Observations & 100 & 80 & 100 \\ 
+R$^{2}$ & 0.042 & 0.0002 & 0.184 \\ 
+Adjusted R$^{2}$ & 0.032 & $-$0.013 & 0.168 \\ 
+Residual Std. Error & 1.129 (df = 98) & 1.062 (df = 78) & 1.047 (df = 97) \\ 
+F Statistic & 4.299$^{**}$ (df = 1; 98) & 0.014 (df = 1; 78) & 10.960$^{***}$ (df = 2; 97) \\ 
 \hline 
 \hline \\[-1.8ex] 
-\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\textit{Note:}  & \multicolumn{3}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
 \end{tabular} 
 \end{table} 
 
@@ -348,11 +651,637 @@ F Statistic & 0.014 (df = 1; 78); p-value: 0.9056 \\
 
 
 
+\newpage
+
+
+
+
+
+
+
 ## 6. Uso del modelo de regresión lineal simple. 
+
+A continuación se presentan los datos de los pesos de los huevos de 11 nidadas de pingüinos Macaroni, cada nidada tiene dos huevos, uno más pequeño (x) que el otro (y). 
+
+```{r, echo=FALSE}
+x=c(79, 93, 100, 105, 101, 96, 96, 109, 70, 71, 87)
+y=c(123, 138, 154, 161, 155, 149, 152, 160, 117, 123, 138 )
+Datos6=data.frame(cbind(x,y))
+kable(t(Datos6)) %>%
+kable_styling(bootstrap_options = "striped", full_width = F)
+```
+
+### I. Ajuste del modelo de regresión.
+
+Ajustaremos una recta de regresión para estimar el peso promedio del huevo mayor (y) dado el peso del huevo menor (x), es decir, la variable dependiente es el peso del huevo más grande $y_i$ y la variable independiente es el peso del huevo menor. 
+
+
+$$y_i=\beta_0+\beta_1x_i+\varepsilon_i$$ 
+
+
+
+```{r, echo=FALSE, include=FALSE}
+#Ajustamos nuestro modelo 
+fit<-lm(y~x, data = Datos6)
+
+#Y mostramos el summary con stargazer
+stargazer(fit)
+```
+
+
+```{r, echo=FALSE, include=FALSE}
+b0<-fit$coefficients[1]
+b1<-fit$coefficients[2]
+```
+
+
+En el siguiente Cuadro podemos observar que el p-valor asociado a la prueba $F$ es de menor a 0.05, por lo que se rechaza la hipótesis nula de que los coeficientes asociados a las variables explicativas son cero contra la alternativa de que al menos un coeficiente estimado es distinto de cero. En este caso, como hay una solo variable explicativa, esta prueba coincide con la prueba $t-student$ individual para la $\beta_1$= `r b1`, que también rechaza la hipótesis nula de que $\beta_1=0$ contra la alternativa de que $\beta_1 \neq0$. 
+
+
+
+
+
+\begin{table}[!htbp] \centering 
+  \caption{} 
+  \label{} 
+\footnotesize
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-2} 
+\\[-1.8ex] & y \\ 
+\hline \\[-1.8ex] 
+ x & 1.169$^{***}$ \\ 
+  & s.e.(0.088) \\
+  & t-value: 13.225 \\
+  & Pr(>|t|): 3.35e-07\\
+  & \\ 
+ Constant & 35.674$^{***}$ \\ 
+  & s.e.(8.171) \\
+  & t-value: 4.366 \\
+  & Pr(>|t|): 0.00181\\
+  & \\ 
+\hline \\[-1.8ex] 
+Observations & 11 \\ 
+R$^{2}$ & 0.951 \\ 
+Adjusted R$^{2}$ & 0.946 \\ 
+Residual Std. Error & 3.702 (df = 9) \\ 
+F Statistic & 174.895$^{***}$ (df = 1; 9); p-value: 3.351e-07 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table} 
+
+
+La Gráfica siguiente muestra las observaciones y la recta ajustada, parece ser que hay un muy buen ajuste de la recta a los puntos. 
+
+
+
+```{r, echo=FALSE, fig.width = 6, fig.height = 2.8}
+ggplot(Datos6, aes(x, y)) +
+  geom_point() +
+  geom_abline(intercept = b0, slope = b1) + 
+  theme_bw()
+```
+
+En las siguientes Gráficas podemos observar  las pruebas gráficas para el cumplimiento de los supuestos del modelo de regresión lineal. La Gráfica **Residuals vs Fitted**, se utiliza para comprobar los supuestos de relación lineal, una línea horizontal, sin patrones distintos, es indicación de una relación lineal, lo que es bueno en nuestro caso. La Gráfica **Normal Q-Q**, se utiliza para examinar si los residuos se distribuyen normalmente, es bueno que los puntos residuales sigan la línea recta discontinua, en nuestro caso parece que todo se ajusta bien. La Gráfica **Scale-Location**, se utiliza para comprobar la homogeneidad de la varianza de los residuos (homoscedasticidad), la línea horizontal con puntos igualmente distribuidos es una buena indicación de homocedasticidad, este es el caso en nuestro ejemplo, donde no tenemos un problema de heterocedasticidad. La Gráfica **Residuals vs Leverage**, se utiliza para identificar casos de valores influyentes, es decir, valores extremos que podrían influir en los resultados de la regresión cuando se incluyen o excluyen del análisis, al parecer ningún valor sale de la distancia de Cook. 
+
+
+
+```{r, echo=FALSE, fig.width = 6, fig.height = 4}
+par(mfrow = c(2, 2))
+plot(fit)
+```
+
+
+
+```{r, echo=FALSE, warning=FALSE,  message=FALSE, fig.width = 3, fig.height = 2.8, include=FALSE}
+par(mfrow = c(2, 2))
+#####check_model() function of performance package: Graphs####
+
+# return a list of single plots
+diagnostic_plots <- plot(check_model(fit, panel = FALSE))
+# linearity
+diagnostic_plots[[2]]
+# normally distributed residuals
+diagnostic_plots[[5]] #6
+# homoscedasticiy - homogeneity of variance
+diagnostic_plots[[3]]
+# influential observations - outliers
+diagnostic_plots[[4]]
+
+
+```
+
+
+
+En el siguiente Cuadro se pueden observar las pruebas de Shapiro-Wilk, Breusch-Pagan y Durbin-Watson, en todos los casos el p-value asociado es mayor a 0.05, por lo que no hay evidencia para rechzar las hipótesis nulas de normalidad, homoscedasticidad y no autocorrelación, respectivamente. 
+
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+#nice_assumptions from package rempsyc
+
+table_tests<-nice_assumptions(fit)
+table_tests_fin<-subset(table_tests, select = -c(Model,Diagnostic) )
+```
+
+
+
+```{r, echo=FALSE}
+#nice_assumptions(fit)
+#table_nice
+kable(t(table_tests_fin)) %>%
+kable_styling(bootstrap_options = "striped", full_width = F)
+
+```
+
+
+
+
+### II. Prueba de hipótesis. Diferencia entre peso mayor y menor como constante. 
+
+Ante la sospecha de que en promedio la diferencia entre el peso mayor y el peso menor es constante (es decir, no depende del peso del huevo menor observado), haremos una prueba de hipótesis. En primer lugar notemos que esto implicaría $H_0: \beta_1=1$, contra la alternativa $\beta_1\neq1$, a continuación se muestra la aprueba ``Simultaneous Tests for General Linear Hypotheses``, donde no se rechaza esta hipótesis nula, pues el p-valor asociado es mayor a 0.05, considerando un nivel del confianza del 95%.  
+
+
+```{r, echo=FALSE}
+# Pruebas de hipótesis para beta1
+Matriz=matrix(c(0,1), ncol=2, nrow=1)
+c=1
+#alternative: "two.sided" (default), "greater" or "less"
+prueba1=glht(fit, linfct=Matriz, rhs=c, alternative="two.sided")
+#summary(prueba1)
+```
+
+
+\begin{table}[!htbp] \centering
+\footnotesize
+\begin{tabular}{|lllll|}
+\hline
+\multicolumn{5}{|c|}{Simultaneous Tests for General Linear Hypotheses}                                                                                                \\ 
+\multicolumn{5}{|c|}{Fit: lm(formula = Y $\sim$x, data = Datos6)}                                                                                                    \\
+\multicolumn{5}{|l|}{Linear Hypotheses:}                                                                                                                            \\ \hline
+\multicolumn{1}{|l|}{}                    & \multicolumn{1}{l|}{Estimate} & \multicolumn{1}{l|}{Std. Error} & \multicolumn{1}{l|}{t value}         & Pr(\textless{}t) \\ \hline
+\multicolumn{1}{|l|}{1 == 1} & \multicolumn{1}{l|}{1.16940}  & \multicolumn{1}{l|}{0.08842}     & \multicolumn{1}{l|}{1.916}         & 0.0877           \\ \hline
+\multicolumn{5}{|l|}{}                             \\ \hline
+\multicolumn{1}{|l|}{Signif. codes:}      & \multicolumn{4}{l|}{0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1}                                                       \\ \hline
+\multicolumn{5}{|l|}{(Adjusted p values reported -- single-step method)}                                                                                              \\ \hline
+\end{tabular}
+\end{table}
+
+
+
+### III. Nueva observación (nidada). ¿Los huevos provienes de pinguinos Macaroni?
+
+
+Se observa el peso de los huevos de una nueva nidada, observándose un peso de 70 y 145 gramos. Usando un intervalo de confianza del 95%, veremos si la nidada de huevos sí proviene de pinguinos Macaroni. 
+
+
+
+```{r, echo=FALSE}
+#cálculo del valor para un peso de 70
+nuevo_y<-b0+b1*70
+```
+
+Si tomamos en cuenta la recta de regresión anterior, podemos ver que $y_i=\hat{\beta_0}+\hat{\beta_1}x_i$ = `r b0` + `r b1` *(70)= `r nuevo_y`. Éste valor se ve alejado de los 145 gramos del huevo más grande encontrado.
+
+
+
+
+
+```{r, echo=FALSE}
+new.dat <- data.frame(x = c(70))
+predict<-predict(fit, newdata = new.dat, interval = 'prediction',  level = 0.95)
+#predict[3]
+```
+
+
+
+Podemos predecir que el valor del huevo más grande debería estar entre el valor `r predict[2]` y el valor `r predict[3]` de acuerdo con un intervalo de predicción. El valor de 145 gramos no cae dentro del intervalo, como también podemos observar en la siguiente Gráfica, por lo que podríamos concluir que la nueva observación no corresponde a los huevos de los pingüinos Macaroni. 
+
+
+
+```{r, echo=FALSE}
+# Extract the prediction interval values
+lower_limit <- predict[1, "lwr"]
+predicted_value <- predict[1, "fit"]
+upper_limit <- predict[1, "upr"]
+
+# Print the prediction interval values
+#cat("Lower Limit:", lower_limit, "\n")
+#cat("Predicted Sales:", predicted_sales, "\n")
+#cat("Upper Limit:", upper_limit, "\n")
+```
+
+
+```{r, echo=FALSE, fig.width = 6, fig.height = 4}
+
+# Plot the prediction interval on a graph
+plot(Datos6$x, Datos6$y, main = "", xlab = "X", ylab = "Y", pch = 16)
+# Add the regression line
+abline(fit, col = "green")  
+# Add the predicted point
+points(70, predicted_value, col = "red", pch = 16)
+points(70, 145, col = "blue", pch = 16)
+segments(70, lower_limit, 70, upper_limit, col = "red", lwd = 2)
+```
+
+
+
+
+
+
+\newpage
+
+
 
 
 
 ## 7. Regresión lineal simple con datos de "performance".
+
+
+
+Consideraremos los datos en la base ``performance.csv`` y las variables: y = academic performance of the school (api00) y x = percentage of students receiving free meals (meals). Estos datos corresponden a una muestra aleatoria de 400 escuelas primarias en California, en donde por escuela se realizaron mediciones que tienen que ver con su desempeño en el año 2000. 
+
+```{r, echo=FALSE}
+datos7<-read_csv("performance.csv", show_col_types = FALSE)
+```
+
+
+### i) Regresión lineal simple y verificación de supuestos.
+
+Ajustaremos un modelo de regresión lineal simple del desempeño escolar (api00) en función del procentaje de estudiantes que recibieron desayunos gratuitos en las escuelas (meals). 
+
+```{r, echo=FALSE}
+modelo1<-lm(data=datos7, api00~meals)
+#summary(modelo1)
+#stargazer(modelo1)
+```
+
+
+\begin{table}[!htbp] \centering 
+  \caption{MODELO 1} 
+  \label{}
+\footnotesize
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-2} 
+\\[-1.8ex] & api00 \\ 
+\hline \\[-1.8ex] 
+ meals & $-$4.015$^{***}$ \\ 
+  & s.e.(0.097) \\ 
+  & p-value: <2e-16 \\ 
+  & \\ 
+ Constant & 889.783$^{***}$ \\ 
+  & (6.622) \\
+  & p-value: <2e-16 \\ 
+  & \\ 
+\hline \\[-1.8ex] 
+Observations & 400 \\ 
+R$^{2}$ & 0.811 \\ 
+Adjusted R$^{2}$ & 0.811 \\ 
+Residual Std. Error & 61.877 (df = 398) \\ 
+F Statistic & 1,710.691$^{***}$ (df = 1; 398); p-value: < 2.2e-16 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table}  
+ 
+ 
+
+En el siguiente Cuadro se pueden observar las pruebas de Shapiro-Wilk y Breusch-Pagan y Durbin-Watson, en el primer caso de la normalidad el p-value asociado es mayor a 0.05, por lo que no hay evidencia para rechzar las hipótesis nulas de normalidad, sin embargo hay problemas de heterocedasticidad. Como la muestra se generó aleatoriamente, podemos asumir que no tenemos problemas de autocorrelación de los errores.  
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+#nice_assumptions from package rempsyc
+
+table_tests<-nice_assumptions(modelo1)
+table_tests_fin<-subset(table_tests, select = -c(Model,Diagnostic) )
+table_tests_fin<-table_tests_fin[,1:2]
+```
+
+
+
+```{r, echo=FALSE}
+#nice_assumptions()
+#table_nice
+kable(t(table_tests_fin)) %>%
+kable_styling(bootstrap_options = "striped", full_width = F)
+
+```
+
+
+
+```{r, echo=FALSE}
+#Normalidad: Ho:Hay normalidad. 
+library(nortest)
+datos_m1<-augment(modelo1)
+normalidad_m1<-ad.test(datos_m1$.std.resid)
+#No se rechaza Ho, p-value >0.05
+```
+
+
+
+
+```{r, echo=FALSE, include=FALSE}
+#Homocedasticidad: Ho:Varianza constantes. 
+library(car)
+homocedasticidad_m1<-car::ncvTest(modelo1)
+#Se rechaza Ho, p-value <0.05
+```
+
+
+
+
+```{r, echo=FALSE, include=FALSE}
+#Linealidad 
+library(car)
+residualPlots(modelo1)
+#Ho: no se necesita transformación para linealidad
+#Se rechaza Ho, p-value <0.05
+```
+
+
+
+
+La normalidad de los errores se confirma con la prueba ``Anderson-Darling normality test`` con la función ``ad.test`` que muestra un p-value de `r normalidad_m1[2]`. La heterocedasticidad se confirma con la prueba ``Non-constant Variance Score Test`` con la función ``ncvTest``, que muestra un p-value de `r homocedasticidad_m1[5]`. Finalmente, con la función de ``residualPlots`` obtenemos para la prueba de ``Tukey test`` un p value de $0.01174$, por lo que se rechaza la hipótesis nula de linealidad. 
+
+
+También podemos observar de forma gráfica estos resultados. Observemos la gráfica de **Fitted values** contra **Residuals**, parece haber un problema de linealidad. En la gráfica **Standard Normal distribution Quantiles** contra **Sample Quantile Deviations** tenemos que la normalidad sí se preserva. En la gráfica de **Fitted Values** contra **$\sqrt{|Std. Residuals|}$** parece no haber homogeneidad de la varianza. Y finalmente, en la gráfica de **Leverage(hii)** contra **Std. Residuals** parece no haber valores atípicos influyentes. Entonces podemos concluir que nuestro modelo no cumple con dos supuestos importantes, la linealidad y la homocedasticidad. 
+
+
+```{r, echo=FALSE, fig.width = 6, fig.height = 4, include=FALSE}
+par(mfrow = c(2, 2))
+plot(modelo1)
+```
+
+
+
+
+
+
+```{r, echo=FALSE, warning=FALSE,  message=FALSE, fig.width = 3, fig.height = 2}
+par(mfrow = c(2, 2))
+#####check_model() function of performance package: Graphs####
+
+# return a list of single plots
+diagnostic_plots <- plot(check_model(modelo1, panel = FALSE))
+# linearity
+diagnostic_plots[[2]]
+# normally distributed residuals
+diagnostic_plots[[5]] #6
+# homoscedasticiy - homogeneity of variance
+diagnostic_plots[[3]]
+# influential observations - outliers
+diagnostic_plots[[4]]
+
+
+```
+
+
+
+### ii) Ajuste de un mejor modelo que cumple los supuestos. 
+
+
+Presentamos pruebas para ver qué transformación es adecuada para la variable dependiente e independiente. 
+
+
+
+```{r, echo=FALSE}
+bc<-car::powerTransform(modelo1)
+#cat("PowerTransform: \n")
+bc
+```
+
+
+
+```{r, echo=FALSE}
+datos7$meals2<-datos7$meals+1 #sumamos 1 porque hay un valor de 0 (no positivo)
+#cat("BoxTidwell: \n")
+car::boxTidwell(api00^2~ I(meals+1), data = datos7)
+```
+
+
+
+El resultado de la prueba ``Estimated transformation parameter `` con la función ``powerTransform`` para transformación de tipo BoxCox, para conocer el exponente $\lambda$ de la variable dependiente, muestra que el valor es de `r bc[7]`. Esto sugiere elevar a un exponente de $1.6$ a la variable dependiente, por simplicidad en la interpretación consideraremos un exponente de $2$. Por otra parte, la prueba con la función ``BoxTidwell`` para la tranformación de la variable independiente (modificada al sumarle +1 y tomando en cuenta la variable dependiente al cuadrado) muestra un valor $\lambda$ de $0.93552$ con un p-value asociado de $0.4374$, lo que implica que la hipótesis nula de que $\lambda = 1$ no se rechaza, i.e., no hay evidencia suficiente para rechazar la linealidad de la variable independiente. Entonces ajustamos el MODELO 2.   
+
+
+```{r, echo=FALSE}
+modelo2<-lm(data=datos7, I(api00^2) ~ meals)
+#summary(modelo2)
+#stargazer(modelo2)
+```
+
+
+
+\begin{table}[!htbp] \centering 
+  \caption{MODELO 2} 
+  \label{}
+\footnotesize
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-2} 
+\\[-1.8ex] & I(api00$\hat{\mkern6mu}$2) \\ 
+\hline \\[-1.8ex] 
+ meals & $-$5,337.734$^{***}$ \\ 
+  & s.e.(121.696) \\
+  & p-value: <2e-16 \\
+  & \\ 
+ Constant & 761,544.500$^{***}$ \\ 
+  & s.e. (8,301.866) \\ 
+  & p-value: <2e-16 \\
+  & \\ 
+\hline \\[-1.8ex] 
+Observations & 400 \\ 
+R$^{2}$ & 0.829 \\ 
+Adjusted R$^{2}$ & 0.828 \\ 
+Residual Std. Error & 77,573.340 (df = 398) \\ 
+F Statistic & 1,923.808$^{***}$ (df = 1; 398);  p-value: < 2.2e-16 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table} 
+
+
+
+En el siguiente Cuadro se pueden observar las pruebas de Shapiro-Wilk y Breusch-Pagan, el p-value asociado es mayor a 0.05 para ambos casos, por lo que no hay evidencia para rechzar las hipótesis nulas de normalidad y homocedasticidad. Como se mencionó anteriormente, la muestra se generó aleatoriamente, por lo que podemos asumir que no tenemos problemas de autocorrelación de los errores. 
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+#nice_assumptions from package rempsyc
+
+table_tests<-nice_assumptions(modelo2)
+table_tests_fin<-subset(table_tests, select = -c(Model,Diagnostic) )
+table_tests_fin<-table_tests_fin[,1:2]
+```
+
+
+
+```{r, echo=FALSE}
+#nice_assumptions()
+#table_nice
+kable(t(table_tests_fin)) %>%
+kable_styling(bootstrap_options = "striped", full_width = F)
+
+```
+
+
+
+
+
+
+```{r, echo=FALSE}
+#Normalidad: Ho:Hay normalidad. 
+library(nortest)
+datos_m2<-augment(modelo2)
+normalidad_m2<-ad.test(datos_m2$.std.resid)
+#No se rechaza Ho, p-value >0.05
+```
+
+
+
+```{r, echo=FALSE}
+#Homocedasticidad: Ho:Varianza constantes. 
+homocedasticidad_m2<-car::ncvTest(modelo2)
+#Se rechaza Ho, p-value <0.05
+```
+
+
+
+
+```{r, echo=FALSE, include=FALSE}
+#Linealidad 
+library(car)
+residualPlots(modelo2)
+#Ho: no se necesita transformación para linealidad
+#Se rechaza Ho, p-value <0.05
+```
+
+
+
+
+
+La normalidad de los errores se confirma con la prueba ``Anderson-Darling normality test`` con la función ``ad.test`` que muestra un p-value de `r normalidad_m2[2]`. La homocedasticidad se confirma con la prueba ``Non-constant Variance Score Test`` con la función ``ncvTest``, que muestra un p-value de `r homocedasticidad_m2[5]`. Finalmente, con la función de ``residualPlots`` obtenemos para la prueba de ``Tukey test`` un p value de $0.5969$, por lo que no se rechaza la hipótesis nula de linealidad. 
+
+
+También podemos confirmar de forma gráfica estos resultados. 
+
+
+```{r, echo=FALSE, fig.width = 6, fig.height = 4, include=FALSE}
+par(mfrow = c(2, 2))
+plot(modelo2)
+```
+
+
+
+
+
+
+```{r, echo=FALSE, warning=FALSE,  message=FALSE, fig.width = 3, fig.height = 1.9}
+par(mfrow = c(2, 2))
+#####check_model() function of performance package: Graphs####
+
+# return a list of single plots
+diagnostic_plots <- plot(check_model(modelo2, panel = FALSE))
+# linearity
+diagnostic_plots[[2]]
+# normally distributed residuals
+diagnostic_plots[[5]] #6
+# homoscedasticiy - homogeneity of variance
+diagnostic_plots[[3]]
+# influential observations - outliers
+diagnostic_plots[[4]]
+
+
+```
+
+
+
+### iii)Gráfica de datos originales y las curvas ajustadas de ambos modelos. 
+
+
+A continuación se muestra la Gráfica de los datos originales y las curvas ajustadas tanto para el primero modelo sin tratamiento de las variables (recta roja) y la curva ajustada del segundo modelo con la variable dependiente cuadrática (curva azul). 
+
+
+```{r, include=FALSE}
+curva_ajustada1 <- function(x) {modelo1$coefficients[1] + modelo1$coefficients[2]*x}
+curva_ajustada2 <- function(x) {sqrt(modelo2$coefficients[1] + modelo2$coefficients[2]*x)}
+```
+
+
+
+
+```{r, echo=FALSE, fig.height=2.8, fig.width=6}
+ggplot(datos7, aes(meals, api00)) +
+  geom_point() +
+  geom_function(fun = curva_ajustada1, col="red") +
+  geom_function(fun = curva_ajustada2, col="blue") + theme_bw()
+```
+
+
+
+### iv) Interpretación de la prueba ANOVA y la R^2. 
+
+En el Modelo 2, se tiene un $R^2$ de 0.82, el cual es el coeficiente de determinación que en este caso se interpreta como que el 82% de la variabilidad del rendimiento acedémico en la escuela ``api00`` se explica por el modelo que incluye la variable del porcentaje de estudiantes que reciben desayuno en la esceula ``meal``. Por otra parte, la prueba $F$ asociada a la tabla ANOVA, contrasta en este caso de la regresión lineal simple las hipótesis nula $H_0: \beta_1=0$ contra la alternativa $H_a: \beta_1\neq0$. Como el p-value asociado es menor a $2e-16$ se rechaza $H_0$ con una significancia estadística del 5%, podemos concluir que la inclusión de la variable explicativa ``meal`` ayuda a modelar $E(api00; meal)$. Es decir, el rendimiento acedémico en la escuela ``api00``  se relaciona linealmente con la variable del porcentaje de estudiantes que reciben desayuno en la esceula ``meal``. 
+
+
+### v) Prueba de hipótesis de investigación. 
+
+Para verificar el argumento de que "A mayor porcentaje de comidas gratis en la escuela es menor el desempeño de la escuela", plantearemos una prueba de hipótesis. Planteamos la hipótesis nula $H_0: \beta_1 \geq0$ contra la alternativa $H_a: \beta_1<0$, donde $\beta_1$ es el parámetro estimado asociado a la variable independiente ``meal``. A continuación se muestra la aprueba ``Simultaneous Tests for General Linear Hypotheses``, donde se rechaza esta hipótesis nula, pues el p-valor asociado es menor a 0.05, con un nivel del confianza de 95%.
+
+
+
+
+
+```{r, echo=FALSE, include=FALSE}
+# Pruebas de hipótesis para beta1
+Matriz=matrix(c(0,1), ncol=2, nrow=1)
+c=0
+#alternative: "two.sided" (default), "greater" or "less"
+prueba1=glht(modelo2, linfct=Matriz, rhs=c, alternative="less")
+summary(prueba1)
+```
+
+
+\begin{table}[!htbp] \centering
+\footnotesize
+\begin{tabular}{|lllll|}
+\hline
+\multicolumn{5}{|c|}{Simultaneous Tests for General Linear Hypotheses}                                                                                                \\ 
+\multicolumn{5}{|c|}{Fit:lm(formula = I(api00$\wedge$2) $\sim$ meals, data = datos7)}                                                                                                    \\
+\multicolumn{5}{|l|}{Linear Hypotheses:}                                                                                                                            \\ \hline
+\multicolumn{1}{|l|}{}                    & \multicolumn{1}{l|}{Estimate} & \multicolumn{1}{l|}{Std. Error} & \multicolumn{1}{l|}{t value}         & Pr(\textless{}t) \\ \hline
+\multicolumn{1}{|l|}{1 >= 0} & \multicolumn{1}{l|}{-5337.7}  & \multicolumn{1}{l|}{121.7}     & \multicolumn{1}{l|}{-43.86 }         & <2e-16 ***           \\ \hline
+\multicolumn{5}{|l|}{}                             \\ \hline
+\multicolumn{1}{|l|}{Signif. codes:}      & \multicolumn{4}{l|}{0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1}                                                       \\ \hline
+\multicolumn{5}{|l|}{(Adjusted p values reported -- single-step method)}                                                                                              \\ \hline
+\end{tabular}
+\end{table}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

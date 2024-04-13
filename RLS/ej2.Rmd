@@ -40,7 +40,7 @@ $= \sigma^2 + \frac{\sigma^2}{n} - \frac{\sigma^2}{SSx} (x_i - \bar{X})^2 =  \si
 
 
 
-Se usaron los siguientes resultados: 
+Además se usaron los siguientes resultados: 
 
 
 $\bar{Y} = \hat{\beta_0} + \hat{\beta_1} \bar{X}$
