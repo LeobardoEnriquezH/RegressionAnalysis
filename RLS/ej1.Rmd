@@ -56,12 +56,31 @@ $$
 & \therefore \operatorname{Var}(\hat{\beta})=\frac{\sigma^2}{n}
 \end{aligned}
 $$
-III)
-$\operatorname{Como} \hat{\beta}=\sum_{i=1}^n \frac{y_i}{x_{i} n}$, Sea $c_i=\frac{1}{x_i n}$ entonces
+III) Tenemos la funcion de verosimilitud
 $$
-\hat{\beta}=\sum_{i=1}^n c_i y_i \quad \therefore \text { es estimador lineal }
+\frac{1}{\sigma^n(2 \pi)^{n / 2} \prod_{i=1}^n x_i} e^{\sum_{i=1}^n \frac{-\left(y_i-\beta x_i\right)^2}{2 x_i^2 \sigma^2}}
+$$
+de donde
+$$
+\begin{aligned}
+& e^{\sum \frac{-\left(x_i-\beta x_i\right)^2}{2 x_i^2 \sigma^2}}=e^{\frac{1}{2 \sigma^2} \sum-\frac{\left(y_i-\beta x_i\right)^2}{x_i^2}} \\
+& =e^{\frac{1}{2 \sigma^2} \sum-\frac{x_i^2+2\beta x_i y_i-\beta^2 x_i^2}{x_i^2}} \\
+& =e^{\frac{1}{2 \sigma^2} \sum \frac{-y_i^2}{x_i^2}+\sum \frac{2 \beta y_i}{x_i}-\sum \beta^2} \\
+& =e^{\frac{-\sum \beta^2}{2 \sigma^2}} \cdot e^{\sum \frac{-y_i^2}{x_i^2}+2 \beta \sum \frac{y_i}{x_i}} \\
+&
+\end{aligned}
+$$
+Asi
+$$
+\begin{array}{ll}
+a(\gamma)=e^{\frac{-\sum \beta^2}{2 \sigma^2}} & b(x)=\frac{1}{\sigma^n(2 \pi)^{n / 2} \prod x_i} \\
+c_1(\gamma)=-1 & d_1(x)=\sum y_i^2 / x_i^2 \\
+c_2(\gamma)=2\beta  & d_2(x)=\sum y_i / x_i
+\end{array}
 $$
 
+Por lo que forma parte de la fam. exponencial.
+Observanos: $\sum \frac{y_i}{x_{i}}$ es una estadistica suficiente y completa y $\hat{\beta}=\sum \frac{y_i}{x_{i}n}$ es funcion de $\sum y_i / x_i$
 Ademas
 $$
 \begin{aligned}
@@ -69,5 +88,4 @@ $$
 & =\frac{1}{n} \sum_{i=1}^n \frac{1}{x_i} \mathbb{E}\left(y_i\right)=\frac{1}{n} \sum_{i=1}^n \beta=\beta
 \end{aligned}
 $$
-
-De esta forma $\hat{\beta}$ es estimador lineal y ademas es insesgado, por el teorema Gauss - Markoy $\hat{\beta}$ es el UMVUE
+Por el teorema de Lehman-Scheffe $\hat{\beta}$ es el UMVUE de $\beta$
