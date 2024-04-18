@@ -228,7 +228,7 @@ predict<-predict(fit, newdata = new.dat, interval = 'prediction',  level = 0.95)
 
 
 
-Al 95% de confianza, podemos predecir que el valor del huevo más grande debería estar entre el valor `r predict[2]` y el valor `r predict[3]` de acuerdo con un intervalo de predicción. El valor de 145 gramos no cae dentro del intervalo, como también podemos observar en la siguiente Gráfica, por lo que podríamos concluir que la nueva observación no corresponde a los huevos de los pingüinos Macaroni. 
+Podemos predecir que el valor del huevo más grande debería estar entre el valor `r predict[2]` y el valor `r predict[3]` de acuerdo con un intervalo de predicción. El valor de 145 gramos no cae dentro del intervalo, como también podemos observar en la siguiente Gráfica, por lo que podríamos concluir que la nueva observación no corresponde a los huevos de los pingüinos Macaroni. 
 
 
 
