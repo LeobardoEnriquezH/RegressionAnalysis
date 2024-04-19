@@ -68,56 +68,116 @@ $$
 $$
 
 Suponiendo $\sigma^2$ conocida y $\omega_i=\frac{1}{x_i^2} \quad i=1, \ldots, n$
-I)
-Como las $\xi_i$ son normales, entonces $y_i \sim N\left(\beta x_i, x_i^2 \sigma^2\right)$ y son independientes, entonces la funcion de verosimilitud nos queda:
+
+
+I) Obtendremos el estimador de $\beta$ por el método de máxima verosimilitud.
+
+
+
+Como las $\xi_i$ son normales, entonces $y_i \sim N\left(\beta x_i, x_i^2 \sigma^2\right)$ independientes con $\sigma^2$ constante (conocida), entonces la funcion de verosimilitud nos queda:
+
 $$
-\prod_{i=1}^n \frac{1}{\sqrt{2 \pi} x_i \sigma} e^{-\frac{\left(y_i-\beta x_i\right)^2}{2 x_i^2 \sigma^2}}
+L(\beta; y_1,...,y_n)=\prod_{i=1}^n \frac{1}{\sqrt{2 \pi} (x_i \sigma)} e^{-\frac{\left(y_i-\beta x_i\right)^2}{2 x_i^2 \sigma^2}}
 $$
+
 es decir:
+
 $$
-\frac{1}{(2 \pi)^{n / 2} x_i^n \sigma^n} e^{\sum_{i=1}^n \frac{-\left(y_i-\beta x_i\right)^2}{2 x_i^2 \sigma^2}}
+L=\frac{1}{(2 \pi)^{n / 2}  \sigma^n} \prod_{i=1}^n \frac{1}{x_i^2}  e^{\sum_{i=1}^n \frac{-\left(y_i-\beta x_i\right)^2}{2 x_i^2 \sigma^2}}
 $$
 
 Aplicando logaritmo:
+
 $$
-\ln (1)-\frac{n}{2} \ln (2 \pi)-n \ln \left(x_i\right)-n \ln (\sigma)+\sum_{i=1}^n \frac{-\left(y_i-\beta x_i\right)^2}{2 x_i^2 \sigma^2}
+ln(L)=\ln (1)+ ln(\prod_{i=1}^n \frac{1}{x_i^2})-\frac{n}{2} \ln (2 \pi)-n \ln (\sigma)+\sum_{i=1}^n \frac{-\left(y_i-\beta x_i\right)^2}{2 x_i^2 \sigma^2}
 $$
 derivando e igualando a cero obtenemos:
+
 $$
 \begin{aligned}
-& \frac{d}{d \beta} \ln (f)=-\sum_{i=1}^n \frac{\left(y_i-\beta x_i\right)}{x_i^2 \sigma^2}\left(-x_i\right)=0 \\
+& \frac{d}{d \beta} \ln (L)=-\sum_{i=1}^n \frac{\left(y_i-\beta x_i\right)}{x_i^2 \sigma^2}\left(-x_i\right)=0 \\
 & \rightarrow \sum_{i=1}^n \frac{\left(y_i-\beta x_i\right)}{x_i \sigma^2}=0 \rightarrow \sum_{i=1}^n \frac{y_i}{x_i \sigma^2}-\sum_{i=1}^n \frac{\beta}{\sigma^2}=0
 \end{aligned}
 $$
-Asi
+Así:
+
 $$
-\sum_{i=1}^n \frac{y_i}{x_i \sigma^2}=\frac{n \beta}{\sigma^2} \rightarrow \hat{\beta}=\sum_{i=1}^n \frac{y_i}{x_i n}
+\sum_{i=1}^n \frac{y_i}{x_i \sigma^2}=\frac{n \beta}{\sigma^2} \rightarrow \hat{\beta}= \frac{1}{n} \sum_{i=1}^n \frac{y_i}{x_i }
 $$
-II)
+
+
+II) Ahora emcontraremos la expresión para la varianza de $\hat{\beta}$. 
+
+
 $$
 \begin{aligned}
-& \operatorname{Var}(\hat{\beta}) \\
+& \operatorname{Var}(\hat{\beta})= \\
 & =\operatorname{Var}\left(\sum_{i=1}^n \frac{y_i}{x_i n}\right)=\frac{1}{n^2} \cdot \operatorname{Var}\left(\sum_{i=1}^n \frac{y_i}{x_i }\right) \\
 & =\frac{1}{n^2} \sum_{i=1}^n \operatorname{Var}\left(\frac{y_i}{x_i}\right)=\frac{1}{n^2} \sum_{i=1}^n \frac{1}{x_i{ }^2} \operatorname{Var}\left(y_i\right) \\
 & =\frac{1}{n^2} \sum_{i=1}^n \frac{1^2}{x_i^2}\left(x_i^2 \sigma^2\right)=\frac{1}{n^2} \sum_{i=1}^n \sigma^2=\frac{\sigma^2}{n} \\
 & \therefore \operatorname{Var}(\hat{\beta})=\frac{\sigma^2}{n}
 \end{aligned}
 $$
-III)
-$\operatorname{Como} \hat{\beta}=\sum_{i=1}^n \frac{y_i}{x_{i} n}$, Sea $c_i=\frac{1}{x_i n}$ entonces
+
+
+
+III) Mostraremos que $\hat{\beta}$ es el UMBUE de $\beta$, i.e., que es el mejor estimador insesgado de $\beta$.
+
+
+Tenemos la funcion de verosimilitud
+
+
+
 $$
-\hat{\beta}=\sum_{i=1}^n c_i y_i \quad \therefore \text { es estimador lineal }
+L=\frac{1}{\sigma^n(2 \pi)^{n / 2} \prod_{i=1}^n x_i} e^{\sum_{i=1}^n \frac{-\left(y_i-\beta x_i\right)^2}{2 x_i^2 \sigma^2}}
 $$
 
-Ademas
+de donde: 
+
+
 $$
 \begin{aligned}
-\mathbb{E}(\hat{\beta}) & =\mathbb{E}\left(\sum_{i=1}^n \frac{y_i}{x_i n}\right)=\frac{1}{n} \sum_{i=1}^n \mathbb{E}\left(\frac{y_i}{x_i}\right) \\
+& e^{\sum \frac{-\left(x_i-\beta x_i\right)^2}{2 x_i^2 \sigma^2}}=e^{\frac{1}{2 \sigma^2} \sum-\frac{\left(y_i-\beta x_i\right)^2}{x_i^2}} \\
+& =e^{\frac{1}{2 \sigma^2} \sum\frac{-y_i^2+2\beta x_i y_i-\beta^2 x_i^2}{x_i^2}} \\
+& =e^{\frac{1}{2 \sigma^2} (\sum \frac{-y_i^2}{x_i^2}+\sum \frac{2 \beta y_i}{x_i}-\sum \beta^2)} \\
+& =e^{\frac{-\sum \beta^2}{2 \sigma^2}} \cdot e^{\frac{1}{2\sigma^2} (\sum \frac{-y_i^2}{x_i^2}+2 \beta \sum \frac{y_i}{x_i})} \\
+&
+\end{aligned}
+$$
+
+Así:
+
+
+$$
+\begin{array}{ll}
+a(\gamma)=e^{\frac{-\sum \beta^2}{2 \sigma^2}} & b(x)=\frac{1}{\sigma^n(2 \pi)^{n / 2} \prod x_i} \\
+c_1(\gamma)=-1/2\sigma^2 & d_1(x)=\sum (y_i / x_i)^2 \\
+c_2(\gamma)=\beta / \sigma^2  & d_2(x)=\sum y_i / x_i
+\end{array}
+$$
+
+Por lo que forma parte de la familia exponencial.
+
+
+Por lo tanto, $(\sum \frac{y_i}{x_{i}}, \sum (\frac{y_i}{x_{i}})^2)$ es una estadistica suficiente, minimal y completa por un teorema que nos dice que si $f(Y;\gamma)$ es de la familia exponencial, i.e., $f(Y; \gamma)=\alpha(\gamma) b(Y)e^{\sum_{j=1}^n c_j(\gamma)d_j(Y)}$, entonces la estadística $T(y_1,...,y_n)=(d_1(Y),...,d_k(Y))$ es suficiente, minimal y completa. 
+
+
+Observemos que $\hat{\beta}=\frac{1}{n}\sum \frac{y_i}{x_{i}}$ es funcion de $\sum y_i / x_i$. 
+
+
+Además veamos que $\hat{\beta}$, función de la estadística suficiente, minimal y completa $\sum y_i / x_i$, es también insesgado: 
+
+$$
+\begin{aligned}
+\mathbb{E}(\hat{\beta}) & =\mathbb{E}\left(\frac{1}{n} \sum_{i=1}^n \frac{y_i}{x_i}\right)=\frac{1}{n} \sum_{i=1}^n \mathbb{E}\left(\frac{y_i}{x_i}\right) \\
 & =\frac{1}{n} \sum_{i=1}^n \frac{1}{x_i} \mathbb{E}\left(y_i\right)=\frac{1}{n} \sum_{i=1}^n \beta=\beta
 \end{aligned}
 $$
 
-De esta forma $\hat{\beta}$ es estimador lineal y ademas es insesgado, por el teorema Gauss - Markoy $\hat{\beta}$ es el UMVUE
+
+Por lo tanto por el teorema de Lehman-Scheffe $\hat{\beta}$ es el UMVUE de $\beta$, i.e, es el estimador insesgado de mínima varianza (tiene el menor ECM). 
+
+
 
 
 \newpage 
@@ -150,7 +210,7 @@ Entonces:
 $$V(e_i)=V(y_i-\hat{y_i})=V(y_i)+V(\hat{y_i})-2Cov(y_i,\hat{y_i}) = \sigma^2+\sigma^2(\frac{1}{n}+\frac{(x_i-\bar{X})^2}{SS_{x}})-2\sigma^2 (\frac{1}{n} - \frac{\bar{X} (x_i-\bar{X})}{SSx} + \frac{x_i(x_i - \bar{X})}{SSx})$$
 $$= \sigma^2 + \frac{\sigma^2}{n} + \frac{\sigma^2 (x_i-\bar{X})^2}{SSx} - \frac{-2\sigma^2}{n} + \frac{2\sigma^2 \bar{X} (x_i- \bar{X})}{SSx} - \frac{2\sigma^2x_i (x_i - \bar{X})}{SSx}=\sigma^2 + \frac{\sigma^2}{n}  + (\frac{-\sigma^2x_i^2 - \sigma^2\bar{X}^2 + 2\sigma^2 \bar{X}x_i}{SSx})$$
 
-$= \sigma^2 + \frac{\sigma^2}{n} - \frac{\sigma^2}{SSx} (x_i - \bar{X})^2 =  \sigma^2 + \frac{\sigma^2}{n} - \frac{\sigma^2}{n} = \sigma^2$
+$= \sigma^2 + \frac{\sigma^2}{n} - \frac{\sigma^2}{SSx} (x_i - \bar{X})^2$
 
 
 

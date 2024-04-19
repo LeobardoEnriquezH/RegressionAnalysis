@@ -36,7 +36,7 @@ Entonces:
 $$V(e_i)=V(y_i-\hat{y_i})=V(y_i)+V(\hat{y_i})-2Cov(y_i,\hat{y_i}) = \sigma^2+\sigma^2(\frac{1}{n}+\frac{(x_i-\bar{X})^2}{SS_{x}})-2\sigma^2 (\frac{1}{n} - \frac{\bar{X} (x_i-\bar{X})}{SSx} + \frac{x_i(x_i - \bar{X})}{SSx})$$
 $$= \sigma^2 + \frac{\sigma^2}{n} + \frac{\sigma^2 (x_i-\bar{X})^2}{SSx} - \frac{-2\sigma^2}{n} + \frac{2\sigma^2 \bar{X} (x_i- \bar{X})}{SSx} - \frac{2\sigma^2x_i (x_i - \bar{X})}{SSx}=\sigma^2 + \frac{\sigma^2}{n}  + (\frac{-\sigma^2x_i^2 - \sigma^2\bar{X}^2 + 2\sigma^2 \bar{X}x_i}{SSx})$$
 
-$= \sigma^2 + \frac{\sigma^2}{n} - \frac{\sigma^2}{SSx} (x_i - \bar{X})^2 =  \sigma^2 + \frac{\sigma^2}{n} - \frac{\sigma^2}{n} = \sigma^2$
+$= \sigma^2 + \frac{\sigma^2}{n} - \frac{\sigma^2}{SSx} (x_i - \bar{X})^2$
 
 
 
