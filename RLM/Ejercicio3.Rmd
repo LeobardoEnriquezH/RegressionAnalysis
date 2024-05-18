@@ -1,0 +1,145 @@
+---
+title: ''
+author: ''
+date: ''
+output:
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=FALSE, include=FALSE}
+library(tidyverse)
+library(hrbrthemes)
+library(viridis)
+library(multcomp)
+```
+
+# Ejercicio 3
+
+Compararemos 4 distintos diseños de empaque de un nuevo cereal, asignados aleatoriamente a 5 tiendas como unidades muestrales, y las ventas en un periodo de 2 semanas. 
+
+```{r, echo=FALSE}
+ventas<-c(12,10,15,17,11,11,17,16,14,15,27,34,22,26,28,23,20,18,17)
+cereal<-c(1,1,1,1,1,2,2,2,2,2,3,3,3,3,3,4,4,4,4)
+data<-cbind(ventas,cereal)
+data<-as.data.frame(data)
+data$cereal<-as.factor(data$cereal)
+```
+
+En el siguiente Boxplot, podemos observar que el empaque que más se vendió es el 3, aunque con una mayor variabilidad entre las tiendas que las venden y el empaque que menos se vendió es el empaque 1. 
+
+
+```{r, echo=FALSE, fig.height=2.8, fig.width=6}
+data %>%
+  ggplot( aes(x=cereal, y=ventas, fill=cereal)) +
+    geom_boxplot() +
+    scale_fill_viridis(discrete = TRUE, alpha=0.6, option="A") + theme_bw()+
+    theme(
+      legend.position="none",
+      plot.title = element_text(size=11)
+    ) +
+    ggtitle("Ventas por tipo de cereal") +
+    xlab("")
+```
+
+Ajustaremos un modelo de regresión lineal múltiple del número de ventas promedio por cada tipo de empaque. 
+
+```{r, echo=FALSE}
+modelo<-lm(data=data, ventas~cereal)
+summary(modelo)
+```
+
+Las expresiones del número de ventas promedio por cada tipo de empaque son.
+
+```{r, echo=FALSE}
+b0<-modelo$coefficients[1]
+b1<-modelo$coefficients[2]
+b2<-modelo$coefficients[3]
+b3<-modelo$coefficients[4]
+b0_b1<-modelo$coefficients[1]+modelo$coefficients[2]
+b0_b2<-modelo$coefficients[1]+modelo$coefficients[3]
+b0_b3<-modelo$coefficients[1]+modelo$coefficients[4]
+```
+
+
+
+$E(ventas; cereal1)=\hat{\beta_0}=$ `r b0` 
+
+$E(ventas; cereal2)=\hat{\beta_0} + \hat{\beta_1}=$ `r b0` + `r b1` = `r b0_b1`
+
+$E(ventas; cereal3)=\hat{\beta_0} + \hat{\beta_2}=$ `r b0` + `r b2` = `r b0_b2`
+
+$E(ventas; cereal4)=\hat{\beta_0} + \hat{\beta_3}=$ `r b0` + `r b3` = `r b0_b3`
+
+
+Las hipótesis que se contrastan con la prueba F asociada a la tabla ANOVA son, la hipotesis nula $H_0: \hat{\beta_1}=\hat{\beta_2}=\hat{\beta_3}=0$ contra la alternativa de $H_a: \hat{\beta_i} \neq0$ para al menos un $i=1,2,3$. Esta prueba se presenta en la salida o ``summary`` anterior, en donde podemos observar un $p-value: 1.367e-05$ de la prueba ``F-statistic`` con valor de $20.71$ con $3$ y $15$ grados de libertad. Como el valor del $p-value <0.05$, i.e., considerando un nivel de significancia estadística $\alpha=0.05$, podemos concluir que se rechaza la hipótesis nula $H_0$, por lo que al menos un $\beta_i$ es distinto de cero en el modelo planteado. 
+
+
+Para ver si el diseño del empaque afecta las ventas promedio, plantearemos algunas pruebas de hipótesis, usando un nivel de confianza del 95%. Nos preguntamos si $E(ventas; cereal1) \neq E(ventas; cereal2)$,  $E(ventas; cereal1) \neq E(ventas; cereal3)$, $E(ventas; cereal1) \neq E(ventas; cereal4)$, $E(ventas; cereal2) \neq E(ventas; cereal3)$, $E(ventas; cereal2) \neq E(ventas; cereal4)$, $E(ventas; cereal3) \neq E(ventas; cereal4)$. Entonces, planteamos las siguientes pruebas.
+
+Planteamiento de la hipótesis nula:
+
+$\hat{\beta_0}=\hat{\beta_0} + \hat{\beta_1} \rightarrow \hat{\beta_1} =0$
+
+$\hat{\beta_0}=\hat{\beta_0} + \hat{\beta_2} \rightarrow \hat{\beta_2} =0$
+
+$\hat{\beta_0}=\hat{\beta_0} + \hat{\beta_3} \rightarrow \hat{\beta_3} =0$
+
+$\hat{\beta_0} + \hat{\beta_1}=\hat{\beta_0} + \hat{\beta_2} \rightarrow \hat{\beta_1} =\hat{\beta_2}$
+
+$\hat{\beta_0} + \hat{\beta_1}= \hat{\beta_0} + \hat{\beta_3}  \rightarrow \hat{\beta_1} =\hat{\beta_3}$
+
+$\hat{\beta_0} + \hat{\beta_2}= \hat{\beta_0} + \hat{\beta_3}  \rightarrow \hat{\beta_2} =\hat{\beta_3}$
+
+Tenemos términos redundantes, por lo que nos quedaría la siguiente prueba de hipótesis. 
+
+$H_0: \hat{\beta_1}=\hat{\beta_2}=\hat{\beta_3}=0$ VS $H_a: \hat{\beta_i}\neq0$ p.a. $i=1,2,3$. 
+
+En la prueba global $F$ asociada a la tabla ANOVA descrita anteriormente, se rechzó $H_0$. Por lo que podemos concluir que al menos un diseño de empaque afecta las ventas promedio, sin embargo no nos dice explícitamente cuál o cuáles en un análisis simultáneo.   
+
+Para esto, podemos plantear una prueba de hipótesis simultánea asociada a la igualdad de las ventas promedio entre todos los posibles pares de diferentes empaques, que puede resolverse con la prueba lineal general simultánea. A continuación, se muestra la salida de la prueba. 
+
+```{r, echo=FALSE}
+K=matrix(c(0,1,0,0,
+           0,0,1,0,
+           0,0,0,1,
+           0,1,-1,0,
+           0,1,0,-1,
+           0,0,1,-1), ncol=4, nrow=6, byrow=TRUE)
+m=c(0,0,0,0,0,0)
+summary(glht(modelo, linfct=K, rhs=m))
+```
+
+Finalmente realizaremos una prueba de hipótesis para argumentar en favor o en contra de la hipótesis de que el diseño de empaque 3 es el que más aumenta las ventas en comparación con el resto de empaques. Esto es, que $E(ventas; cereal3)>E(ventas; cereal1)$, $E(ventas; cereal3)>E(ventas; cereal2)$, $E(ventas; cereal3)>E(ventas; cereal4)$. Entonces planteamos, las siguientes hipótesis.   
+
+$\hat{\beta_0} + \hat{\beta_2}> \hat{\beta_0} \rightarrow \hat{\beta_2}>0$
+
+$\hat{\beta_0} + \hat{\beta_2}>\hat{\beta_0} + \hat{\beta_1} \rightarrow \hat{\beta_2}>\hat{\beta_1}$
+
+$\hat{\beta_0} + \hat{\beta_2}>\hat{\beta_0} + \hat{\beta_3} \rightarrow \hat{\beta_2}>\hat{\beta_3}$
+
+
+Hipótesis nula: $H_0: \hat{\beta_2}\leq 0$, $\hat{\beta_2}\leq \hat{\beta_1}$, $\hat{\beta_2}\leq \hat{\beta_3}$
+
+Hipótesis alternativa: $H_a: \hat{\beta_2}> 0$, $\hat{\beta_2} > \hat{\beta_1}$, $\hat{\beta_2} >\hat{\beta_3}$
+
+A continuación se muestra la salida, donde podemos observar que se rechaza $H_0$, por lo que podemos afirmar que el diseño de empaque 3 es el que más aumenta las ventas en comparación con el resto de empaques.  
+
+```{r, echo=FALSE}
+K=matrix(c(0,0,1,0,
+           0,-1,1,0,
+           0,0,1,-1), ncol=4, nrow=3, byrow=TRUE)
+m=c(0,0,0)
+summary(glht(modelo, linfct=K, rhs=m, alternative="great"))
+```
+
+
+
+
+
+
+

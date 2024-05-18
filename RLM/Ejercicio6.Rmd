@@ -1,0 +1,331 @@
+---
+title: ""
+author: ""
+date: ""
+header-includes:
+- \usepackage[utf8]{inputenc}
+- \usepackage[spanish]{babel}
+- \usepackage{graphicx}
+- \usepackage{multirow,rotating}
+- \usepackage{dcolumn}
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r,echo=FALSE, include=FALSE}
+library(stargazer)
+```
+
+
+# Ejercicio 6
+
+```{r, echo=FALSE}
+datos6<-read.csv("Ex6.csv")
+datos6$X1<-as.factor(datos6$X1)
+datos6$X2<-as.factor(datos6$X2)
+```
+
+Con datos de ``Ex6.csv`` se considera un modelo de regresión lineal con las covariables $X_1$ a $X_6$ sin interacción. Se muestra el resultado en la primera columna del Cuadro de ``MODELOS``, en donde se observa la prueba global $F$ asociado a la tabla ANOVA cuyo p-value es menor a $0.05$, por lo que se rechaza la hipótesis nula $H_0: \hat{\beta_i}=0, \forall i=1,2,...,p$, a favor de la alternativa de que al menos un coeficiente estimado $\hat{\beta_i}$ es distinto de cero.  Se observa además que dado que están las otras variables, la variable X3 no agrega información adicional al modelado, lo mismo para el caso de X5. (Chunk modelo1, línea de código 34). 
+
+```{r modelo1, echo=FALSE, include=FALSE}
+modelo1<-lm(data=datos6, Y~.)
+summary(modelo1)
+```
+
+
+```{r, echo=FALSE}
+#stargazer(modelo1, no.space=TRUE)
+```
+
+Si hacemos una prueba visual de los supuestos del modelo, tales como la linealidad (Residuals vs Fitted),  homocedasticidad (Scale-Location), normalidad (Q-Q Residuals) y presencia de outliers influyentes (Residuals vs Leverage), se observa que no se cumple la linealidad y normalidad, aunque parece no haber problemas con la homocedasticidad y la presencia de outliers influyentes (que se salgan de la distancia de Cook). (Chunk plotsmodelo1, línea de código 47) 
+
+
+```{r plotsmodelo1, echo=FALSE, fig.height=2.5, fig.width=6, include=FALSE}
+par(mfrow=c(1,2))
+#par(mar=c(4, 5, 3, 1))
+plot(modelo1, 1)   #linealidad
+plot(modelo1, 3)   #homocedasticidad
+plot(modelo1, 2)   #normalidad
+plot(modelo1, 5)   #Outliers 
+```
+
+```{r pruebasmodelo1, echo=FALSE, include=FALSE}
+#Varianza constante 
+#Se basa en los errores estandarizados o estudentizados
+#Mismas pruebas usadas en regresión lineal simple:
+library(lmtest)
+sbpt1<-lmtest::bptest(modelo1) #NO se rechaza H0 de homocedasticidad, NO hay problemas
+sbpt1p<-sbpt1$p.value #p-value de la prueba Breusch Pagan estudentizado
+
+#Normalidad 
+#Se basa en los residuales estandarizados o estudentizados
+#Mismas pruebas que se usaron en regresi?n lineal simple:
+library(broom)
+Datosmodelo1=augment(modelo1)
+swt1<-shapiro.test(Datosmodelo1$.std.resid) #Se rechaza H0 de normalidad, hay problemas
+swt1p<-swt1$p.value
+library(nortest)
+kst1<-nortest::lillie.test(Datosmodelo1$.std.resid)#Se rechaza H0 de normalidad, hay problemas
+kst1p<-kst1$p.value
+library(tseries)
+jbt1<-tseries::jarque.bera.test(Datosmodelo1$.std.resid)#Se rechaza H0 de normalidad, hay problemas
+jbt1p<-jbt1$p.value
+```
+
+De acuerdo con la prueba ``studentized Breusch-Pagan`` se tiene un p-value de `r sbpt1p` por lo que no se rechaza la hipótesis nula de homocesaticidad, mientras que las pruebas de normalidad Jarque-Bera, Shapiro-Wilk y Kolmogorov-Smirnov rechazan la hipótesis nula de normalidad, con p-value de `r jbt1p`, `r swt1p` y `r kst1p`, respectivamente. (Chunk pruebasmodelo1, línea de código 56). 
+
+
+```{r residualplotsmodelo1, echo=FALSE, fig.height=4, fig.width=7 , include=FALSE}
+#par(mfrow=c(1,1))
+library(car)
+residualPlots_modelo1<-residualPlots(modelo1) #se observan problemas con X4 y X6
+```
+
+Para el caso de la linealidad, la prueba de Tukey rechaza la hipótesis nula de linealidad, particularmente con X4 y X6, el p-value asociado es menor a 0.05. (Chunk residualplotsmodelo1, línea de código 82). 
+
+```{r, echo=FALSE}
+residualPlots_modelo1[,2]
+```
+
+Esto se refleja en las gráficas individuales, para X4 y X6 es evidente la no linealidad. (Chunk residualPlotsmodelo1, línea de código 96). 
+
+```{r residualPlotsmodelo1, echo=FALSE, warning=FALSE, fig.height=3, fig.width=7, results='hide',fig.keep='all', include=FALSE}
+par(mfrow=c(1,2))
+residualPlots(modelo1, terms= ~ X1,fitted=FALSE)
+residualPlots(modelo1, terms= ~ X2,fitted=FALSE)
+residualPlots(modelo1, terms= ~ X3,fitted=FALSE)
+residualPlots(modelo1, terms= ~ X4,fitted=FALSE)
+residualPlots(modelo1, terms= ~ X5,fitted=FALSE)
+residualPlots(modelo1, terms= ~ X6,fitted=FALSE)
+```
+
+
+En las gráficas crPlots, se muestra que es posible ajustar tal vez un polinomio para X4 y X6. (Chunk crPlotsmodelo1, linea de código 109)  
+
+```{r crPlotsmodelo1, echo=FALSE, include=FALSE}
+library(car)
+#Gráficas condicionales. 
+#Dado el resto de variables, la relación es lineal?
+#se compara con un polinomio (rosa) para ver si podría realizarse alguna modificación
+
+crPlots(modelo1, order=2) #mucho problema con X4 y X6, jugar con order
+#crPlots(modelo, terms= ~ X4, order=2)
+```
+
+```{r powerTransform1, echo=FALSE, include=FALSE}
+summary(powerTransform(modelo1)) 
+```
+Haciendo la prueba ``powerTransform`` se rechaza la hipótesis nula de $\lambda =1$ por lo que hay que hacer una transformación a la variable dependiente $Y$, en la misma prueba se rechaza la hipótesis nula de la transformación logarítimica $\lambda =0$, y se presenta un valor sugerido de $2$ como exponente. (Chunk powerTransform1, linea de código 119). 
+
+
+```{r boxTidwell1, echo=FALSE, include=FALSE}
+boxTidwell(I((Y)^2)~I(X6+5.5), ~X1+X2+X3+X4+X5 , data=datos6)
+boxTidwell(I((Y)^2)~ X4, ~X1+X2+X3+X5+X6 , data=datos6)
+```
+
+Luego, al hacer la prueba de ``boxTidwell`` para ver si se requiere transformar X4 y X6, tenemos que para el caso de X6 no se rechaza la hipótesis nula de una $\lambda = 1.032$, por lo que no requiere transformación, sin embargo, para el caso de X4, se muestra una $\lambda=0.38193$ que redondearemos a $1/2$, por lo que tomaremos la raíz cuadrada de la variable X4 en el modelado. (Chunk boxTidwell1, linea de codigo 125). 
+
+
+Entonces, planteamos un segundo modelo que considera $Y^2$ en función de las covariables $X1$ a $X6$ considerando $\sqrt{X4}$ y los demás covariables sin cambios.  Los resultados se muestran en la segunda columna del Cuadro de ``MODELOS``, en donde  se observa la prueba global $F$ asociado a la tabla ANOVA cuyo p-value es menor a $0.05$, por lo que se rechaza la hipótesis nula $H_0: \hat{\beta_i}=0, \forall i=1,2,...,p$, a favor de la alternativa de que al menos un coeficiente estimado $\hat{\beta_i}$ es distinto de cero.  Se observa además que dado que están las otras variables, la variable X3 no agrega información adicional al modelado, lo mismo para el caso de X5. (Chunk modelo2, linea de código 137).  
+
+
+```{r modelo2, echo=FALSE, include=FALSE}
+#se considera un modelo con un polinomio de grado 2
+#para la variable X6
+modelo2=lm(I((Y)^2)~X1+X2+X3+I(X4^(1/2))+X5+X6, data=datos6)
+summary(modelo2)
+```
+
+
+```{r residualplotsmodelo2, echo=FALSE, fig.height=4, fig.width=7 , include=FALSE}
+#par(mfrow=c(1,1))
+library(car)
+residualPlots_modelo2<-residualPlots(modelo2) #se observan problemas con X4 y X6
+```
+
+
+Con este segundo modelo se cumple linealidad con la prueba Tukey, al igual que para todas las variables individuales. (Chunk residualplotsmodelo2, linea de código 144). 
+
+
+```{r, echo=FALSE}
+residualPlots_modelo2[,2]
+```
+
+```{r pruebasmodelo2, echo=FALSE, include=FALSE}
+#Varianza constante 
+#Se basa en los errores estandarizados o estudentizados
+#Mismas pruebas usadas en regresión lineal simple:
+library(lmtest)
+sbpt2<-lmtest::bptest(modelo2) #NO se rechaza H0 de homocedasticidad, NO hay problemas
+sbpt2p<-sbpt2$p.value #p-value de la prueba Breusch Pagan estudentizado
+
+#Normalidad 
+#Se basa en los residuales estandarizados o estudentizados
+#Mismas pruebas que se usaron en regresi?n lineal simple:
+library(broom)
+Datosmodelo2=augment(modelo2)
+swt2<-shapiro.test(Datosmodelo2$.std.resid) #Se rechaza H0 de normalidad, hay problemas
+swt2p<-swt2$p.value
+
+library(nortest)
+kst2<-nortest::lillie.test(Datosmodelo2$.std.resid)#Se rechaza H0 de normalidad, hay problemas
+kst2p<-kst2$p.value
+
+library(tseries)
+jbt2<-tseries::jarque.bera.test(Datosmodelo2$.std.resid)#Se rechaza H0 de normalidad, hay problemas
+jbt2p<-jbt2$p.value
+```
+
+Además, de acuerdo con la prueba ``studentized Breusch-Pagan`` se tiene un p-value de `r sbpt2p` por lo que no se rechaza la hipótesis nula de homocesaticidad, mientras que las pruebas de normalidad Jarque-Bera, Shapiro-Wilk y Kolmogorov-Smirnov no rechazan la hipótesis nula de normalidad, con p-value de `r jbt2p`, `r swt2p` y `r kst2p`, respectivamente.  (Chunk pruebasmodelo2, línea de código 158).  
+
+A partir de este segundo modelo, haremos una selección de variables. 
+
+```{r subconjuntosleaps, echo=FALSE, include=FALSE}
+#Mejor subconjunto
+library(leaps)
+subconjuntos<-regsubsets(I((Y)^2)~X1+X2+X3+I(X4^(1/2))+X5+X6, data=datos6, nbest=2, nvmax=10)
+#summary(subconjuntos)
+
+###algunas graficas interesantes para analizar los resultados con cada criterio
+###bic, adjr2, Cp
+plot(subconjuntos ,scale="bic")
+
+####modelo descrito en renglón 15
+coef(subconjuntos, 15)
+
+modelo3=lm(I((Y)^2)~X1+X2+I(X4^(1/2))+X6, data=datos6) #modelo descrito en renglon 15
+summary(modelo3)
+("BIC")
+BIC_modelo3<-BIC(modelo3)
+BIC_modelo3
+```
+
+```{r stepBIC, echo=FALSE, include=FALSE}
+#Metodos por pasos backward
+##k es la penalizacion, 2 para AIC, log(n) para BIC
+fitCompleto=lm(I((Y)^2)~X1+X2+X3+I(X4^(1/2))+X5+X6, data=datos6)
+#step(fitCompleto,direction="backward", k = 2)   #Usando AIC y empezando con fitCompleto
+#agregar trace=0 para eliminar la impresion de los pasos
+step(fitCompleto,direction="backward", k = log(400), trace=0)  
+
+#Metodos por pasos forward
+##k es la penalizacion, 2 para AIC, log(n) para BIC
+fitNulo=lm(I((Y)^2)~1, data=datos6)
+step(fitNulo,direction="forward", k = log(400), scope=  ~ X1+X2+X3+I(X4^(1/2))+X5+X6, trace=0)  #Usando AIC y empezando con fitNulo
+```
+
+```{r glm_lambdabic, echo=FALSE, include=FALSE}
+#Usando lasso #seleccion via penalizacion en la logverosimilitud
+# paquete smurf #otra opcion mas popular es glmnet
+library(smurf)
+formu <- I((Y)^2) ~ p(X1, pen = "gflasso") + p(X2, pen = "gflasso")+
+  p(X3, pen = "lasso") + p(I(X4^(1/2)), pen = "lasso") + p(X5, pen = "lasso") + p(X6, pen = "lasso")
+#Usando la muestra completa
+glm_lambdabic <- glmsmurf(formula = formu, family = gaussian(), data = datos6, 
+                       pen.weights = "glm.stand", lambda = "is.bic")
+plot_lambda(glm_lambdabic)
+("lambda")
+glm_lambdabic$lambda
+BIC_glm<-BIC(glm_lambdabic)
+plot(glm_lambdabic, cex=3)
+summary(glm_lambdabic)
+```
+
+```{r modsellasso, echo=FALSE, include=FALSE}
+glm_lambdabica <- glmsmurf(formula = formu, family = gaussian(), data = datos6, 
+                         pen.weights = "glm.stand", lambda = glm_lambdabic$lambda, x.return=TRUE)
+modsellasso=lm(V1~-1+.,as.data.frame(cbind(glm_lambdabica$y, as.matrix(glm_lambdabica$X.reest))) )
+summary(modsellasso)
+("BIC")
+BIC_lasso<-BIC(modsellasso)
+BIC_lasso
+```
+
+```{r, echo=FALSE, include=FALSE}
+names(modsellasso$coefficients)<-c("(Intercept)", "X1A2", "X1A3.4", "X2B2.3", "X2B4", "I(X4^(1/2))", "X6")
+modsellasso$coefficients
+```
+
+
+
+Con la función ``regsubsets`` de la biblioteca ``leaps`` se analizaron los mejores subconjuntos, se presenta la siguiente gráfica izquierda mostrando los resultados, con esto decidimos tomar las covariables X1, X2, X4 y X6, omitiendo las variables X3 y X5, con lo que se podría tener un tercer modelo que muestra un BIC de `r BIC_modelo3` y que se muestra en la columna 3 del Cuadro de MODELOS. (Chunk subconjuntosleaps, linea de código 187). Este resultado se refuerza con el análisis hecho con los métodos por pasos forward y backward, con la función ``step`` y el criterio BIC. (Chunk stepBIC, linea de código 207).  Adicionalmente se realizó con la biblioteca ``smurf`` un  modelo lasso de seleccion via penalizacion en la logverosimilitud,  considerando la familia gausiana, pesos glm.stand, y lambda is.bic, cuyo BIC es de `r BIC_glm` y resultado se muestra se presenta en la gráfica de la derecha (Chunk glm_lambdabic, linea de código 221). Como se puede observar en la gráfica derecha, las variables X3 y X5 tienen un valor de cero, además podemos notar que X1A3 y X1A4 pueden combinarse en una sola variable, al igual que  X2B2 y X2B3 en otra, así se realizó el ajuste con el modelo lasso final cuyos resultados se presentan en la cuarta y última columna del Cuadro de MODELOS y cuyo BIC es de `r BIC_lasso`. (Chunk modsellasso, linea de código 238). 
+
+
+```{r, echo=FALSE, fig.width=9}
+par(mfrow=c(1,2))
+plot(subconjuntos ,scale="bic")
+plot(glm_lambdabic, cex=3)
+```
+
+
+
+Finalmente, se presentan los resultados de los modelos referidos anteriormente en el Cuadro de MODELOS. El modelo final elegido es el de la última columna donde la variable dependiente es $V1=I((Y)ˆ2)$, podemos observar que la prueba $F$ tiene un p-value menor a $0.05$, los tres asteriscos indican que incluso menor que $0.01$, por lo que al menos un coeficiente estimado es distinto de cero. Además, cada uno de los coeficientes, en una análisis individual, dado que están las otras variables, agregan información al modelo.    
+
+```{r, echo=FALSE}
+#stargazer(modelo1, modelo2, modelo3, modsellasso, no.space=TRUE)
+```
+
+
+\begin{table}[!htbp] \centering 
+  \caption{MODELOS} 
+  \label{} 
+\footnotesize
+\begin{tabular}{@{\extracolsep{5pt}}lcccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{4}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-5} 
+\\[-1.8ex] & Y & \multicolumn{2}{c}{I((Y)$\hat{\mkern6mu}$2)} & V1 \\ 
+\\[-1.8ex] & (1) & (2) & (3) & (4)\\ 
+\hline \\[-1.8ex] 
+ X3 & 0.002 & 0.036 &  &  \\ 
+  & (0.003) & (0.028) &  &  \\ 
+  X4 & 0.066$^{***}$ &  &  &  \\ 
+  & (0.003) &  &  &  \\ 
+  I(X4$\hat{\mkern6mu}$(1/2)) &  & 5.014$^{***}$ & 5.018$^{***}$ & 5.006$^{***}$ \\ 
+  &  & (0.167) & (0.167) & (0.167) \\ 
+  X5 & $-$0.002 & $-$0.016 &  &  \\ 
+  & (0.002) & (0.018) &  &  \\ 
+  X6 & $-$0.238$^{***}$ & $-$2.999$^{***}$ & $-$3.005$^{***}$ & $-$3.002$^{***}$ \\ 
+  & (0.003) & (0.028) & (0.028) & (0.028) \\ 
+  X1A2 & 1.295$^{***}$ & 16.979$^{***}$ & 16.967$^{***}$ & 16.969$^{***}$ \\ 
+  & (0.014) & (0.152) & (0.151) & (0.151) \\ 
+  X1A3 & 0.177$^{***}$ & 2.032$^{***}$ & 2.030$^{***}$ &  \\ 
+  & (0.014) & (0.151) & (0.151) &  \\ 
+  X1A4 & 0.177$^{***}$ & 2.019$^{***}$ & 2.014$^{***}$ &  \\ 
+  & (0.014) & (0.152) & (0.151) &  \\ 
+  X2B2 & $-$0.410$^{***}$ & $-$5.078$^{***}$ & $-$5.073$^{***}$ &  \\ 
+  & (0.014) & (0.151) & (0.151) &  \\ 
+  X2B3 & $-$0.410$^{***}$ & $-$5.248$^{***}$ & $-$5.244$^{***}$ &  \\ 
+  & (0.014) & (0.151) & (0.151) &  \\ 
+  X1A3.4 &  &  &  & 2.023$^{***}$ \\ 
+  &  &  &  & (0.131) \\ 
+  X2B2.3 &  &  &  & $-$5.159$^{***}$ \\ 
+  &  &  &  & (0.131) \\ 
+  X2B4 & $-$0.235$^{***}$ & $-$3.035$^{***}$ & $-$3.047$^{***}$ & $-$3.048$^{***}$ \\ 
+  & (0.014) & (0.152) & (0.152) & (0.151) \\ 
+  Constant & 5.550$^{***}$ & 23.262$^{***}$ & 23.410$^{***}$ & 23.448$^{***}$ \\ 
+  & (0.030) & (0.548) & (0.541) & (0.540) \\ 
+ \hline \\[-1.8ex] 
+Observations & 400 & 400 & 400 & 400 \\ 
+R$^{2}$ & 0.982 & 0.988 & 0.988 & 0.999 \\ 
+Adjusted R$^{2}$ & 0.981 & 0.988 & 0.988 & 0.999 \\ 
+Residual Std. Error & 0.102 (df = 389) & 1.065 (df = 389) & 1.066 (df = 391) & 1.065 (df = 393) \\ 
+F Statistic & 2,101.510$^{***}$ (df = 10; 389) & 3,204.967$^{***}$ (df = 10; 389) & 3,999.207$^{***}$ (df = 8; 391) & 89,411.300$^{***}$ (df = 7; 393) \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{4}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table} 
+
+
+
+
+
+
+
+
+
