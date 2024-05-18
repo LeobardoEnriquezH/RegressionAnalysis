@@ -1,0 +1,110 @@
+---
+title: ""
+output: pdf_document
+---
+2.-
+
+Considere el modelo de regresion
+$$
+y_i=\beta_0+\beta_1 x_i+\beta_2\left(3 x_i^2-2\right)+\xi_i \quad i=1,2,3
+$$
+donde
+$$
+x_1=-1, x_2=0, x_3=1
+$$
+I)
+Matriz de diseño
+$$
+X=\left(\begin{array}{rrr}
+1 & -1 & 1 \\
+1 & 0 & -2 \\
+1 & 1 & 1
+\end{array}\right) \text { pues } \begin{aligned}
+& 3 x_1^2-2=1 \\
+& 3 x_2^2-2=-2 \\
+& 3 x_3^2-2=1
+\end{aligned}
+$$
+
+Asi
+$$
+\begin{aligned}
+& X^t X=\left(\begin{array}{ccc}
+1 & 1 & 1 \\
+-1 & 0 & 1 \\
+1 & -2 & 1
+\end{array}\right)\left(\begin{array}{ccc}
+1 & -1 & 1 \\
+1 & 0 & -2 \\
+1 & 1 & 1
+\end{array}\right)=\left(\begin{array}{lll}
+3 & 0 & 0 \\
+0 & 2 & 0 \\
+0 & 0 & 6
+\end{array}\right) \\
+& y \\
+& \left(X^t X\right)^{-1}=\left(\begin{array}{ccc}
+1 / 3 & 0 & 0 \\
+0 & 1 / 2 & 0 \\
+0 & 0 & 1 / 6
+\end{array}\right)
+\end{aligned}
+$$
+II)
+
+$$
+\hat{\beta}=(X^t X)^{-1} X^t y
+$$
+asi:
+$$
+\begin{aligned}
+& \hat{\beta}=\left(\begin{array}{ccc}
+1 / 3 & 0 & 0 \\
+0 & 1 / 2 & 0 \\
+0 & 0 & 1 / 6
+\end{array}\right)\left(\begin{array}{ccc}
+1 & 1 & 1 \\
+-1 & 0 & 1 \\
+1 & -2 & 1
+\end{array}\right)\left(\begin{array}{l}
+y_1 \\
+y_2 \\
+y_3
+\end{array}\right)=\left(\begin{array}{ccc}
+1 / 3 & 1 / 3 & 1 / 3 \\
+-1 / 2 & 0 & 1 / 2 \\
+1 / 6 & -1 / 3 & 1 / 6
+\end{array}\right)\left(\begin{array}{l}
+y_1 \\
+y_2 \\
+y_3
+\end{array}\right) \\
+& \hat{\beta}=\left(\begin{array}{l}
+\frac{1}{3}\left(y_1+y_2+y_3\right) \\
+\frac{1}{2}\left(y_3-y_1\right) \\
+\frac{1}{6}\left(y_1-2 y_2+y_3\right)
+\end{array}\right)
+\end{aligned}
+$$
+
+Por lo tanto
+$$
+\hat{\beta}_0=\frac{1}{3}\left(y_1+y_2+y_3\right) \quad \hat{\beta}_1=\frac{1}{2}\left(y_3-y_1\right) \quad \hat{\beta}_2=\frac{1}{6}\left(y_1-2 y_2+y_3\right)
+$$
+III)
+Obtenemos los estimadores del modelo reducido:
+$$
+y_i=\beta_0^*+\beta_1^* x_i+\xi_i^* \quad i=1,2,3
+$$
+
+Obtenemos
+$$
+\begin{aligned}
+& \left(X^t X\right)^{-1}=\left(\begin{array}{cc}
+1 / 3 & 0 \\
+0 & 1 / 2
+\end{array}\right) \\
+&
+\end{aligned}
+$$
+$$\begin{aligned} & \rightarrow \hat{\beta}^*=\left(\begin{array}{cc}1 / 3 & 0 \\ 0 & 1 / 2\end{array}\right)\left(\begin{array}{ccc}1 & 1 & 1 \\ -1 & 0 & 1\end{array}\right)\left(\begin{array}{l}y_1 \\ y_2 \\ y_3\end{array}\right)=\left(\begin{array}{ccc}1 / 3 & 1 / 3 & 1 / 3 \\ -1 / 2 & 0 & 1 / 2\end{array}\right)\left(\begin{array}{l}y_1 \\ y_2 \\ y_3\end{array}\right) \\ & \hat{\beta}^*=\binom{\frac{1}{3}\left(y_1+y_2+y_3\right)}{\frac{1}{2}\left(y_3-y_1\right)} \\ & \text { Asi } \hat{\beta}_0^*=\frac{1}{3}\left(y_1+y_2+y_3\right) \text { y } \hat{\beta}_1^*=\frac{1}{2}\left(y_3-y_1\right) \\ \therefore \hat{\beta}_0^*=\hat{\beta}_0 \text { y } \hat{\beta}_1^*=\hat{\beta}_1 \\ & \end{aligned}$$
