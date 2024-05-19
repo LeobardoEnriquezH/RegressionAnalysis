@@ -1,0 +1,329 @@
+---
+title: "Ejercicio 4"
+output: pdf_document
+---
+
+```{r, include=FALSE}
+library(multcomp)
+datos <- read.csv("C:/Users/coyxz/Downloads/Ex4B.csv")
+str(datos)
+datos$Sexo=factor(datos$Sexo)
+datos$Trat=factor(datos$Trat)
+str(datos)
+levels(datos$Sexo)
+levels(datos$Trat)
+```
+
+I) 
+
+```{r}
+boxplot(Puntaje ~ Trat+Sexo, data = datos, col = "white", outline=FALSE)
+```
+
+En estos boxplots podemos observar que para el caso Control se observa que de puntaje
+que presentan ansiedad, tamto en hombres como mujeres, se encuentra aproximadamente entre 10 y 11.
+
+En el caso de aplicar el tratamiento actual (Trat1) podemos notar que hay una disminucion
+en el nivel de ansiedad que presentan tanto hombres como mujeres, aunque parece ser que el 
+tratamiento actual reduce más el nivel de ansiedad en mujeres que en hombres.
+
+Por otro lado, al aplicar el nuevo tratamiento (Trat2) podemos notar una ligera disminucion
+en el nivel de ansiedad de los hombres respecto al caso Control, pero los niveles de ansiedad
+son mayores en comparacion al aplicar el tratamiento actual. Mientras que en el caso de las
+mujeres el nuevo tratamiento reduce la ansiedad a un nivel muchisimo mas bajo en comparación
+al caso control e incluso a un nivel mas bajo comparandolo al aplicar el tratamiento actual.
+
+
+II) 
+
+
+El modelo general es el siguiente:
+$$
+E(Puntaje;Trat,Sexo) = \beta_{0} + \beta_{1}*Trat1 + \beta_{2}*Trat2 + \beta_{3}*Mujer + \beta_{4}(Trat1*Mujer) + \beta_{5}(Trat2*Mujer)
+$$
+A partir del modelo general podemos obtener los modelos individuales:
+
+$E(Puntaje;Control,Hombre) = \beta_{0}$
+
+$E(Puntaje;Trat1,Hombre) = \beta_{0} + \beta_{1}$
+
+$E(Puntaje;Trat2,Hombre) = \beta_{0} + \beta_{2}$
+
+$E(Puntaje;Control,Mujer) = \beta_{0} + \beta_{3}$
+
+$E(Puntaje;Trat1,Mujer) = \beta_{0} + \beta_{1} + \beta_{3} + \beta_{4}$ 
+
+$E(Puntaje;Trat2,Mujer) = \beta_{0} + \beta_{2} + \beta_{3} + \beta_{5}$
+
+Ajunstamos nuestro modelo:
+
+```{r}
+fit <- lm(Puntaje ~ Trat*Sexo, data = datos)
+summary(fit)
+```
+
+Por tanto las estimaciones puntuales son:
+
+$E(Puntaje;Control,Hombre) = 10.7602$
+
+$E(Puntaje;Trat1,Hombre) = 10.7602 + (-1.51) = 9.2502$
+
+$E(Puntaje;Trat2,Hombre) = 10.7602 + (-0.4798) = 10.2804$
+
+$E(Puntaje;Control,Mujer) = 10.7602 + 0.5231 = 11.2833$
+
+$E(Puntaje;Trat1,Mujer) = 10.7602 + (-1.5100) + 0.5231 + (-1.3758) = 8.3975$ 
+
+$E(Puntaje;Trat2,Mujer) = 10.7602 + (-0.4789) + 0.5231 + (-3.5914) = 7.213$
+
+
+III) 
+
+
+Las hipótesis que se contrastan con la tabla ANOVA son:
+
+$H_0 : \beta_{0}=0$, $\beta_{1}=0$, $\beta_{2}=0$, $\beta_{3}=0$, $\beta_{4}=0$, $\beta_{5}=0$  vs  $H_{\alpha} : \beta_{0}\neq0$ ó $\beta_{1}\neq0$ $\beta_{2}\neq0$, $\beta_{3}\neq0$, $\beta_{4}\neq0$, $\beta_{5}\neq0$
+
+Con el comando $summary(fit)$ vemos que el p-value asociado a la tabla ANOVA es de 1.873e-11 que es menor a nuestra significancia de .05, por lo que rechazamos $H_{0}$.
+
+IV)
+
+Para determinar si el sexo tiene un efecto en el puntaje realizaremos una prueba de hipotesis, la cual tiene como hipotesis nula:
+$$
+H_{0} = \left\{ \begin{array}{rcl}
+E(Puntaje;Control,Hombre) & \mbox{=}
+& E(Puntaje;Control,Mujer) \\  E(Puntaje;Trat1,Hombre) & \mbox{=}
+& E(Puntaje;Trat1,Mujer) \\ 
+E(Puntaje;Trat2,Hombre) & \mbox{=}
+& E(Puntaje;Trat2,Mujer)
+\end{array}\right.
+$$
+$$
+\Longleftrightarrow \\
+$$
+$$
+H_{0} = \left\{ \begin{array}{rcl}
+\beta_{0} & \mbox{=} & \beta_{0} + \beta_{3} \\  
+\beta_{0} + \beta_{1} & \mbox{=} & \beta_{0} + \beta_{1} + \beta_{3} + \beta_{4} \\ 
+\beta_{0} + \beta_{2} & \mbox{=} & \beta_{0} + \beta_{2} + \beta_{3} + \beta_{5}
+\end{array}\right.
+$$
+$$
+\Longleftrightarrow \\
+$$
+$$
+H_{0} = \left\{ \begin{array}{rcl}
+0 & \mbox{=} & \beta_{3} \\  
+0 & \mbox{=} & \beta_{3} + \beta_{4} \\ 
+0 & \mbox{=} & \beta_{3} + \beta_{5}
+\end{array}\right.
+$$
+Notemos que al comparar dos a dos las igualdades de $H_{0}$ podemos obtener una hipotesis nula que es equivalente, la cual es:
+$$
+H_{0} = \left\{ \begin{array}{rcl}
+0 & \mbox{=} & \beta_{3} \\  
+0 & \mbox{=} & \beta_{4} \\ 
+0 & \mbox{=} & \beta_{5}
+\end{array}\right.
+$$
+Por lo tanto, la prueba de hipotesis a realizar es:
+
+$H_0 : \beta_{3}=0$, $\beta_{4}=0$, $\beta_{5}=0$  vs  $H_{\alpha}: \beta_{3}\neq0$, $\beta_{4}\neq0$, $\beta_{5}\neq0$
+
+```{r}
+K=matrix(c(0,0,0,1,0,0,
+            0,0,0,0,1,0,
+            0,0,0,0,0,1), ncol=6, nrow=3, byrow=TRUE)
+m=c(0,0,0)
+summary(glht(fit, linfct=K, rhs=m), test=Ftest())
+```
+Vemos que el p-valor es de 1.827792e-06, por lo que rechazamos $H_{0}$. Ahora realizaremos una prueba simultanea para ver si podemos decir que el sexo tiene algun efecto en el tratamiento 
+
+```{r}
+summary(glht(fit, linfct=K, rhs=m))
+```
+Con la prueba simultanea podemos ver que es plausible quitar a $\beta_{3}$ y $\beta_{4}$ del modelo, pues el p-value en ambos es mayor a .025
+
+Por tanto nuestro modelo reducido seria:
+$$
+E(Puntaje;Trat,Sexo) = \beta_{0} + \beta_{1}*Trat1 + \beta_{2}*Trat2 + \beta_{3}(Trat2*Mujer)
+$$
+V)
+
+Ajustamos nuestro modelo reducido:
+```{r}
+fit2 <- lm(Puntaje ~ I(Trat=="Trat1")+I(Trat=="Trat2")+I((Sexo=="Mujer")*(Trat=="Trat2")), data = datos)
+summary(fit2)
+```
+Entonces las expresiones del puntaje promedio de cada uno de los valores en las variables categoricas, junton con su estimacion puntual, son:
+
+$E(Puntaje;Control,Hombre) = \beta_{0} = 11.0217$
+
+$E(Puntaje;Trat1,Hombre) = \beta_{0} + \beta_{1} = 11.0217 + (-2.1979) = 8.8238$
+
+$E(Puntaje;Trat2,Hombre) = \beta_{0} + \beta_{2} = 11.0217 + (-0.7405) = 10.2812$
+
+$E(Puntaje;Control,Mujer) = \beta_{0} = 11.0217$
+
+$E(Puntaje;Trat1,Mujer) = \beta_{0} + \beta_{1} = 11.0217 + (-2.1979) = 8.8238$ 
+
+$E(Puntaje;Trat2,Mujer) = \beta_{0} + \beta_{2} + \beta_{3} = 11.0217 + (-0.7405) + (-3.0683) = 7.2129$
+
+VI)
+
+Queremos realizar una prueba de hipotesis para ver si el nuevo tratamiento tiene mejor desempeño, por lo que nuestra hipotesis alternativa seria:
+$$
+H_{\alpha} = \left\{ \begin{array}{rcl}
+E(puntaje;Trat2,Hombre) & \mbox{<} & E(puntaje;Control,Hombre) \\  
+E(puntaje;Trat2,Hombre) & \mbox{<} & E(puntaje;Trat1,Hombre) \\ 
+E(puntaje;Trat2,Mujer) & \mbox{<} & E(puntaje;Control,Mujer) \\
+E(puntaje;Trat2,Mujer) & \mbox{<} & E(puntaje;Trat1,Mujer)
+\end{array}\right.
+$$
+$$
+\Longleftrightarrow \\
+$$
+$$
+H_{\alpha} = \left\{ \begin{array}{rcl}
+\beta_{0} + \beta_{2} & \mbox{<} & \beta_{0} \\  
+\beta_{0} + \beta_{2} & \mbox{<} & \beta_{0} + \beta_{1} \\ 
+\beta_{0} + \beta_{2} + \beta_{3} & \mbox{<} & \beta_{0} \\
+\beta_{0} + \beta_{2} + \beta_{3} & \mbox{<} & \beta_{0} + \beta_{1}
+\end{array}\right.
+$$
+$$
+\Longleftrightarrow \\
+$$
+$$
+H_{\alpha} = \left\{ \begin{array}{rcl}
+0 & \mbox{<} & - \beta_{2} \\  
+0 & \mbox{<} & \beta_{1} - \beta_{2} \\ 
+0 & \mbox{<} & - \beta_{2} - \beta_{3} \\
+0 & \mbox{<} & \beta_{1} - \beta_{2} - \beta_{3}
+\end{array}\right.
+$$
+Entonces nuestra prueba de hipotesis a realizar es:
+$$
+H_{0} = \left\{ \begin{array}{rcl}
+0 & \geq & - \beta_{2} \\  
+0 & \geq & \beta_{1} - \beta_{2} \\ 
+0 & \geq & - \beta_{2} - \beta_{3} \\
+0 & \geq & \beta_{1} - \beta_{2} - \beta_{3}
+\end{array}\right.
+\mbox{vs} \quad
+H_{\alpha} = \left\{ \begin{array}{rcl}
+0 & \mbox{<} & - \beta_{2} \\  
+0 & \mbox{<} & \beta_{1} - \beta_{2} \\ 
+0 & \mbox{<} & - \beta_{2} - \beta_{3} \\
+0 & \mbox{<} & \beta_{1} - \beta_{2} - \beta_{3}
+\end{array}\right.
+$$
+
+```{r}
+K2=matrix(c(0,0,-1,0,
+            0,1,-1,0,
+            0,-1,-1,0,
+            0,1,-1,-1), ncol=4, nrow=4, byrow=TRUE)
+m2=c(0,0,0,0)
+summary(glht(fit2, linfct=K2, rhs=m2, alternative="greater"))
+```
+Con esta prueba podemos ver que hay evidencia para no rechazar H0, pues tenemos que en los hombres el nuevo tratamiento no resulta ser mejor. Por lo que podriamos decir que el nuevo tratamiento no tiene mejor desempeño
+
+VII)
+
+Queremos realizar una prueba de hipotesis para ver que el tratamiento nuevo tiene mejor desempeño en mujeres mientras que el tratamiento actual lo tiene en hombres, por lo que nuestra hipotesis alternativa seria:
+$$
+H_{\alpha} = \left\{ \begin{array}{rcl}
+E(puntaje;Trat1,Hombre) & \mbox{<} & E(puntaje;Control,Hombre) \\  
+E(puntaje;Trat1,Hombre) & \mbox{<} & E(puntaje;Trat2,Hombre) \\ 
+E(puntaje;Trat2,Mujer) & \mbox{<} & E(puntaje;Control,Mujer) \\
+E(puntaje;Trat2,Mujer) & \mbox{<} & E(puntaje;Trat1,Mujer)
+\end{array}\right.
+$$
+$$
+\Longleftrightarrow \\
+$$
+$$
+H_{\alpha} = \left\{ \begin{array}{rcl}
+\beta_{0} + \beta_{1} & \mbox{<} & \beta_{0} \\  
+\beta_{0} + \beta_{1} & \mbox{<} & \beta_{0} + \beta_{2} \\ 
+\beta_{0} + \beta_{2} + \beta_{3} & \mbox{<} & \beta_{0} \\
+\beta_{0} + \beta_{2} + \beta_{3} & \mbox{<} & \beta_{0} + \beta_{1}
+\end{array}\right.
+$$
+$$
+\Longleftrightarrow \\
+$$
+$$
+H_{\alpha} = \left\{ \begin{array}{rcl}
+0 & \mbox{<} & - \beta_{1} \\  
+0 & \mbox{<} & \beta_{2} - \beta_{1} \\ 
+0 & \mbox{<} & - \beta_{2} - \beta_{3} \\
+0 & \mbox{<} & \beta_{1} - \beta_{2} - \beta_{3}
+\end{array}\right.
+$$
+Entonces nuestra prueba de hipotesis a realizar es:
+$$
+H_{0} = \left\{ \begin{array}{rcl}
+0 & \geq & - \beta_{1} \\  
+0 & \geq & \beta_{2} - \beta_{1} \\ 
+0 & \geq & - \beta_{2} - \beta_{3} \\
+0 & \geq & \beta_{1} - \beta_{2} - \beta_{3}
+\end{array}\right.
+\mbox{vs} \quad
+H_{\alpha} = \left\{ \begin{array}{rcl}
+0 & \mbox{<} & - \beta_{1} \\  
+0 & \mbox{<} & \beta_{2} - \beta_{1} \\ 
+0 & \mbox{<} & - \beta_{2} - \beta_{3} \\
+0 & \mbox{<} & \beta_{1} - \beta_{2} - \beta_{3}
+\end{array}\right.
+$$
+```{r}
+K3=matrix(c(0,-1,0,0,
+            0,-1,1,0,
+            0,0,-1,-1,
+            0,1,-1,-1), ncol=4, nrow=4, byrow=TRUE)
+m3=c(0,0,0,0)
+summary(glht(fit2, linfct=K3, rhs=m3, alternative="greater"))
+```
+Con esta prueba podemos ver que todos los p-value son menores a .05, por lo que podemos decir que el medicamento actual es mejor en los hombres mientras que el nuevo medicamento tiene mejor desempeño en las mujeres.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

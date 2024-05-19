@@ -1,0 +1,59 @@
+---
+title: "Ejercicio 1"
+output: pdf_document
+---
+
+Considere el modelo de regresión
+$$
+y= \beta_{0}+\beta_{1}x_{1}+...+\beta_{p}x_{p}+\epsilon
+$$
+y los estimadores obtenidos por mínimos cuadrados en forma matricial $\hat{\beta}=(X^tX)^{-1}X^ty$
+
+Usando la matriz proyección $H$ y sus propiedades indique:
+
+I) A que es igual: $e^tX$
+
+$$
+\begin{aligned} 
+e^tX & = (y-\hat{y})^tX \\ & 
+= (y- Hy)^tX \\ &
+= (y^t-y^tH^t)X \\ &
+= y^tX-y^tHX \\ &
+= y^tX-y^t(X(X^tX)^{-1}X^t)X \\ &
+= y^tX-y^tX[(X^tX)^{-1}X^tX] \\ &
+= y^tX-y^tX = 0 
+\end{aligned}
+$$
+
+$\therefore$ $e^tX=0$ 
+
+II) A que es igual: $Cov(e,\hat{y})$
+
+Primero notemos lo siguiente:
+$$
+\begin{aligned} 
+e & = (y-\hat{y)} \\ & 
+= (y-Hy) \\ &
+= (I-H)y \\ &
+\end{aligned}
+$$
+Donde $I$ es la matriz identidad, entonces tenemos:
+$$
+\begin{aligned} 
+Cov(e,\hat{y}) & = Cov((I-H)y,\hat{y}) \\ & 
+= Cov((I-H)y,Hy) \\ &
+= (I-H)Cov(y,y)H^t \\ &
+= (I-H)Var(y)H \\ &
+= (I-H)\sigma^2 H \\ &
+= \sigma^2(H-HH) \\ &
+= \sigma^2(H-H) \\ &
+= \sigma^2(0) = 0
+\end{aligned}
+$$
+$\therefore$ $Cov(e,\hat{y})=0$
+
+
+
+
+
+
