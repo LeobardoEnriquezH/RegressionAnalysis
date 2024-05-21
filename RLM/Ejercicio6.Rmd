@@ -8,6 +8,7 @@ header-includes:
 - \usepackage{graphicx}
 - \usepackage{multirow,rotating}
 - \usepackage{dcolumn}
+- \usepackage{pdflscape}
 output: pdf_document
 ---
 
@@ -268,6 +269,7 @@ Finalmente, se presentan los resultados de los modelos referidos anteriormente e
 #stargazer(modelo1, modelo2, modelo3, modsellasso, no.space=TRUE)
 ```
 
+\begin{landscape}
 
 \begin{table}[!htbp] \centering 
   \caption{MODELOS} 
@@ -321,6 +323,7 @@ F Statistic & 2,101.510$^{***}$ (df = 10; 389) & 3,204.967$^{***}$ (df = 10; 389
 \end{tabular} 
 \end{table} 
 
+\end{landscape}
 
 
 

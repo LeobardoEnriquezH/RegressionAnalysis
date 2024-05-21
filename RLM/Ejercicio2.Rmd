@@ -2,7 +2,8 @@
 title: ""
 output: pdf_document
 ---
-2.-
+
+# Ejercicio 2
 
 Considere el modelo de regresion
 $$

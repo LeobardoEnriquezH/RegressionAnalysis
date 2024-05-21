@@ -1,11 +1,13 @@
 ---
-title: "Ejercicio 4"
+title: ""
 output: pdf_document
 ---
 
+# Ejercicio 4
+
 ```{r, include=FALSE}
 library(multcomp)
-datos <- read.csv("C:/Users/coyxz/Downloads/Ex4B.csv")
+datos <- read.csv("Ex4B.csv")
 str(datos)
 datos$Sexo=factor(datos$Sexo)
 datos$Trat=factor(datos$Trat)
@@ -16,7 +18,7 @@ levels(datos$Trat)
 
 I) 
 
-```{r}
+```{r, echo=FALSE, fig.height=3.5, fig.width=6}
 boxplot(Puntaje ~ Trat+Sexo, data = datos, col = "white", outline=FALSE)
 ```
 
@@ -57,7 +59,7 @@ $E(Puntaje;Trat2,Mujer) = \beta_{0} + \beta_{2} + \beta_{3} + \beta_{5}$
 
 Ajunstamos nuestro modelo:
 
-```{r}
+```{r, echo=FALSE}
 fit <- lm(Puntaje ~ Trat*Sexo, data = datos)
 summary(fit)
 ```
@@ -96,28 +98,22 @@ E(Puntaje;Control,Hombre) & \mbox{=}
 & E(Puntaje;Trat1,Mujer) \\ 
 E(Puntaje;Trat2,Hombre) & \mbox{=}
 & E(Puntaje;Trat2,Mujer)
-\end{array}\right.
+\end{array}\right. \Longleftrightarrow
 $$
+
 $$
-\Longleftrightarrow \\
-$$
-$$
-H_{0} = \left\{ \begin{array}{rcl}
+\Longleftrightarrow H_{0} = \left\{ \begin{array}{rcl}
 \beta_{0} & \mbox{=} & \beta_{0} + \beta_{3} \\  
 \beta_{0} + \beta_{1} & \mbox{=} & \beta_{0} + \beta_{1} + \beta_{3} + \beta_{4} \\ 
 \beta_{0} + \beta_{2} & \mbox{=} & \beta_{0} + \beta_{2} + \beta_{3} + \beta_{5}
-\end{array}\right.
-$$
-$$
-\Longleftrightarrow \\
-$$
-$$
+\end{array}\right.\Longleftrightarrow
 H_{0} = \left\{ \begin{array}{rcl}
 0 & \mbox{=} & \beta_{3} \\  
 0 & \mbox{=} & \beta_{3} + \beta_{4} \\ 
 0 & \mbox{=} & \beta_{3} + \beta_{5}
 \end{array}\right.
 $$
+
 Notemos que al comparar dos a dos las igualdades de $H_{0}$ podemos obtener una hipotesis nula que es equivalente, la cual es:
 $$
 H_{0} = \left\{ \begin{array}{rcl}
@@ -130,7 +126,7 @@ Por lo tanto, la prueba de hipotesis a realizar es:
 
 $H_0 : \beta_{3}=0$, $\beta_{4}=0$, $\beta_{5}=0$  vs  $H_{\alpha}: \beta_{3}\neq0$, $\beta_{4}\neq0$, $\beta_{5}\neq0$
 
-```{r}
+```{r, echo=FALSE}
 K=matrix(c(0,0,0,1,0,0,
             0,0,0,0,1,0,
             0,0,0,0,0,1), ncol=6, nrow=3, byrow=TRUE)
@@ -139,7 +135,7 @@ summary(glht(fit, linfct=K, rhs=m), test=Ftest())
 ```
 Vemos que el p-valor es de 1.827792e-06, por lo que rechazamos $H_{0}$. Ahora realizaremos una prueba simultanea para ver si podemos decir que el sexo tiene algun efecto en el tratamiento 
 
-```{r}
+```{r, echo=FALSE}
 summary(glht(fit, linfct=K, rhs=m))
 ```
 Con la prueba simultanea podemos ver que es plausible quitar a $\beta_{3}$ y $\beta_{4}$ del modelo, pues el p-value en ambos es mayor a .025
@@ -151,7 +147,7 @@ $$
 V)
 
 Ajustamos nuestro modelo reducido:
-```{r}
+```{r, echo=FALSE}
 fit2 <- lm(Puntaje ~ I(Trat=="Trat1")+I(Trat=="Trat2")+I((Sexo=="Mujer")*(Trat=="Trat2")), data = datos)
 summary(fit2)
 ```
@@ -178,23 +174,16 @@ E(puntaje;Trat2,Hombre) & \mbox{<} & E(puntaje;Control,Hombre) \\
 E(puntaje;Trat2,Hombre) & \mbox{<} & E(puntaje;Trat1,Hombre) \\ 
 E(puntaje;Trat2,Mujer) & \mbox{<} & E(puntaje;Control,Mujer) \\
 E(puntaje;Trat2,Mujer) & \mbox{<} & E(puntaje;Trat1,Mujer)
-\end{array}\right.
+\end{array}\right. \Longleftrightarrow 
 $$
+
 $$
-\Longleftrightarrow \\
-$$
-$$
-H_{\alpha} = \left\{ \begin{array}{rcl}
+\Longleftrightarrow  H_{\alpha} = \left\{ \begin{array}{rcl}
 \beta_{0} + \beta_{2} & \mbox{<} & \beta_{0} \\  
 \beta_{0} + \beta_{2} & \mbox{<} & \beta_{0} + \beta_{1} \\ 
 \beta_{0} + \beta_{2} + \beta_{3} & \mbox{<} & \beta_{0} \\
 \beta_{0} + \beta_{2} + \beta_{3} & \mbox{<} & \beta_{0} + \beta_{1}
-\end{array}\right.
-$$
-$$
-\Longleftrightarrow \\
-$$
-$$
+\end{array}\right.\Longleftrightarrow 
 H_{\alpha} = \left\{ \begin{array}{rcl}
 0 & \mbox{<} & - \beta_{2} \\  
 0 & \mbox{<} & \beta_{1} - \beta_{2} \\ 
@@ -202,6 +191,8 @@ H_{\alpha} = \left\{ \begin{array}{rcl}
 0 & \mbox{<} & \beta_{1} - \beta_{2} - \beta_{3}
 \end{array}\right.
 $$
+
+
 Entonces nuestra prueba de hipotesis a realizar es:
 $$
 H_{0} = \left\{ \begin{array}{rcl}
@@ -219,7 +210,7 @@ H_{\alpha} = \left\{ \begin{array}{rcl}
 \end{array}\right.
 $$
 
-```{r}
+```{r, echo=FALSE}
 K2=matrix(c(0,0,-1,0,
             0,1,-1,0,
             0,-1,-1,0,
@@ -249,12 +240,7 @@ H_{\alpha} = \left\{ \begin{array}{rcl}
 \beta_{0} + \beta_{1} & \mbox{<} & \beta_{0} + \beta_{2} \\ 
 \beta_{0} + \beta_{2} + \beta_{3} & \mbox{<} & \beta_{0} \\
 \beta_{0} + \beta_{2} + \beta_{3} & \mbox{<} & \beta_{0} + \beta_{1}
-\end{array}\right.
-$$
-$$
-\Longleftrightarrow \\
-$$
-$$
+\end{array}\right.\Longleftrightarrow
 H_{\alpha} = \left\{ \begin{array}{rcl}
 0 & \mbox{<} & - \beta_{1} \\  
 0 & \mbox{<} & \beta_{2} - \beta_{1} \\ 
@@ -262,6 +248,7 @@ H_{\alpha} = \left\{ \begin{array}{rcl}
 0 & \mbox{<} & \beta_{1} - \beta_{2} - \beta_{3}
 \end{array}\right.
 $$
+
 Entonces nuestra prueba de hipotesis a realizar es:
 $$
 H_{0} = \left\{ \begin{array}{rcl}
@@ -278,7 +265,7 @@ H_{\alpha} = \left\{ \begin{array}{rcl}
 0 & \mbox{<} & \beta_{1} - \beta_{2} - \beta_{3}
 \end{array}\right.
 $$
-```{r}
+```{r, echo=FALSE}
 K3=matrix(c(0,-1,0,0,
             0,-1,1,0,
             0,0,-1,-1,

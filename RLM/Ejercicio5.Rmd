@@ -3,7 +3,7 @@ title: ""
 output: pdf_document
 
 ---
-5.-
+# Ejercicio 5
 
 I)
 ```{r,include=FALSE}
@@ -11,7 +11,7 @@ Datos<-read.csv("Ex5.csv")
 Datos$Trat=factor(Datos$Trat)
 ```
 
-```{r}
+```{r, echo=FALSE}
 
 plot(Datos$Edad,Datos$Ant,pch=19,col=c("blue","green")[Datos$Trat],xlab = "Edad",ylab = "Anticuerpos")
 legend("bottomleft", levels(Datos$Trat),
@@ -26,7 +26,7 @@ Tenemos el modelo con interacciones:
 $$
 E(y;x)= \beta_0 + \beta_1 + \beta_2 TratMed + \beta_3 (Edad*TratMed)
 $$
-```{r}
+```{r, echo=FALSE}
 fit <- lm(Ant ~ Edad * Trat, data = Datos) 
 summary(fit)
 ```
@@ -53,7 +53,7 @@ es decir se busca una diferencia en las pendientes
 library(multcomp)
 ```
 
-```{r}
+```{r, echo=FALSE}
 K=matrix(c(0,0,0,1), ncol=4, nrow=1, byrow=TRUE)
 m=c(0)
 summary(glht(fit, linfct=K, rhs=m), test=Ftest())
@@ -92,7 +92,8 @@ fitE<-glht(fit,linfct = K)
 fitci<-confint(fitE,level = 0.90)
 
 ```
-```{r}
+
+```{r, echo=FALSE}
 plot(Datos$Edad,Datos$Ant,pch=19,col=c("blue","green")[Datos$Trat],xlab = "Edad",ylab = "Anticuerpos")
 legend("bottomleft", levels(Datos$Trat),
        col = c("blue","green"), pch = 19, inset = 0.01,  pt.cex=1.5,cex = .9, y.intersp = 1.3 , bty="n")

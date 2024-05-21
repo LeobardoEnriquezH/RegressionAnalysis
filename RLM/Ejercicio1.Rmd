@@ -3,6 +3,8 @@ title: "Ejercicio 1"
 output: pdf_document
 ---
 
+# Ejercicio 1
+
 Considere el modelo de regresión
 $$
 y= \beta_{0}+\beta_{1}x_{1}+...+\beta_{p}x_{p}+\epsilon
