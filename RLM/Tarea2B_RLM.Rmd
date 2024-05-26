@@ -347,7 +347,8 @@ levels(datos$Trat)
 
 I) 
 
-```{r, echo=FALSE, fig.height=3.5, fig.width=6}
+```{r, echo=FALSE, fig.height=3.5, fig.width=8}
+par(cex.axis=0.8) 
 boxplot(Puntaje ~ Trat+Sexo, data = datos, col = "white", outline=FALSE)
 ```
 
