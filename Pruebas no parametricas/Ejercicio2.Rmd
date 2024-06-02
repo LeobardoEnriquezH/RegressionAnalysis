@@ -1,0 +1,44 @@
+---
+title: ""
+output: pdf_document
+---
+2.-
+
+1) Prueba parametrica
+```{r}
+x<-c(1.53,1.68,1.88,1.55,3.06,1.3,0.5,1.62,2.48)
+y<-c(0.578,1.06,1.29,1.06,3.14,1.29,0.647,0.59,2.05)
+w<-x-y
+```
+Para esta prueba usamos el modelo de regresion:
+$$w_i: \beta_0 + \epsilon_i$$
+Para saber si el tratamiento tuvo exito neseistamos la siguiente prueba de hipotesis:
+$$H_0:\beta_0\leq0
+vs
+H_a:\beta_0>0$$
+```{r,include=FALSE}
+library(multcomp)
+fit<-lm(w~1)
+```
+
+```{r}
+K=matrix(c(1), ncol=1, nrow=1, byrow=TRUE)
+m=c(0)
+summary(glht(fit, linfct=K, rhs=m, alternative="greater"))
+```
+
+Se rechaza $H_0$ por lo que podemos decir que el tratamiento tuvo exito.
+
+
+
+2)Prueba no parametrica
+
+prueba de hipotesis:
+$$
+H_0:\theta \leq0  vs  H_a:\theta>0
+$$
+```{r}
+wilcox.test(x,y,paired = TRUE, alternative = c("greater"), exact = TRUE, correct = FALSE)
+```
+
+en esta prueba tambien se rechaza $H_0$, lo que nos indica que el tratamiento tuvo exito.

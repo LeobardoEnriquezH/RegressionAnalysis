@@ -1,0 +1,30 @@
+---
+title: ''
+output: pdf_document
+---
+7.-
+```{r,include=FALSE}
+observados<-c(0.0023, 0.0150, 0.0298, 0.0337, 0.0729, 0.0943, 0.0950, 0.1080, 0.1180, 0.1300, 0.1500, 0.1592,
+              0.1617, 0.2016,0.2083, 0.2316, 0.2403, 0.2863, 0.3427, 0.3766, 0.4384, 0.4715, 0.4895, 0.5544,
+              0.5575, 0.5910, 0.5960, 0.6224,0.6517, 0.6602, 0.7197, 0.7317, 0.7687, 0.8212, 0.9439, 1.1242,
+              1.2681, 1.2885, 2.3626, 2.6055)
+```
+
+Tenemos la prueba de hipotesis:
+
+$H_0$:provienen de la distribucion exponencial
+
+vs
+
+$H_a$:no provienen de esa distribucion
+
+Usamos la prueba Kolmogorov–Smirnov con correcion Lilliefors
+```{r}
+set.seed(123)
+library(KScorrect)
+Test=LcKS(observados, cdf = "pexp", nreps = 10000)
+Test$D.obs
+Test$p.value
+
+```
+No se rechaza $H_0$
