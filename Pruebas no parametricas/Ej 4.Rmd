@@ -1,11 +1,25 @@
 ---
-title: "Ejercicio 4"
-date: "2024-06-02"
+title: ""
+author: ""
+date: ""
+header-includes:
+- \usepackage[utf8]{inputenc}
+- \usepackage[spanish]{babel}
+- \usepackage{graphicx}
+- \usepackage{multirow,rotating}
+- \usepackage{dcolumn}
+- \usepackage{pdflscape}
 output: pdf_document
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Ejercicio 4
+
 ```{r, echo=FALSE}
-datos <- read.csv("C:/Users/coyxz/Downloads/Ejercicio4Ex3.csv")
+datos <- read.csv("Ejercicio4Ex3.csv")
 ```
 
 Primero vamos a transformar nuestras variables a tipo factor de una manera que nos sea conveniente para poder analizar si a mayor nivel de estudio menor es el impacto de las fakenews

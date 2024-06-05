@@ -1,8 +1,23 @@
 ---
-title: ''
+title: ""
+author: ""
+date: ""
+header-includes:
+- \usepackage[utf8]{inputenc}
+- \usepackage[spanish]{babel}
+- \usepackage{graphicx}
+- \usepackage{multirow,rotating}
+- \usepackage{dcolumn}
+- \usepackage{pdflscape}
 output: pdf_document
 ---
-7.-
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Ejercicio 7
+
 ```{r,include=FALSE}
 observados<-c(0.0023, 0.0150, 0.0298, 0.0337, 0.0729, 0.0943, 0.0950, 0.1080, 0.1180, 0.1300, 0.1500, 0.1592,
               0.1617, 0.2016,0.2083, 0.2316, 0.2403, 0.2863, 0.3427, 0.3766, 0.4384, 0.4715, 0.4895, 0.5544,
@@ -27,4 +42,7 @@ Test$D.obs
 Test$p.value
 
 ```
-No se rechaza $H_0$
+
+No se rechaza $H_0$, por lo tanto no hay suficiente evidencia para rechazar que provenga de la distribución exponencial. 
+
+

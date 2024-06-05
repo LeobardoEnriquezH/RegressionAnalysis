@@ -1,0 +1,465 @@
+---
+title: ""
+date: ""
+header-includes:
+- \usepackage[utf8]{inputenc}
+- \usepackage[spanish]{babel}
+- \usepackage{graphicx}
+- \usepackage{multirow,rotating}
+- \pagenumbering{gobble}
+- \usepackage{dcolumn}
+output: 
+  pdf_document:
+    toc: true
+    toc_depth: 3
+    includes:
+      in_header: labels.tex
+      before_body: cover.tex
+csl: apa.csl
+bibliography: fuentes1.bib
+---
+
+```{=tex}
+\pagenumbering{gobble}
+\pagenumbering{arabic}
+```
+
+
+```{r setup, include=FALSE }
+knitr::opts_chunk$set(echo = T, fig.width = 6, fig.height = 3.5)
+
+```
+
+```{r, message=FALSE, include=FALSE,warning=FALSE, background=FALSE, comment=FALSE, engine.path=FALSE, cache=FALSE, out.extra=FALSE, results='hide'}
+#rm(list = ls())
+pacman::p_load(tidyverse,ISLR,forcats,broom,factoextra,gridExtra,psych,car,nortest,
+               kableExtra,data.table,NbClust,cowplot,clValid,factorextra,leaps,
+               stargazer,knitr,viridis,dplyr,readr,scales,quantmod,texreg,tinytex, 
+               tidyr, imager,lubridate,tseries, astsa, growthrates, tis, dynlm, 
+               readxl, foreign, hrbthemes, gtsummary, corrplot, lm.beta, ggfortify,
+               AER, lmtest, sandwich,GGally, ggplot2, multcomp, purrr, VGAM, lessR,
+               flextable, performance, see,qqplotr, ggrepel, patchwork,boot,rempsyc,
+               report, ggResidpanel,DHARMa, SuppDists, glmnet)
+```
+
+\newpage 
+
+
+## Ejercicio 1
+
+En esta sección trabajaremos con datos de colesterol malo (ldl) y cuatro tratamientos (treat: 1,2,3,4) que se probaron para reducir los niveles. Se tienen 39 observaciones aleatorias e independientes en el conjunto de datos ``quail`` de la biblioteca ``Rfit``. A continuación se presenta el BoxPlot, en donde podemos observar que la mediana de ldl para el segundo tratamiento es menor que en los demás casos, y que hay algunos valores que son outliers (los puntos asociados al símbolo de +). No parece que se pudiera asumir que los datos tengan un comportamiento normal para todos los grupos, por ejemplo en el caso del segundo grupo de tratamiento, no hay simetría entre los intercuantiles Q1 y Q3, con una media más cercana al cuantil Q1.  
+
+```{r, echo=FALSE}
+datos<-Rfit::quail
+```
+
+```{r, echo=FALSE, fig.height=3, fig.width=5}
+set.seed(340)
+ggplot(datos, aes(x = treat, y = ldl, colour = treat)) + 
+  geom_boxplot(outlier.shape = 3) +
+  geom_jitter()+theme_bw()
+```
+
+```{r normalidad, echo=FALSE}
+### Normalidad
+library(nortest)
+# Lilliefors
+norm_g1<-lillie.test(datos$ldl[datos$treat=="1"])
+norm_g2<-lillie.test(datos$ldl[datos$treat=="2"])
+norm_g3<-lillie.test(datos$ldl[datos$treat=="3"])
+norm_g4<-lillie.test(datos$ldl[datos$treat=="4"])
+```
+
+En la prueba de normalidad ``Lilliefors (Kolmogorov-Smirnov) normality test`` para cada grupo, tenemos que no se rechaza la hipótesis nula de normalidad, para los grupos 1 y 4, mientras que se rechaza para los grupos 2 y 3.  El p-value para el grupo 1 es de `r norm_g1$p.value`, para el 4 de `r norm_g4$p.value`, para el 2 de `r norm_g2$p.value` y para el 3 de `r norm_g3$p.value`. (Chunk normalidad, linea de código 40)
+
+
+```{r homocedasticidad, echo=FALSE, include=FALSE, message=FALSE}
+#Prueba de homocedasticidad
+# H_o: las varianzas de los grupos es la misma vs H_a: al menos un grupo tiene una varianza diferente
+bartlett<-bartlett.test(ldl~ treat, data = datos)
+#Otra prueba más robusta 
+library(car)
+levene<-leveneTest(ldl~ treat, data = datos)
+levene1<-levene$`Pr(>F)`[1]
+fligner<-fligner.test(ldl~ treat, data = datos) #prueba no paramétrica
+```
+
+Por otra parte, en las pruebas de homocedasticidad entre grupos, no se rechaza la hipótesis nula de misma varianza, pues el p-value para la prueba de Bartlett es de `r bartlett$p.value`, para la prueba Fligner de `r fligner$p.value` y para la prueba Levene de `r levene1`. (Chunk homocedasticidad, linea de código 53)
+
+```{r, echo=FALSE, include=FALSE, message=FALSE}
+### Una alternativa no parámetrica es 
+#  la prueba de Kruskal-Wallis
+library(PMCMRplus)
+### ¿Los grupos son iguales con respecto a la mediana?
+#H0: las medianas son iguales vs Ha: al menos dos grupos tienen mediana diferente
+
+#Distribución exacta sobre la estadística que es función de los rangos
+kruskalTest1<-kruskalTest(ldl ~ treat, data = datos, dist="KruskalWallis")
+```
+
+Si no asumimos ninguna distribución en particular pero sí que es la misma, la prueba Kruskal–Wallis se basa en una transformación de rangos. En este caso no hay problema de varianza heterogénea, por lo que no será necesario esto para comparar grupos. Sin embargo, con esta prueba tenemos que la mediana o la distribución no es la misma en todos los grupos, porque se rechaza la hipótesis nula (p-value de `r kruskalTest1$p.value`), con un nivel de significancia $\alpha=0.1$. El resultado es similar si usamos distribución asintótoca con distribución Chisquare. (Chunk kruskaltest, linea de código 80)
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+### Una alternativa no parámetrica es 
+#  la prueba de Kruskal-Wallis
+library(PMCMRplus)
+### ¿Los grupos son iguales con respecto a la mediana?
+#H0: las medianas son iguales vs Ha: al menos dos grupos tienen mediana diferente
+# Algo equivalente a la prueba de la tabla ANOVA cuando se usa regresión 
+# lineal múltiple.
+#kruskal.test(ldl ~ treat, data = datos)  #usando distribución asintótica
+
+#Distribución exacta sobre la estadística que es función de los rangos
+kruskalTest(ldl ~ treat, data = datos, dist="KruskalWallis")
+
+#Supuesto asintótico (por default)
+kruskalTest(ldl ~ treat, data = datos, dist="Chisquare")
+```
+
+Además, en las pruebas simultáneas de Dunn, para pares de grupos, se tienen p-values mayores a 0.1 en casi todos los casos, por lo que la dstribución es igual entre los grupos comparados por pares, a excepción de los grupos 1 y 2. (Chunk kwAllPairsDunnTest1, linea de código 100)
+
+
+```{r kwAllPairsDunnTest1, echo=FALSE, warning=FALSE, message=FALSE}
+#Son pruebas simultáneas
+ans <- kwAllPairsDunnTest(ldl ~ treat, data = datos)
+summary(ans)
+```
+
+Comparando un grupo contra todos los demás (ManyOne) usando Dunn test, tenemos que si tomamos el grupo de referencia (Grupo 1), para responder si el grupo 1 es el mejor, hay un p-value menor a 0.1 para la comparación con el grupo 2, lo que rechaza que sean iguales estos grupos. Si cambiamos al grupo de referencia, se rechaza la hipótesis de que éstos dos grupos (1 Y 2) sean iguales en todos los casos. (Chunk kwManyOneDunnTest1, linea de código 108)
+
+```{r kwManyOneDunnTest1, echo=FALSE, warning=FALSE, message=FALSE}
+#Por ejemplo. A. Un grupo se toma de referencia y se hacen sólo las comparaciones 
+#de ese grupo con los demás
+ans1 <- kwManyOneDunnTest(ldl ~ treat, data = datos)
+summary(ans1)
+levels(datos$treat) #por default se hacen todas las comparaciones contra el grupo de referencia
+```
+
+```{r, echo=FALSE}
+### si quisieramos comparar el grupo 2 con los demás:
+#datos$treat<- relevel(datos$treat, ref = "2")
+#ans1 <- kwManyOneDunnTest(ldl ~ treat, data = datos)
+#summary(ans1)
+```
+
+Haciendo una prueba con dirección, podemos concluir que el grupo 2 es mejor que el grupo 1, pues se rechaza la hipótesis nula, donde la hipótesis alternativa es que el grupo 2 es mejor que el grupo 1, este es el único caso.  (Chunk kwManyOneDunnTestLess, linea de código 125)
+
+```{r kwManyOneDunnTestLess, echo=FALSE, warning=FALSE, message=FALSE}
+# B. Se puede especificar sentido para poder obtener más control en la significancia
+# Sólo si los investigadores tienen esa hipótesis
+
+ans1 <- kwManyOneDunnTest(ldl ~ treat, data = datos, alternative = "less")
+summary(ans1)
+# con base en lo último no se puede conluir con alpha=.05 que el grupo 1 es mejor que el grupo 3 y 4, pero sí que el 2.
+```
+
+Por otra parte, si hacemos esta misma prueba tomando como referencia al grupo 2, no hay suficiente evidencia para decir que el tratamiento 2 es mejor o reduce más los niveles de colesterol en comparación con el resto de tratamientos.  (Chunk kwManyOneDunnTestLess2, linea de código 136)
+
+```{r kwManyOneDunnTestLess2, echo=FALSE, warning=FALSE, message=FALSE}
+### si quisieramos comparar el grupo 2 con los demás:
+datos$treat<- relevel(datos$treat, ref = "2")
+ans1 <- kwManyOneDunnTest(ldl ~ treat, data = datos, alternative = "less")
+summary(ans1)
+```
+
+
+Análogamente, esta prueba se hizo también para los grupos 3 y 4, con lo que tampoco hay suficiente evidencia para afirmar que los tratamientos 3 y 4 pudieran ser mejores que los demás. 
+
+Podemos concluir que el tratamiento 2 es mejor que el 1, sin embargo no es posible afirmar que sea mejor que los tratamientos 3 y 4. En las pruebas de los demás tratamientos, no es posible afirmar que los tratamientos 1,3 y 4 sean mejores que algún otro. 
+
+
+
+\newpage
+
+## Ejercicio 2
+
+1) Prueba parametrica
+```{r}
+x<-c(1.53,1.68,1.88,1.55,3.06,1.3,0.5,1.62,2.48)
+y<-c(0.578,1.06,1.29,1.06,3.14,1.29,0.647,0.59,2.05)
+w<-x-y
+```
+Para esta prueba usamos el modelo de regresion:
+$$w_i: \beta_0 + \epsilon_i$$
+Para saber si el tratamiento tuvo exito neseistamos la siguiente prueba de hipotesis:
+$$H_0:\beta_0\leq0
+vs
+H_a:\beta_0>0$$
+```{r,include=FALSE}
+library(multcomp)
+fit<-lm(w~1)
+```
+
+```{r}
+K=matrix(c(1), ncol=1, nrow=1, byrow=TRUE)
+m=c(0)
+summary(glht(fit, linfct=K, rhs=m, alternative="greater"))
+```
+
+Se rechaza $H_0$ por lo que podemos decir que el tratamiento tuvo exito.
+
+
+
+2)Prueba no parametrica
+
+prueba de hipotesis:
+$$
+H_0:\theta \leq0  vs  H_a:\theta>0
+$$
+```{r}
+wilcox.test(x,y,paired = TRUE, alternative = c("greater"), exact = TRUE, correct = FALSE)
+```
+
+En esta prueba tambien se rechaza $H_0$, lo que nos indica que el tratamiento tuvo exito.
+
+\newpage 
+
+## Ejercicio 3
+
+```{r,include=FALSE}
+library(MVN)
+```
+
+
+```{r}
+x <- c(3.9, 7.9, 4.1, 8.8, 9.4, 0.46, 5.3, 8.92, 5.5, 4.6, 47.9, 23.2, 34.2, 29.1, 6.0, 
+       45.1, 13.1, 3.1, 17.1, 47.8)
+y <- c(2.3, 2.4, 1.8, 2.3, 1.7, 0.1, 2.2, 0.22, 2.4, 1.0, 2.8, 2.9, 2.5, 2.6, 1.2, 2.1, 
+       3.4, 1.3, 1.7, 1.6)
+```
+
+I)
+
+Vamos a obtener el coeficiente de correlacion de Pearson.
+
+```{r}
+cor.test(x,y,method = "pearson", alternative="two.sided")
+```
+
+Entonces el coeficiente de correlacion de Pearson es de 0.3686798 y ademas el p-value es mayor a .05 por lo que no se rechaza $H_{0}$, es decir, no estamos rechazando que $x$ y $y$ sean independientes. Pero para realizar este coeficiente estamos suponiendo que se cumple la normalidad bivariada, entonces vamos a hacer pruebas para ver si efectivamente se cumple este supuesto.
+
+```{r}
+mvn(data=cbind(x,y), mvnTest = "hz")
+mvn(data=cbind(x,y), mvnTest = "mardia")
+```
+
+En ambas pruebas podemos ver que marginalmente rechazamos que $x$ se distribuya como una normal, por lo que se rechaza $H_{0}$, es decir, hay evidencia que nos dice que no se cumple el supuesto de normalidad bivariada. Y por lo tanto el coeficiente que obtuvimos solo se puede usar como una estadistica que nos habla de la asociacion monotona de las variables y en este caso la prueba de hipotesis asociada al coeficiente de correlacion de Pearson no tiene validez. 
+
+II)
+
+Ahora vamos a obtener el coeficiente $\tau_{b}$ de Kendall
+
+```{r}
+cor.test(x,y,method = "kendall", alternative="two.sided")
+```
+
+En este caso el coeficiente $\tau_{b}$ de Kendall es de 0.3130073   
+
+III)
+
+Ahora vamos a calcular el coeficiente $\rho_{s}$ de Spearman
+
+```{r}
+cor.test(x,y,method = "spearman", alternative="two.sided")
+```
+
+Entonces tenemos que el coeficiente $\rho_{s}$ de Spearman es de 0.4659393 
+
+Vamos a realizar un diagrama de dispersion para ver como se comportan las variables
+
+```{r}
+plot(x,y)
+```
+
+Podemos ver en el diagrama de dispersion que no hay algun patron o comportamiento en especifico que nos pueda indicar que las variables sean independientes e incluso podemos ver que no parece haber una relacion completamente monotona positiva entre las variables 
+
+
+\newpage
+
+## Ejercicio 4
+
+```{r, echo=FALSE}
+datos <- read.csv("Ejercicio4Ex3.csv")
+```
+
+Primero vamos a transformar nuestras variables a tipo factor de una manera que nos sea conveniente para poder analizar si a mayor nivel de estudio menor es el impacto de las fakenews
+
+```{r}
+datos$NivEdu=factor(datos$NivEdu, levels = c("Primaria", "Secundaria", 
+                                             "Bachillerato", "Profesional"))
+datos$FakeNews=factor(datos$FakeNews,levels = c("Muy Poco", "Poco", "Regular", "Mucho"))
+str(datos)
+```
+
+```{r,include=FALSE}
+levels(datos$NivEdu)
+rank(datos$NivEdu)
+levels(datos$FakeNews)
+rank(datos$FakeNews)
+```
+
+Y ahora procedemos a calcular los coeficientes $\tau_{b}$ de Kendall y $\rho_{s}$ de Spearman
+
+```{r}
+cor.test(rank(datos$NivEdu),rank(datos$FakeNews), method = "kendall")
+cor.test(rank(datos$NivEdu),rank(datos$FakeNews), method = "spearman")
+```
+
+En ambos casos podemos ver que el p-value es de 2.2e-16 por lo que rechazamos $H_{0}$, es decir, hay evidencia de que hay una relacion monotona entre las variables. 
+En el caso del coeficiente $\tau_{b}$ de Kendall tiene un valor de -0.2491923, mientras que en el coeficiente $\rho_{s}$ de Spearman tenemos un valor de -0.2958182 por lo que en ambos caso tendriamos una relacion monotona negativa. Entonces podriamos decir que a mayor nivel de estudio menor es el impacto de las fakenews  
+
+\newpage
+
+## Ejercicio 5
+
+A partir de la información de 1475 pacientes que sufrieron un paro cardiaco, de los cuales 733 recibieron el medicamento Sulphinpyrazone usada para disminuir la muerte cardiaca y 742 un placebo, durante 2 años, se quiere saber si el medicamento funciona o no.  A continuación se muestra el número de pacientes (Frec) de acuerdo a si tomó o no el medicamento y su condición de vivo o muerto después del paro cardiaco. 
+
+```{r, echo=FALSE}
+frec <- c(692,41,682,60)
+tratamiento <- c('Sulphinpyrazone', 'Sulphinpyrazone', 'Placebo', 'Placebo')
+vivo<- c('Si', 'No', 'Si', 'No')
+data <- data.frame(frec, tratamiento, vivo)
+```
+
+
+\begin{table}[!htbp] \centering 
+  \caption{} 
+  \label{} 
+\footnotesize
+\begin{tabular}{@{\extracolsep{5pt}}lccccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+Frecuencia & \multicolumn{1}{c}{Tratamiento} & \multicolumn{1}{c}{Vivo}\\ 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+692 & Sulphinpyrazone & Si  \\ 
+\hline \\[-1.8ex] 
+41 & Sulphinpyrazone & No  \\ 
+\hline \\[-1.8ex] 
+682 & Placebo & Si  \\ 
+\hline \\[-1.8ex] 
+60 & Placebo & No \\ 
+\hline \\[-1.8ex] 
+\end{tabular} 
+\end{table} 
+
+
+Con esta información haremos una prueba de hipótesis para indicar si la condición de muerte después de un paro cardíaco es diferente de acuerdo a si se recibió o no el tratamiento con Sulphinpyrazone, considerando un novel de significancia estadística de $\alpha=0.1$.
+
+```{r, echo=FALSE}
+datos<- data[rep(row.names(data), data$frec), 2:3]
+```
+
+```{r, echo=FALSE}
+data$frec=as.numeric(as.character(data$frec))
+data$tratamiento=factor(data$tratamiento)
+data$vivo=factor(data$vivo)
+```
+
+```{r, echo=FALSE}
+#Creación de una tabla de contingencia con valores observados
+Obs=xtabs(frec~tratamiento+vivo, data=data)
+```
+
+En primer lugar creamos una tabla de contingencia, y los valores esperados para cada celda bajo el supuesto de independencia entre las variables de tratamiento y vivo en la hipótesus nula $H_0$. Estos últimos valores se muestran a continuación. 
+
+```{r, echo=FALSE}
+#Valores esperados para cada celda bajo supuesto de independencia (H0)
+Esp <- ( apply(Obs,1,sum) %*% t(apply(Obs,2,sum)) )/ sum(Obs)
+Esp
+```
+
+A continuación mostramos la prueba de independencia con la función ``loglm`` de la biblioteca ``MASS``, donde tenemos la prueba del cociente de verosimilitudes generalizadas y la chi cuadrada (Pearson).  En ambos casos la hipótesis nula $H_0$ es que las variables tratamiento y vivo son independientes y como el p-value es menor considerando $\alpha=0.1$, se rechaza $H_0$. Por lo tanto estas variables no son independientes. 
+
+```{r, echo=FALSE}
+#Pruebas de independencia
+library(MASS)
+reg2=loglm(frec~tratamiento+vivo, data=data)
+reg2 #Pearson corresponde a la prueba Ji-cuadrada
+```
+En la suguiente gráfica de mosaico, mostramos las distribuciones por cada una de las clases. En esta caso podemos ver que en efecto el medicamento hace una diferencia en estar vivo o no estarlo. Con esto podríamos concluir de manera exploratoria que no son independientes el tratamiento de estar o no vivo. 
+
+```{r, echo=FALSE, message=FALSE, fig.height=6, fig.width=3.5}
+library(vcd)
+par( mfrow= c(1,2) )
+mosaic(Obs, split = TRUE, shade = TRUE, 
+       gp_varnames = gpar(fontsize = 8, fontface = 1),
+       gp_labels = gpar(fontsize = 8),
+       mar = c(left = 3.5), gp = gpar(fill=matrix(c("orange","skyblue","orange","skyblue"), 2, 2)))
+mosaic(t(Obs), split = TRUE, shade = TRUE,
+       gp_varnames = gpar(fontsize = 8, fontface = 1),
+       gp_labels = gpar(fontsize = 8),
+       mar = c(left = 3.5), gp = gpar(fill=matrix(c("orange","skyblue","orange","skyblue"), 2, 2)))
+
+
+```
+
+
+\newpage
+
+## Ejercicio 6
+
+Tenemos la prueba de hipotesis:
+
+
+$H_0$:provienen de la distribucion exp(2)
+
+vs
+
+$H_a$:no provienen de esa distribucion
+```{r}
+observados<-c(0.0023, 0.0150, 0.0298, 0.0337, 0.0729, 0.0943, 0.0950, 0.1080, 
+              0.1180, 0.1300, 0.1500, 0.1592, 0.1617, 0.2016,0.2083, 0.2316, 
+              0.2403, 0.2863, 0.3427, 0.3766, 0.4384, 0.4715, 0.4895, 0.5544,
+              0.5575, 0.5910, 0.5960, 0.6224,0.6517, 0.6602, 0.7197, 0.7317, 
+              0.7687, 0.8212, 0.9439, 1.1242, 1.2681, 1.2885, 2.3626, 2.6055)
+
+```
+```{r,include=FALSE}
+library(EnvStats)
+```
+Usamos la prueba de bondad de ajuste ji-cuadrada
+```{r}
+gofTest(observados, test = "chisq", distribution = "exp", param.list = list(rate = 2),
+            cut.points=c(0,0.3,0.7,1.1,Inf) )
+
+```
+
+No se rechaza $H_0$, por lo cual no hay evidencia suficiente para rechazar que proviene de la distribución exp(2). 
+
+
+\newpage
+
+## Ejercicio 7
+
+```{r,include=FALSE}
+observados<-c(0.0023, 0.0150, 0.0298, 0.0337, 0.0729, 0.0943, 0.0950, 0.1080, 0.1180, 0.1300, 0.1500, 0.1592,
+              0.1617, 0.2016,0.2083, 0.2316, 0.2403, 0.2863, 0.3427, 0.3766, 0.4384, 0.4715, 0.4895, 0.5544,
+              0.5575, 0.5910, 0.5960, 0.6224,0.6517, 0.6602, 0.7197, 0.7317, 0.7687, 0.8212, 0.9439, 1.1242,
+              1.2681, 1.2885, 2.3626, 2.6055)
+```
+
+Tenemos la prueba de hipotesis:
+
+$H_0$:provienen de la distribucion exponencial
+
+vs
+
+$H_a$:no provienen de esa distribucion
+
+Usamos la prueba Kolmogorov–Smirnov con correcion Lilliefors
+```{r}
+set.seed(123)
+library(KScorrect)
+Test=LcKS(observados, cdf = "pexp", nreps = 10000)
+Test$D.obs
+Test$p.value
+
+```
+
+No se rechaza $H_0$, por lo tanto no hay suficiente evidencia para rechazar que provenga de la distribución exponencial. 
+
+
+
+

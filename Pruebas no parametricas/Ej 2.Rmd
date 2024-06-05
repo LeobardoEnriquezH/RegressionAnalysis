@@ -1,8 +1,22 @@
 ---
 title: ""
+author: ""
+date: ""
+header-includes:
+- \usepackage[utf8]{inputenc}
+- \usepackage[spanish]{babel}
+- \usepackage{graphicx}
+- \usepackage{multirow,rotating}
+- \usepackage{dcolumn}
+- \usepackage{pdflscape}
 output: pdf_document
 ---
-2.-
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Ejercicio 2
 
 1) Prueba parametrica
 ```{r}
