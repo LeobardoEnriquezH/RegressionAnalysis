@@ -1,0 +1,122 @@
+---
+title: ""
+author: ""
+date: ""
+header-includes:
+- \usepackage[utf8]{inputenc}
+- \usepackage[spanish]{babel}
+- \usepackage{graphicx}
+- \usepackage{multirow,rotating}
+- \usepackage{dcolumn}
+- \usepackage{pdflscape}
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r,echo=FALSE, include=FALSE}
+library(stargazer)
+library(Rfit)
+library(ggplot2)
+library(tidyverse)
+```
+
+## Ejercicio 5
+
+A partir de la información de 1475 pacientes que sufrieron un paro cardiaco, de los cuales 733 recibieron el medicamento Sulphinpyrazone usada para disminuir la muerte cardiaca y 742 un placebo, durante 2 años, se quiere saber si el medicamento funciona o no.  A continuación se muestra el número de pacientes (Frec) de acuerdo a si tomó o no el medicamento y su condición de vivo o muerto después del paro cardiaco. 
+
+```{r, echo=FALSE}
+frec <- c(692,41,682,60)
+tratamiento <- c('Sulphinpyrazone', 'Sulphinpyrazone', 'Placebo', 'Placebo')
+vivo<- c('Si', 'No', 'Si', 'No')
+data <- data.frame(frec, tratamiento, vivo)
+```
+
+
+\begin{table}[!htbp] \centering 
+  \caption{} 
+  \label{} 
+\footnotesize
+\begin{tabular}{@{\extracolsep{5pt}}lccccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+Frecuencia & \multicolumn{1}{c}{Tratamiento} & \multicolumn{1}{c}{Vivo}\\ 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+692 & Sulphinpyrazone & Si  \\ 
+\hline \\[-1.8ex] 
+41 & Sulphinpyrazone & No  \\ 
+\hline \\[-1.8ex] 
+682 & Placebo & Si  \\ 
+\hline \\[-1.8ex] 
+60 & Placebo & No \\ 
+\hline \\[-1.8ex] 
+\end{tabular} 
+\end{table} 
+
+
+Con esta información haremos una prueba de hipótesis para indicar si la condición de muerte después de un paro cardíaco es diferente de acuerdo a si se recibió o no el tratamiento con Sulphinpyrazone, considerando un novel de significancia estadística de $\alpha=0.1$.
+
+```{r, echo=FALSE}
+datos<- data[rep(row.names(data), data$frec), 2:3]
+```
+
+```{r, echo=FALSE}
+data$frec=as.numeric(as.character(data$frec))
+data$tratamiento=factor(data$tratamiento)
+data$vivo=factor(data$vivo)
+```
+
+```{r, echo=FALSE}
+#Creación de una tabla de contingencia con valores observados
+Obs=xtabs(frec~tratamiento+vivo, data=data)
+```
+
+En primer lugar creamos una tabla de contingencia, y los valores esperados para cada celda bajo el supuesto de independencia entre las variables de tratamiento y vivo en la hipótesus nula $H_0$. Estos últimos valores se muestran a continuación. 
+
+```{r, echo=FALSE}
+#Valores esperados para cada celda bajo supuesto de independencia (H0)
+Esp <- ( apply(Obs,1,sum) %*% t(apply(Obs,2,sum)) )/ sum(Obs)
+Esp
+```
+
+A continuación mostramos la prueba de independencia con la función ``loglm`` de la biblioteca ``MASS``, donde tenemos la prueba del cociente de verosimilitudes generalizadas y la chi cuadrada (Pearson).  En ambos casos la hipótesis nula $H_0$ es que las variables tratamiento y vivo son independientes y como el p-value es menor considerando $\alpha=0.1$, se rechaza $H_0$. Por lo tanto estas variables no son independientes. 
+
+```{r, echo=FALSE}
+#Pruebas de independencia
+library(MASS)
+reg2=loglm(frec~tratamiento+vivo, data=data)
+reg2 #Pearson corresponde a la prueba Ji-cuadrada
+```
+En la suguiente gráfica de mosaico, mostramos las distribuciones por cada una de las clases. En esta caso podemos ver que en efecto el medicamento hace una diferencia en estar vivo o no estarlo. Con esto podríamos concluir de manera exploratoria que no son independientes el tratamiento de estar o no vivo. 
+
+```{r, echo=FALSE, message=FALSE, fig.height=6, fig.width=3.5}
+library(vcd)
+par( mfrow= c(1,2) )
+mosaic(Obs, split = TRUE, shade = TRUE, 
+       gp_varnames = gpar(fontsize = 8, fontface = 1),
+       gp_labels = gpar(fontsize = 8),
+       mar = c(left = 3.5), gp = gpar(fill=matrix(c("orange","skyblue","orange","skyblue"), 2, 2)))
+mosaic(t(Obs), split = TRUE, shade = TRUE,
+       gp_varnames = gpar(fontsize = 8, fontface = 1),
+       gp_labels = gpar(fontsize = 8),
+       mar = c(left = 3.5), gp = gpar(fill=matrix(c("orange","skyblue","orange","skyblue"), 2, 2)))
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
