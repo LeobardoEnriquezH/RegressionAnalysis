@@ -24,15 +24,14 @@ Vamos a obtener el coeficiente de correlacion de Pearson.
 cor.test(x,y,method = "pearson", alternative="two.sided")
 ```
 
-Entonces el coeficiente de correlacion de Pearson es de 0.3686798, pero para realizar este coeficiente estamos suponiendo que se cumple la normalidad bivariada. 
-Entonces vamos a hacer pruebas para ver si efectivamente se cumple este supuesto.
+Entonces el coeficiente de correlacion de Pearson es de 0.3686798 y ademas el p-value es mayor a .05 por lo que no se rechaza $H_{0}$, es decir, no estamos rechazando que $x$ y $y$ sean independientes. Pero para realizar este coeficiente estamos suponiendo que se cumple la normalidad bivariada, entonces vamos a hacer pruebas para ver si efectivamente se cumple este supuesto.
 
 ```{r}
 mvn(data=cbind(x,y), mvnTest = "hz")
 mvn(data=cbind(x,y), mvnTest = "mardia")
 ```
 
-En ambas pruebas podemos ver que el p-value es menor a .05, por lo que se rechaza $H_{0}$, es decir, hay evidencia que nos dice que no se cumple el supuesto de normalidad bivariada. Y por lo tanto el coeficiente de correlacion de Pearson solo se puede usar como una estadistica que nos habla de la asociacion monotona de las variables 
+En ambas pruebas podemos ver que marginalmente rechazamos que $x$ se distribuya como una normal, por lo que se rechaza $H_{0}$, es decir, hay evidencia que nos dice que no se cumple el supuesto de normalidad bivariada. Y por lo tanto el coeficiente que obtuvimos solo se puede usar como una estadistica que nos habla de la asociacion monotona de las variables y en este caso la prueba de hipotesis asociada al coeficiente de correlacion de Pearson no tiene validez. 
 
 II)
 
@@ -42,7 +41,7 @@ Ahora vamos a obtener el coeficiente $\tau_{b}$ de Kendall
 cor.test(x,y,method = "kendall", alternative="two.sided")
 ```
 
-En este caso el coeficiente $\tau_{b}$ de Kendall es de 0.3130073 
+En este caso el coeficiente $\tau_{b}$ de Kendall es de 0.3130073   
 
 III)
 
@@ -60,7 +59,7 @@ Vamos a realizar un diagrama de dispersion para ver como se comportan las variab
 plot(x,y)
 ```
 
-Podemos ver en el diagrama de dispersion que no hay algun patron o comportamiento en especifico que nos pueda indicar que las variables sean independientes e incluso podemos ver que no parece haber una relacion completamente monótona entre las variables 
+Podemos ver en el diagrama de dispersion que no hay algun patron o comportamiento en especifico que nos pueda indicar que las variables sean independientes e incluso podemos ver que no parece haber una relacion completamente monotona positiva entre las variables 
 
 
 

@@ -12,10 +12,9 @@ Primero vamos a transformar nuestras variables a tipo factor de una manera que n
 
 ```{r}
 datos$NivEdu=factor(datos$NivEdu, levels = c("Primaria", "Secundaria", "Bachillerato", "Profesional"))
-datos$FakeNews=factor(datos$FakeNews,levels = c("Mucho", "Regular", "Poco", "Muy Poco"))
+datos$FakeNews=factor(datos$FakeNews,levels = c("Muy Poco", "Poco", "Regular", "Mucho"))
 str(datos)
 ```
-
 
 ```{r,include=FALSE}
 levels(datos$NivEdu)
@@ -32,7 +31,8 @@ cor.test(rank(datos$NivEdu),rank(datos$FakeNews), method = "spearman")
 ```
 
 En ambos casos podemos ver que el p-value es de 2.2e-16 por lo que rechazamos $H_{0}$, es decir, hay evidencia de que hay una relacion monotona entre las variables. 
-En el caso del coeficiente $\tau_{b}$ de Kendall tiene un valor de 0.2491923, mientras que en el coeficiente $\rho_{s}$ de Spearman tenemos un valor de 0.2958182 por lo que en ambos caso tendriamos una relacion monotona positiva. Entonces podriamos decir que a mayor nivel de estudio menor es el impacto de las fakenews  
+En el caso del coeficiente $\tau_{b}$ de Kendall tiene un valor de -0.2491923, mientras que en el coeficiente $\rho_{s}$ de Spearman tenemos un valor de -0.2958182 por lo que en ambos caso tendriamos una relacion monotona negativa. Entonces podriamos decir que a mayor nivel de estudio menor es el impacto de las fakenews  
+
 
 
 
