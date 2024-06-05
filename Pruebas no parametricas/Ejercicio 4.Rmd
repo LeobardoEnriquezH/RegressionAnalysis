@@ -1,0 +1,47 @@
+---
+title: "Ejercicio 4"
+date: "2024-06-02"
+output: pdf_document
+---
+
+```{r, echo=FALSE}
+datos <- read.csv("C:/Users/coyxz/Downloads/Ejercicio4Ex3.csv")
+```
+
+Primero vamos a transformar nuestras variables a tipo factor de una manera que nos sea conveniente para poder analizar si a mayor nivel de estudio menor es el impacto de las fakenews
+
+```{r}
+datos$NivEdu=factor(datos$NivEdu, levels = c("Primaria", "Secundaria", "Bachillerato", "Profesional"))
+datos$FakeNews=factor(datos$FakeNews,levels = c("Mucho", "Regular", "Poco", "Muy Poco"))
+str(datos)
+```
+
+
+```{r,include=FALSE}
+levels(datos$NivEdu)
+rank(datos$NivEdu)
+levels(datos$FakeNews)
+rank(datos$FakeNews)
+```
+
+Y ahora procedemos a calcular los coeficientes $\tau_{b}$ de Kendall y $\rho_{s}$ de Spearman
+
+```{r}
+cor.test(rank(datos$NivEdu),rank(datos$FakeNews), method = "kendall")
+cor.test(rank(datos$NivEdu),rank(datos$FakeNews), method = "spearman")
+```
+
+En ambos casos podemos ver que el p-value es de 2.2e-16 por lo que rechazamos $H_{0}$, es decir, hay evidencia de que hay una relacion monotona entre las variables. 
+En el caso del coeficiente $\tau_{b}$ de Kendall tiene un valor de 0.2491923, mientras que en el coeficiente $\rho_{s}$ de Spearman tenemos un valor de 0.2958182 por lo que en ambos caso tendriamos una relacion monotona positiva. Entonces podriamos decir que a mayor nivel de estudio menor es el impacto de las fakenews  
+
+
+
+
+
+
+
+
+
+
+
+
